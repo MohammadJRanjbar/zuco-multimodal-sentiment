@@ -1118,3 +1118,65 @@ The original 15-section v1/v2 training notebook was not discarded. It was moved
 to `notebooks/archive/zuco_v1_v2_training_colab.ipynb` so the completed training
 workflow remains reproducible without cluttering the current runner. The
 temporary duplicate `zuco_step1_closeout_colab.ipynb` name was removed.
+
+## 2026-07-24 — Complete the Step 1 closeout analysis
+
+The `v3_closeout_analysis` Drive run completed successfully. Its folder contains
+the analysis manifest, all 13 expected table files, and both expected plots:
+`text_hard_subset_deltas.png` and `prediction_flips.png`. The manifest confirms
+2,000 sentence-cluster bootstrap samples and the predeclared `0.015` minimum
+accuracy-delta screen.
+
+Whole-dataset aligned-minus-control macro-F1 differences remained negligible:
+
+```text
+fine-tuned aligned minus noise:     +0.0004, CI [-0.0040, +0.0051]
+fine-tuned aligned minus shuffled:  +0.0013, CI [-0.0030, +0.0054]
+fine-tuned aligned minus zero:      -0.0009, CI [-0.0040, +0.0018]
+
+frozen aligned minus noise:         -0.0004, CI [-0.0090, +0.0081]
+frozen aligned minus shuffled:      -0.0012, CI [-0.0050, +0.0021]
+frozen aligned minus zero:          -0.0000, CI [-0.0054, +0.0049]
+```
+
+Prediction agreement between aligned and control models was `99.25%`–`99.75%`
+for fine-tuned LaBSE and `97.42%`–`99.42%` for frozen LaBSE.
+
+No predefined text-hard subset passed all three controls. For the fine-tuned
+lowest-confidence quartile, aligned EEG was `+0.0067` accuracy against shuffled
+EEG but only `+0.0033` against noise and `-0.0033` against zero, with intervals
+that did not provide a positive effect against all controls. The lowest 50% was
+also effectively tied with every control.
+
+For sentences that the no-EEG pathway classified incorrectly, aligned EEG was
+worse than noise: `-0.0113` accuracy with fine-tuned text, CI
+`[-0.0235, -0.0027]`, and `-0.0237` with frozen text, CI
+`[-0.0378, -0.0110]`. It also failed to beat shuffled and zero controls. Thus,
+the current EEG representation did not rescue the text model's errors.
+
+Within the aligned fine-tuned model, adding EEG changed only one of 1,200
+seed/sentence predictions; that one change was favorable. In the frozen model,
+EEG changed 17 of 1,200 predictions, with five favorable and 11 unfavorable
+changes, for a net loss of six correct predictions. Noise and shuffled branches
+changed comparable or larger numbers of predictions, so these changes do not
+show alignment-specific EEG use.
+
+The frozen aligned model showed a positive within-model delta on the subset its
+no-EEG pathway misclassified (`+0.0108`, CI `[+0.0022, +0.0211]`). This is not
+accepted as EEG evidence because the aligned model was worse than all relevant
+controls on the corresponding paired comparison, including the clearly worse
+result against noise.
+
+The saved decision is:
+
+```text
+alignment_specific_priority_subset_detected: false
+```
+
+Step 1 therefore closes the current pooled classical-feature fusion pipeline.
+The next phase is the bounded classical-feature viability study: test EEG before
+text fusion using subject-specific models, equal and learned subject pooling,
+simple regularized baselines, and shuffled-alignment and label-permutation
+controls. Only an aligned EEG effect that passes the predeclared viability gate
+will justify carrying these 2,496 sentence-level features into another fusion
+model.
