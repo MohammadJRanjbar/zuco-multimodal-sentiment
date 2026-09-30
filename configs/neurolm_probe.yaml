@@ -1,0 +1,101 @@
+# Frozen NeuroLM/LaBraM EEG-only sentiment probe on raw ZuCo Task 1 EEG.
+# Paths are placeholders; the Colab notebook and CLI flags override them.
+experiment: neurolm_eeg_probe_v1
+
+paths:
+  mat_dir: null            # folder with results*_SR.mat (Drive: Thesis/Data/zuco_og_raw)
+  labels_csv: null         # zuco_sentiment_labels_task1_fixed.csv
+  handcrafted_dir: null    # existing classical feature cache (per-subject .npz)
+  neurolm_dir: ../NeuroLM  # clone of github.com/935963004/NeuroLM
+  checkpoint: null         # local path to NeuroLM-B.pt
+  cache_dir: data/cache/neurolm
+  results_dir: results/neurolm_probe
+
+checkpoint:
+  repo: Weibang/NeuroLM
+  revision: eddfff5c64a4139442f826d6c67c8369fd00f45a  # HF commit pinned on 2026-10-01
+  filename: checkpoints/NeuroLM-B.pt
+
+data:
+  source_sfreq: 500        # ZuCo EEG.srate (authors' EEGLAB file)
+  expected_channels: 105   # 104 EGI electrodes + flat Cz reference
+  language: en
+
+# Matched to the released NeuroLM code (see src/neurolm/preprocess.py).
+preprocess:
+  source_sfreq: 500
+  target_sfreq: 200
+  input_unit: uV
+  reference: average       # data are Cz-referenced; averaging restores Cz
+  reference_channel_index: 104
+  highpass_hz: 0.1
+  lowpass_hz: 75.0
+  notch_hz: 50.0
+  notch_quality: 30.0
+  filter_order: 4
+  demean: true
+  max_nan_fraction: 0.1
+  scale_divisor: 100.0
+  patch_samples: 200
+  remainder: drop
+  amplitude_guard_uv: [0.05, 2000.0]
+
+# Each view is one cached embedding set. All views are extracted in one pass.
+views:
+  - name: tenten6_chunk1024         # PRIMARY: defensible 10-10 subset, no truncation
+    target_set: 10-10
+    max_angle_deg: 6.0              # <= ~1 cm on the 10-05 head sphere
+    length: {strategy: chunk, max_tokens: 1024}
+  - name: tenten6_crop276           # crop to NeuroLM's instruction-tuning context
+    target_set: 10-10
+    max_angle_deg: 6.0
+    length: {strategy: crop, max_tokens: 276}
+  - name: tentwenty_chunk1024       # fewer channels: classical 10-20 sites
+    target_set: 10-20
+    max_angle_deg: 8.6              # half the median 10-10 neighbour spacing
+    length: {strategy: chunk, max_tokens: 1024}
+  - name: tenten8p6_chunk1024       # lenient 10-10 threshold (sensitivity)
+    target_set: 10-10
+    max_angle_deg: 8.6
+    length: {strategy: chunk, max_tokens: 1024}
+
+encoder:
+  representations: [tokenizer, gpt]
+  gpt_layers: []            # e.g. [5] adds the output of GPT block 5 as gpt_L5
+  poolings: [mean, max, last_step]
+  precision: float32
+  batch_size: 8
+
+probe:
+  primary_view: tenten6_chunk1024
+  primary_feature: tokenizer__mean       # frozen VQ encoder, mean over tokens
+  primary_classifier: logreg
+  primary_protocol: joint
+  secondary_features: [gpt__mean, tokenizer__mean+max, gpt__last_step]
+  secondary_views: [tenten6_crop276, tentwenty_chunk1024, tenten8p6_chunk1024]
+  seeds: [42, 52, 62, 72, 82]
+  classifiers:
+    handcrafted: [logreg, svm]
+    neurolm: [logreg, svm, mlp, linear]
+  protocols_to_run: [joint, text, subject]
+  protocols:
+    text: {n_folds: 5, val_fraction: 0.15}
+    subject: {n_val_subjects: 1}
+    joint: {n_subject_folds: 4, n_sentence_folds: 5, val_fraction: 0.15, n_val_subjects: 1}
+  bootstrap: {n_boot: 2000, n_perm: 5000}
+
+sanity:
+  n_label_permutations: 100
+  permutation_level: sentence
+  trial_level_permutations: 20
+  permutation_classifier: logreg
+  permutation_protocols: [joint, text, subject]
+  association_classifier: logreg
+  subject_id_protocol: text
+  random_feature_seed: 0
+
+decision:
+  alpha: 0.05
+  min_margin_macro_f1: 0.02   # over the permutation-null mean
+  min_seed_agreement: 4       # seeds (of 5) above the null mean
+  fusion_margin_macro_f1: 0.05

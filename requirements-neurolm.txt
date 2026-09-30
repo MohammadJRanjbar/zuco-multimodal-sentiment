@@ -1,0 +1,8 @@
+# Extra dependencies for the NeuroLM probe (Colab already provides numpy, pandas,
+# scipy, scikit-learn, torch, transformers, matplotlib).
+-r requirements.txt
+pyyaml>=6.0
+einops>=0.7
+tiktoken>=0.6
+huggingface_hub>=0.23
+pytest>=7.0
