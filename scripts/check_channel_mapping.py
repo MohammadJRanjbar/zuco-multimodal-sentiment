@@ -43,26 +43,73 @@ def parse_args():
     return parser.parse_args()
 
 
-def embedding_evidence(checkpoint_path, targets):
+def optimizer_row_activity(checkpoint, state, param_name="pos_embed.weight"):
+    """Per-row Adam second moment of NeuroLM's trainable channel embedding.
+
+    ``train_pretrain.py`` saves ``optimizer.state_dict()``. Adam's second moment
+    of a row stays exactly 0 unless that row received gradients; with
+    beta2 = 0.95 it also underflows to 0 within ~2,000 steps without gradients.
+    A nonzero row is therefore direct proof of training; a zero row means "not
+    updated near the end of pretraining", which is weaker than "never trained".
+    """
+    optimizer = checkpoint.get("optimizer")
+    if not optimizer or not optimizer.get("state"):
+        return None, "checkpoint has no optimizer state"
+    shape = tuple(state[param_name].shape)
+    moments = optimizer["state"]
+    # NeuroLM.configure_optimizers: trainable (non-tokenizer) params with dim >= 2
+    # come first, in named_parameters order.
+    ordered = [k for k, v in state.items() if not k.startswith("tokenizer.") and v.dim() >= 2]
+    index = ordered.index(param_name) if param_name in ordered else None
+    if index is not None and index in moments and tuple(moments[index]["exp_avg_sq"].shape) == shape:
+        entry = moments[index]
+    else:
+        same_shape = [s for s in moments.values()
+                      if "exp_avg_sq" in s and tuple(s["exp_avg_sq"].shape) == shape]
+        if len(same_shape) != 1:
+            return None, f"cannot identify the optimizer state of {param_name}"
+        entry = same_shape[0]
+    second = entry["exp_avg_sq"].float().mean(dim=1).numpy()
+    step = entry.get("step")
+    return {
+        "param": param_name,
+        "optimizer_step": float(step) if step is not None else None,
+        "row_second_moment": second.tolist(),
+    }, None
+
+
+def embedding_evidence(checkpoint_path, targets, exclude_untrained):
+    """Checkpoint evidence on the spatial embedding of every mapping target.
+
+    The norm/similarity comparison with never-indexed rows is descriptive only:
+    pretraining moves rows little relative to their N(0, 1) initialisation, so
+    trained rows can be indistinguishable from unused ones. Exclusion (off by
+    default) uses only the optimizer second moment.
+    """
     import torch
 
     checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
     state = {k.replace("_orig_mod.", ""): v for k, v in checkpoint["model"].items()}
-    tables = {
-        "tokenizer.pos_embed": state["tokenizer.pos_embed.weight"].float().numpy(),
-        "neurolm.pos_embed": state["pos_embed.weight"].float().numpy(),
-    }
-    evidence, flagged = {}, {}
-    for name, weight in tables.items():
-        rows, reference = cm.embedding_row_evidence(weight)
+    evidence = {}
+    for name, key in (("tokenizer.pos_embed", "tokenizer.pos_embed.weight"), ("neurolm.pos_embed", "pos_embed.weight")):
+        rows, reference = cm.embedding_row_evidence(state[key].float().numpy())
         evidence[name] = {"reference": reference, "rows": rows}
-        for row in rows:
-            if row["name"] in targets and row["likely_untrained"]:
-                flagged.setdefault(row["name"], []).append(name)
-    excluded = {
-        name: "spatial embedding looks untrained in " + ", ".join(tables)
-        for name, tables in flagged.items()
-    }
+    activity, problem = optimizer_row_activity(checkpoint, state)
+    evidence["optimizer"] = activity or {"unavailable": problem}
+    excluded = {}
+    if activity:
+        second = activity["row_second_moment"]
+        updated = [t for t in targets if second[cm.NEUROLM_CHANNEL_VOCAB.index(t)] > 0]
+        stale = [t for t in targets if second[cm.NEUROLM_CHANNEL_VOCAB.index(t)] <= 0]
+        evidence["optimizer"]["targets_updated"] = updated
+        evidence["optimizer"]["targets_not_updated_recently"] = stale
+        print(f"optimizer evidence: {len(updated)}/{len(targets)} 10-10 targets received gradients near the "
+              f"end of pretraining; not recently updated: {stale or 'none'}")
+        if exclude_untrained:
+            excluded = {t: "NeuroLM channel embedding received no gradient near the end of pretraining"
+                        for t in stale}
+    else:
+        print("optimizer evidence unavailable:", problem)
     return evidence, excluded
 
 
@@ -214,21 +261,37 @@ def write_report(path, *, labels, chanlocs_check, alignment, spacing, views_info
         )
     lines += ["", "## Spatial-embedding check (checkpoint)", ""]
     if evidence is None:
-        lines.append("*Pending: run with `--checkpoint NeuroLM-B.pt`. Rows 139–255 of each 256-row spatial "
-                     "embedding are never indexed and form the untrained reference.*")
+        lines.append("*Pending: run with `--checkpoint NeuroLM-B.pt`.*")
     else:
-        for table, block in evidence.items():
-            ref = block["reference"]
-            flagged = [r["name"] for r in block["rows"] if r["likely_untrained"]]
+        optimizer = evidence.get("optimizer", {})
+        if "targets_updated" in optimizer:
+            stale = optimizer["targets_not_updated_recently"]
             lines.append(
-                f"* `{table}`: unused-row norm {ref['unused_norm_mean']:.3f} ± {ref['unused_norm_std']:.3f}, "
-                f"unused max|cos| q99 {ref['unused_max_abs_cos_q99']:.3f}. Vocabulary rows that look untrained: "
-                f"{', '.join(flagged) if flagged else 'none'}."
+                f"* **Optimizer state (direct evidence)**: Adam's second moment of NeuroLM's channel embedding "
+                f"(`pos_embed`, step {optimizer.get('optimizer_step')}) is nonzero for "
+                f"{len(optimizer['targets_updated'])} of {len(optimizer['targets_updated']) + len(stale)} 10-10 "
+                f"targets, i.e. those rows received gradients near the end of pretraining. Not recently updated: "
+                f"{', '.join(stale) if stale else 'none'}. (With beta2 = 0.95 a row decays to 0 within ~2,000 "
+                "steps without gradients, so zero means 'not updated near the end', not necessarily 'never'.)"
+            )
+        else:
+            lines.append(f"* Optimizer state unavailable: {optimizer.get('unavailable')}.")
+        for table in ("tokenizer.pos_embed", "neurolm.pos_embed"):
+            block = evidence[table]
+            ref = block["reference"]
+            n_same = sum(r["indistinguishable_from_unused"] for r in block["rows"])
+            lines.append(
+                f"* `{table}` norm/similarity vs the never-indexed rows 139–255 (descriptive only): unused-row norm "
+                f"{ref['unused_norm_mean']:.3f} ± {ref['unused_norm_std']:.3f}; {n_same} of {len(block['rows'])} "
+                "vocabulary rows are statistically indistinguishable from unused rows. This comparison has low "
+                "power (pretraining moves rows little relative to their N(0, 1) initialisation) and is never "
+                "used to exclude channels."
             )
         lines.append("")
         lines.append(
             "Targets excluded because of this check: "
-            + (", ".join(f"`{k}`" for k in sorted(excluded_targets)) if excluded_targets else "none") + "."
+            + (", ".join(f"`{k}`" for k in sorted(excluded_targets)) if excluded_targets else
+               "none (exclusion is off unless `channel_mapping.exclude_untrained_embeddings: true`)") + "."
         )
     lines += ["", "## Montage consistency on raw trials", ""]
     if consistency is None:
@@ -286,7 +349,8 @@ def main():
 
     evidence, excluded_targets = None, {}
     if args.checkpoint:
-        evidence, excluded_targets = embedding_evidence(args.checkpoint, set(cm.candidate_targets("10-10")))
+        exclude = bool(config.get("channel_mapping", {}).get("exclude_untrained_embeddings", False))
+        evidence, excluded_targets = embedding_evidence(args.checkpoint, cm.candidate_targets("10-10"), exclude)
         print("targets excluded by embedding evidence:", excluded_targets or "none")
     ref_summary, ref_excluded = reference_decision(args.inspection_summary)
 
@@ -309,6 +373,10 @@ def main():
         cm.save_mapping(rows, summary, os.path.join(args.out_dir, f"mapping_{view['name']}"))
         print(f"{view['name']}: {summary['counts']} -> {summary['n_retained']} retained "
               f"({summary['percent_retained']:.1f}%)")
+
+    primary = config["probe"]["primary_view"]
+    retained = views_info[primary]["summary"]["n_retained"]
+    minimum = int(config.get("channel_mapping", {}).get("min_primary_channels", 8))
 
     sensitivity = [
         (t, cm.summarize_mapping(cm.build_channel_mapping(
@@ -334,6 +402,11 @@ def main():
         ref_summary=ref_summary, ref_excluded=ref_excluded, consistency=consistency, budget=budget, config=config,
     )
     print("report ->", args.report)
+    if retained < minimum:
+        raise SystemExit(
+            f"primary view {primary} retains only {retained} channels (< {minimum}); "
+            f"excluded targets: {sorted(excluded_targets) or 'none'}. Fix the mapping before extraction."
+        )
 
 
 if __name__ == "__main__":

@@ -398,13 +398,15 @@ def verify_vocabulary(neurolm_dir):
 
 
 def embedding_row_evidence(weight, vocab=NEUROLM_CHANNEL_VOCAB, z_limit=4.0):
-    """Flag spatial-embedding rows that look untouched by pretraining.
+    """Compare spatial-embedding rows with rows that are never indexed.
 
     NeuroLM's spatial embeddings have 256 rows but only ``len(vocab)`` names, so
-    rows ``len(vocab):`` are never indexed and keep their initial random values
-    (only decoupled weight decay touches them). Those rows define the null: a
-    named row whose norm and similarity to other named rows are both inside the
-    unused-row distribution is reported as ``likely_untrained``.
+    rows ``len(vocab):`` keep their initial random values (only decoupled
+    weight decay touches them). A named row whose norm and similarity to other
+    named rows both fall inside the unused-row distribution is reported as
+    ``indistinguishable_from_unused``. This is descriptive: small learning rates
+    move rows little relative to an N(0, 1) initialisation, so trained rows can
+    be indistinguishable too. It must not be used on its own to drop channels.
     """
     weight = np.asarray(weight, dtype=np.float64)
     n_named = len(vocab)
@@ -428,7 +430,7 @@ def embedding_row_evidence(weight, vocab=NEUROLM_CHANNEL_VOCAB, z_limit=4.0):
             "norm": float(norms[index]),
             "norm_z_vs_unused": z,
             "max_abs_cos_to_named": float(max_cos[index]),
-            "likely_untrained": bool(abs(z) <= z_limit and max_cos[index] <= ref_cos_limit),
+            "indistinguishable_from_unused": bool(abs(z) <= z_limit and max_cos[index] <= ref_cos_limit),
         })
     return rows, {
         "unused_rows": int(len(reference)),

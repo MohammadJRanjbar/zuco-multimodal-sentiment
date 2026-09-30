@@ -69,14 +69,14 @@ def test_ten_twenty_view_uses_only_ten_twenty_names():
     assert retained <= set(cm.TEN_TWENTY_19)
 
 
-def test_embedding_evidence_flags_untouched_rows():
+def test_embedding_evidence_separates_moved_rows_from_unused_rows():
     rng = np.random.default_rng(0)
     weight = rng.standard_normal((256, 64)) * 0.5
     shared = rng.standard_normal(64)
     trained = [i for i in range(139) if i not in (5, 6)]
     weight[trained] = 3.0 * shared + 0.3 * rng.standard_normal((len(trained), 64))
     rows, reference = cm.embedding_row_evidence(weight)
-    flagged = {r["vocab_index"] for r in rows if r["likely_untrained"]}
+    flagged = {r["vocab_index"] for r in rows if r["indistinguishable_from_unused"]}
     assert flagged == {5, 6}
     assert reference["unused_rows"] == 256 - 139
 
@@ -91,3 +91,30 @@ def test_montage_consistency_detects_label_order():
     assert good["spearman_rho"] < -0.9 and good["p_value_one_sided"] < 0.01
     shuffled = cm.montage_consistency(corr, points[rng.permutation(30)], n_permutations=200)
     assert shuffled["p_value_one_sided"] > 0.01
+
+
+def test_optimizer_second_moment_identifies_trained_rows():
+    torch = pytest.importorskip("torch")
+    import importlib.util
+    from collections import OrderedDict
+
+    script = os.path.join(os.path.dirname(__file__), "..", "scripts", "check_channel_mapping.py")
+    spec = importlib.util.spec_from_file_location("check_channel_mapping", script)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    state = OrderedDict([
+        ("GPT2.transformer.wte.weight", torch.zeros(10, 4)),
+        ("GPT2.transformer.ln_f.weight", torch.ones(4)),
+        ("tokenizer.pos_embed.weight", torch.zeros(256, 4)),  # frozen, not in the optimizer
+        ("pos_embed.weight", torch.zeros(256, 4)),
+    ])
+    moment = torch.zeros(256, 4)
+    moment[:6] = 1e-6
+    checkpoint = {"optimizer": {"state": {0: {"exp_avg_sq": torch.ones(10, 4)},
+                                          1: {"exp_avg_sq": moment, "step": torch.tensor(500.0)},
+                                          2: {"exp_avg_sq": torch.ones(4)}}}}
+    activity, problem = module.optimizer_row_activity(checkpoint, state)
+    assert problem is None and activity["optimizer_step"] == 500.0
+    second = np.asarray(activity["row_second_moment"])
+    assert (second[:6] > 0).all() and (second[6:] == 0).all()
+    assert module.optimizer_row_activity({}, state) == (None, "checkpoint has no optimizer state")

@@ -48,7 +48,7 @@ Totals refer to the 105 ZuCo channels. Not retained = missing + excluded.
 
 ## Spatial-embedding check (checkpoint)
 
-*Pending: run with `--checkpoint NeuroLM-B.pt`. Rows 139–255 of each 256-row spatial embedding are never indexed and form the untrained reference.*
+*Pending: run with `--checkpoint NeuroLM-B.pt`.*
 
 ## Montage consistency on raw trials
 

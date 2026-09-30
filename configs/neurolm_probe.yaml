@@ -40,6 +40,12 @@ preprocess:
   remainder: drop
   amplitude_guard_uv: [0.05, 2000.0]
 
+channel_mapping:
+  # Report-only by default. If true, 10-10 targets whose NeuroLM channel
+  # embedding has a zero Adam second moment in the checkpoint are excluded.
+  exclude_untrained_embeddings: false
+  min_primary_channels: 8   # step 6 stops if the primary view keeps fewer
+
 # Each view is one cached embedding set. All views are extracted in one pass.
 views:
   - name: tenten6_chunk1024         # PRIMARY: defensible 10-10 subset, no truncation

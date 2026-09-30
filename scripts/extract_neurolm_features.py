@@ -52,7 +52,13 @@ def load_view_plan(mapping_dir, view):
     stored = json.load(open(os.path.join(mapping_dir, f"mapping_{view['name']}.json")))
     rows = [r for r in stored["rows"] if r["status"] in {"exact", "approximate"}]
     if not rows:
-        raise SystemExit(f"view {view['name']} retains no channels")
+        reasons = {}
+        for row in stored["rows"]:
+            reasons[row["reason"].split(":")[0]] = reasons.get(row["reason"].split(":")[0], 0) + 1
+        raise SystemExit(
+            f"view {view['name']} retains no channels in {mapping_dir}. Status reasons: {reasons}. "
+            "Re-run scripts/check_channel_mapping.py (notebook step 6) and read reports/channel_mapping.md."
+        )
     plan = [(int(r["zuco_index"]), int(r["vocab_index"])) for r in rows]
     channels = [(r["zuco_label"], r["target"]) for r in rows]
     return plan, channels
