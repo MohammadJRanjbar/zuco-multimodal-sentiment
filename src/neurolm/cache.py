@@ -132,6 +132,38 @@ def payload_matches(stored, expected):
     return all(stored.get(key) == value for key, value in normalized.items())
 
 
+def payload_differences(stored, expected):
+    normalized = json.loads(json.dumps(expected, default=str))
+    return {key: {"cache": stored.get(key), "config": value}
+            for key, value in normalized.items() if stored.get(key) != value}
+
+
+def describe_view_folders(cache_root, view_name, expected=None):
+    """Explain every candidate folder: completeness and config differences."""
+    lines = []
+    folders = sorted(glob.glob(os.path.join(cache_root, f"{view_name}__*")))
+    if not os.path.isdir(cache_root):
+        return [f"cache root does not exist: {cache_root}"]
+    if not folders:
+        present = sorted(os.listdir(cache_root))
+        return [f"no folder named {view_name}__<fingerprint> in {cache_root} (contains: {present}); "
+                "run scripts/extract_neurolm_features.py (notebook step 8)"]
+    for folder in folders:
+        parts = sorted(p[:-4] for p in os.listdir(os.path.join(folder, "parts")) if p.endswith(".npz")) \
+            if os.path.isdir(os.path.join(folder, "parts")) else []
+        complete = os.path.exists(os.path.join(folder, "metadata.csv"))
+        state = "complete" if complete else (
+            f"INCOMPLETE: {len(parts)} subject part(s) saved {parts}, never merged; "
+            "re-run extraction, it resumes and merges")
+        lines.append(f"{os.path.basename(folder)}: {state}")
+        if complete and expected is not None:
+            stored = json.load(open(os.path.join(folder, "fingerprint.json")))["payload"]
+            differences = payload_differences(stored, expected)
+            if differences:
+                lines.append(f"  config differs from this cache: {json.dumps(differences)}")
+    return lines
+
+
 def find_view(cache_root, view_name, expected=None):
     """Return the completed cache folder for ``view_name``.
 
@@ -147,7 +179,9 @@ def find_view(cache_root, view_name, expected=None):
             if payload_matches(json.load(open(os.path.join(m, "fingerprint.json")))["payload"], expected)
         ]
     if not matches:
-        raise FileNotFoundError(f"no completed cache for view {view_name!r} matching the config in {cache_root}")
+        details = "\n  ".join(describe_view_folders(cache_root, view_name, expected))
+        raise FileNotFoundError(
+            f"no completed cache for view {view_name!r} matching the config in {cache_root}:\n  {details}")
     if len(matches) > 1:
         raise RuntimeError(
             f"{len(matches)} caches match view {view_name!r}; pass the exact folder: {matches}"

@@ -70,3 +70,17 @@ def test_changed_config_uses_a_new_folder(tmp_path):
     a = cache.prepare_view(str(tmp_path), "view", payload())
     b = cache.prepare_view(str(tmp_path), "view", payload(**{"preprocess.notch_hz": 60}))
     assert a != b
+
+
+def test_missing_cache_error_explains_why(tmp_path):
+    root = str(tmp_path)
+    with pytest.raises(FileNotFoundError, match="notebook step 8"):
+        cache.find_view(root, "view")
+    path = cache.prepare_view(root, "view", payload())
+    rows = [{"sample_id": "S_0", "subject_id": "S", "sentence_id": 0, "label_id": 0}]
+    cache.save_part(path, "S", rows, {"tokenizer__mean": np.ones((1, 3))})
+    with pytest.raises(FileNotFoundError, match=r"INCOMPLETE: 1 subject part"):
+        cache.find_view(root, "view")
+    cache.merge_parts(path)
+    with pytest.raises(FileNotFoundError, match="config differs from this cache"):
+        cache.find_view(root, "view", expected={"poolings": ["mean", "max"]})
