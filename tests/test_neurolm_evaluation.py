@@ -6,7 +6,7 @@ from src.neurolm.evaluation import (
     _macro_f1_from_confusion, cluster_bootstrap, compute_metrics, make_probe, paired_comparison,
     predictions_frame, run_probe,
 )
-from tests.neurolm_helpers import signal_features, synthetic_samples
+from neurolm_helpers import signal_features, synthetic_samples
 
 
 @pytest.fixture(scope="module")

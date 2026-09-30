@@ -4,7 +4,7 @@ import pytest
 from src.neurolm import sanity
 from src.neurolm.evaluation import run_probe
 from src.neurolm.splits import make_splits
-from tests.neurolm_helpers import signal_features, synthetic_samples
+from neurolm_helpers import signal_features, synthetic_samples
 
 
 @pytest.fixture(scope="module")

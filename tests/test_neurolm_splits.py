@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from src.neurolm.splits import Split, assert_split, make_splits
-from tests.neurolm_helpers import synthetic_samples
+from neurolm_helpers import synthetic_samples
 
 
 @pytest.fixture(scope="module")
