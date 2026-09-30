@@ -268,7 +268,10 @@ probes. Subjects are never averaged in the primary analysis.
   preprocessing, length handling, and pooling.
 
 Run `notebooks/neurolm_probe_colab.ipynb` top to bottom (GPU recommended for
-extraction). Command-line equivalents:
+extraction):
+[open in Colab](https://colab.research.google.com/github/MohammadJRanjbar/zuco-multimodal-sentiment/blob/feature/neurolm-eeg-probe/notebooks/neurolm_probe_colab.ipynb).
+It clones this branch from `MohammadJRanjbar/zuco-multimodal-sentiment`.
+Command-line equivalents:
 
 ```bash
 pip install -r requirements-neurolm.txt
