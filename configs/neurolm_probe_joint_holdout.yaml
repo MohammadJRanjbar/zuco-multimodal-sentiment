@@ -1,0 +1,7 @@
+# Protocol: unseen subjects AND unseen sentences (primary)
+base: neurolm_probe.yaml
+probe:
+  protocols_to_run: [joint]
+  primary_protocol: joint
+sanity:
+  permutation_protocols: [joint]

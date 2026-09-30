@@ -1,0 +1,7 @@
+# Protocol: unseen subjects, seen sentences
+base: neurolm_probe.yaml
+probe:
+  protocols_to_run: [subject]
+  primary_protocol: subject
+sanity:
+  permutation_protocols: [subject]
