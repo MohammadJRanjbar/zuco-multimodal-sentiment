@@ -1180,3 +1180,77 @@ simple regularized baselines, and shuffled-alignment and label-permutation
 controls. Only an aligned EEG effect that passes the predeclared viability gate
 will justify carrying these 2,496 sentence-level features into another fusion
 model.
+
+## 2026-10-01 — Implement the frozen NeuroLM/LaBraM EEG-only probe
+
+### Motivation
+
+The classical EEG branch was uninformative (EEG-only macro-F1 about 0.28;
+aligned, shuffled, noise, and zero EEG indistinguishable). Before any new
+fusion work, the next question is whether pretrained EEG representations carry
+sentiment information on their own. This is implemented as a separate path
+(`src/neurolm/`, `scripts/`, `configs/`) on branch `feature/neurolm-eeg-probe`;
+the existing pipeline is unchanged.
+
+### Decisions verified against sources rather than assumed
+
+- **Model.** NeuroLM-B from `huggingface.co/Weibang/NeuroLM`, pinned to HF
+  commit `eddfff5c…`; code from NeuroLM commit `0cda987`. One checkpoint holds
+  both representations: the frozen text-aligned VQ encoder ("tokenizer",
+  LaBraM-style) and the GPT-2 backbone after multi-channel autoregressive
+  pretraining. The state dict is loaded strictly.
+- **Preprocessing from the released code**: 200 Hz, 1 s (200-sample) patches,
+  `X / 100` in microvolts (a fixed scale, nothing fitted), time-major token
+  order, 0.1–75 Hz band-pass and notch; pretraining samples are
+  `floor(1024 / C)` seconds (1024-token context); instruction tuning used 276
+  tokens; 64 time-embedding rows. Everything is trial-local, so no statistic can
+  leak from test trials.
+- **Attention masks.** The VQ encoder falls back to causal attention without a
+  mask, so a bidirectional valid-token mask is always passed. The GPT uses
+  NeuroLM's stair-stepping mask.
+- **No padding.** `TemporalConv` applies `GroupNorm` over all tokens of a
+  sample, so zero padding would change real-token embeddings by an amount that
+  depends on trial length. Chunks are batched only with chunks of identical
+  length.
+- **ZuCo channel labels** come from the authors' EEGLAB file
+  `gip_ZAB_SR5_EEG.mat` (zuco-benchmark repository). It has 105 channels:
+  104 EGI electrodes plus Cz last, `srate = 500`, and coordinates identical to
+  the `GSN-HydroCel-129.sfp` template. The values are vendored in
+  `src/neurolm/montages/`.
+- **Reference.** In that file Cz is exactly zero, and the per-sample mean over
+  the other 104 channels is far from zero (0.63× the median channel std). The
+  data are therefore Cz-referenced, not average-referenced. Average
+  re-referencing restores a genuine Cz, which maps exactly to `CZ`. This is
+  re-checked on `rawData` by `inspect_raw_zuco.py`.
+- **Channel mapping** is geometric and mutual-nearest:
+  - Both templates are put in the fiducial head frame and on best-fit spheres.
+  - Residual pitch is removed with the definitional vertex/Cz landmark.
+  - A 6° cap (about 1 cm on the head sphere) retains 42 of 105 channels
+    (41 approximate plus Cz exact).
+  - The 10-20 view at 8.6° retains 18 channels; the lenient 10-10 view at 8.6°
+    retains 68.
+  - Checkpoint rows that look untrained are compared against the never-indexed
+    embedding rows 139–255 and excluded as targets.
+
+### Protocol
+
+- Samples are single subject × sentence trials.
+- Three split protocols, each with hard disjointness assertions on the rows
+  actually selected:
+  - unseen sentences (5 stratified sentence folds);
+  - unseen subjects (leave one subject out);
+  - unseen subjects plus unseen sentences (primary: 4 subject groups × 5
+    sentence folds, with a disjoint validation subject and disjoint validation
+    sentences).
+- Every trial is tested exactly once per seed; 5 seeds are used.
+- Handcrafted and NeuroLM features are evaluated on identical trials.
+- The primary feature, classifier, protocol, and decision thresholds are
+  predeclared in `configs/neurolm_probe.yaml`.
+
+### Status
+
+Implemented and tested offline: 69 tests pass locally, including an
+end-to-end synthetic pipeline test with a stub encoder. The real-architecture
+batch-invariance test needs `einops` and runs in Colab. Nothing has been run on
+the real ZuCo EEG yet, so there are no sentiment results.
+`notebooks/neurolm_probe_colab.ipynb` runs the complete sequence.

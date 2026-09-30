@@ -243,6 +243,48 @@ interval, and a positive direction in at least two seeds against every control.
 Failure closes the current pooled classical-feature fusion pipeline; it does not
 claim that EEG intrinsically contains no sentiment information.
 
+## Frozen NeuroLM/LaBraM EEG-only probe
+
+A separate path (branch `feature/neurolm-eeg-probe`) asks whether pretrained
+EEG representations carry sentiment information *before* any fusion is tried:
+raw ZuCo `rawData` → trial-local preprocessing matched to the released
+NeuroLM code → ZuCo→10-10 channel mapping → frozen NeuroLM-B (VQ encoder and
+GPT hidden states) → one pooled vector per subject × sentence trial → simple
+probes. Subjects are never averaged in the primary analysis.
+
+* Channel mapping: labels from the ZuCo authors' EEGLAB `chanlocs`, geometric
+  mutual-nearest matching to 10-10 sites (≤ 6°, ≈1 cm); see
+  `reports/channel_mapping.md`.
+* Three protocols with hard disjointness assertions: unseen sentences,
+  unseen subjects, and unseen subjects + unseen sentences (primary).
+* Baselines on identical trials: handcrafted features (logistic regression,
+  linear SVM) vs frozen NeuroLM features (logistic regression, linear SVM,
+  MLP, linear layer); 5 seeds; sentence- and subject-cluster bootstrap; paired
+  permutation tests.
+* Controls: sentence- and trial-level label permutation nulls, shuffled
+  sentence association, subject-ID decoding, Gaussian features,
+  label-distribution baselines, collapse diagnostics, duration-only baseline.
+* Embeddings are cached under a fingerprint of checkpoint, channels,
+  preprocessing, length handling, and pooling.
+
+Run `notebooks/neurolm_probe_colab.ipynb` top to bottom (GPU recommended for
+extraction). Command-line equivalents:
+
+```bash
+pip install -r requirements-neurolm.txt
+python scripts/inspect_raw_zuco.py --mat-dir RAW --labels-csv LABELS --out-dir RUN/inspection
+python scripts/check_channel_mapping.py --out-dir RUN/mapping --neurolm-dir ../NeuroLM \
+    --checkpoint NeuroLM-B.pt --inspection-summary RUN/inspection/raw_zuco_summary.json --mat-dir RAW
+python scripts/extract_neurolm_features.py --mat-dir RAW --labels-csv LABELS --neurolm-dir ../NeuroLM \
+    --checkpoint NeuroLM-B.pt --cache-dir CACHE --mapping-dir RUN/mapping [--smoke]
+python scripts/run_neurolm_probe.py --cache-dir CACHE --handcrafted-dir FEATURES --results-dir RESULTS
+python scripts/run_neurolm_sanity.py --cache-dir CACHE --handcrafted-dir FEATURES --results-dir RESULTS
+python scripts/build_neurolm_report.py --run-dir RESULTS/probe_v1
+```
+
+Protocol-specific configs: `configs/neurolm_probe_{joint,text,subject}_holdout.yaml`.
+Tests: `python -m pytest`.
+
 ## Repository layout
 
 ```text
@@ -262,4 +304,10 @@ src/closeout_analysis.py  text-hard subsets, prediction flips, and stop screen
 notebooks/                minimal Colab runner
 tests/                    feature, split, preprocessing, and model checks
 PROJECT_LOG.md            concise experiment and implementation decisions
+src/neurolm/              frozen NeuroLM probe: mapping, preprocessing, encoder,
+                          pooling, cache, splits, evaluation, sanity, report
+scripts/                  NeuroLM probe entry points (inspect, map, extract,
+                          probe, sanity, report)
+configs/                  NeuroLM probe configs (base + one per protocol)
+reports/                  channel mapping and probe results
 ```
