@@ -90,10 +90,16 @@ def main():
                             "--n-perm-single >= 20 before reading the significance-based findings.")
         controls = [t for t in ["length", "zipf", "surprisal", "trt_ms", "is_content"]
                     if significant(probes, "reader-averaged", t)]
-        sentiment_avg = [t for t in ["valence", "abs_valence", "in_lexicon", "sentence_label"]
+        # in_lexicon (emotional word yes/no) is confounded with word class, length, and frequency,
+        # which EEG does track; it is reported in the table but never counted as sentiment evidence.
+        sentiment_avg = [t for t in ["valence", "abs_valence", "sentence_label"]
                          if significant(probes, "reader-averaged", t)]
-        sentiment_single = [t for t in ["valence", "abs_valence", "in_lexicon", "sentence_label"]
+        sentiment_single = [t for t in ["valence", "abs_valence", "sentence_label"]
                             if significant(probes, "single reader", t)]
+        n_tests = int(probes["p_value"].notna().sum()) if probes is not None else 0
+        if n_tests:
+            lines += [f"*{n_tests} probes were tested at p < {ALPHA}; about {n_tests * ALPHA:.0f} false positives are "
+                      "expected by chance. `in_lexicon` is confounded with word class, length, and frequency.*", ""]
         if variance["reader"] > variance["word_item"]:
             findings.append("Reader identity explains more EEG variance than the words being read.")
             fixes.append("Remove reader variance before fusion: per-reader alignment, reader-adversarial loss.")
@@ -142,7 +148,9 @@ def main():
                   "Attention by layer: `attention_by_layer.png` in the stage 3 folder.", ""]
         slot = pd.DataFrame(stage3.get("slot_probes", []))
         if not slot.empty:
-            lines += [table(slot, ["space", "target", "metric", "score", "null_q95", "p_value"]), ""]
+            lines += [table(slot, ["space", "target", "metric", "score", "null_q95", "p_value"]), "",
+                      "*Only `raw EEG input` and `projector output` isolate EEG. Hidden states at an EEG slot also "
+                      "attend to the word just before it, so hidden-layer probes mix text and EEG information.*", ""]
         shuffled = reliance.set_index("variant").get("accuracy", pd.Series()).get("shuffled_within_reader")
         aligned = reliance.set_index("variant").get("accuracy", pd.Series()).get("aligned")
         flips = reliance.set_index("variant").get("flip_rate_vs_aligned", pd.Series()).get("shuffled_within_reader")
@@ -171,14 +179,21 @@ def main():
                   f"{stage4['n_text_errors']} sentences misclassified.", "",
                   table(subsets, ["subset", "comparison", "n_sentences", "accuracy_a", "accuracy_b", "delta", "ci95"]), ""]
         error = stage4.get("eeg_predicts_text_errors", {}).get("text_wrong_from_eeg")
+        if error and not error.get("skipped") and error["p_value"] >= ALPHA:
+            findings.append(f"EEG does not predict which sentences the text model gets wrong (AUC {fmt(error['score'])}).")
         if error and not error.get("skipped"):
             lines.append(f"EEG predicts which sentences the text model gets wrong: AUC {fmt(error['score'])} "
                          f"(null 95th percentile {fmt(error['null_q95'])}, p = {fmt(error['p_value'])}).")
             if error["p_value"] < ALPHA:
                 findings.append("EEG predicts where the text model fails.")
                 fixes.append("Use EEG as a confidence / routing signal rather than as extra features.")
+        # Subsets selected on the text model's own errors or confidence favour any model that differs from it
+        # (selection / regression to the mean), so they never count as evidence that EEG helps.
+        lines += ["*`text_wrong` and `text_low_confidence` are selected on the text model's own errors: any other "
+                  "model looks better there. Treat effects in these rows as hypotheses for other folds.*", ""]
         helpful = subsets[(subsets["comparison"] == "text_eeg - text_shuffled_eeg")
                           & (subsets["n_sentences"] >= 10)
+                          & ~subsets["subset"].isin(["text_wrong", "text_low_confidence"])
                           & subsets["ci95"].astype(str).str.match(r"\[[0-9]")] if subsets is not None else None
         if helpful is not None and not helpful.empty:
             findings.append("Aligned EEG beats shuffled EEG within: " + ", ".join(helpful["subset"]))
