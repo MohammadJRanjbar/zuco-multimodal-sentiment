@@ -177,37 +177,40 @@ def main():
                                  "trainable_parameters": model.n_trainable()}),
               os.path.join(run_dir, "manifest.json"))
 
-    predictions = {}
+    # Fold-major order: after each fold every arm has been trained on it, so a
+    # first aligned-vs-shuffled comparison (and stage 3) is available early.
+    collected = {arm: [] for arm in arms}
     started = time.time()
-    for arm in arms:
-        control = ARM_CONTROL[arm]
-        frames = []
-        for k, split in enumerate(splits):
+    for k, split in enumerate(splits):
+        stats, fallback = reader_statistics(data, split.train)
+        fold_scores = {}
+        for arm in arms:
+            control = ARM_CONTROL[arm]
             csv_path = os.path.join(run_dir, arm, f"fold_{k}.csv")
             meta_path = os.path.join(run_dir, arm, f"fold_{k}.json")
             weights_path = os.path.join(run_dir, arm, f"fold_{k}_weights.pt")
             missing_weights = args.retrain_missing_weights and not os.path.exists(weights_path)
             if (os.path.exists(csv_path) and os.path.exists(meta_path) and not missing_weights
                     and json.load(open(meta_path))["key"] == key):
-                frames.append(pd.read_csv(csv_path))
+                frame = pd.read_csv(csv_path)
                 print(f"{arm} fold {k + 1}: reuse saved predictions")
-                continue
-            stats, fallback = reader_statistics(data, split.train)
-            rng = np.random.default_rng(split_cfg["seed"] * 1000 + k)
-            inputs = model_inputs(data, stats, control or "aligned", split, rng)
-            print(f"{arm} fold {k + 1}/{len(splits)}: train {len(split.train)}, val {len(split.val)}, "
-                  f"test {len(split.test)}")
-            probs, info = run_fold(model, init, data, inputs, split, control is not None, train_cfg, device)
-            if not args.no_save_weights:
-                os.makedirs(os.path.join(run_dir, arm), exist_ok=True)
-                torch.save(model.trainable_state(), weights_path)
-            frame = predictions_table(data, split.test, probs, arm, k, split_cfg["seed"])
-            os.makedirs(os.path.dirname(csv_path), exist_ok=True)
-            frame.to_csv(csv_path, index=False)
-            save_json({"key": key, "info": info, "transductive_reader_norm": fallback}, meta_path)
-            print(f"    test macro-F1 {compute_metrics(frame['true_id'], frame['predicted_id'])['macro_f1']:.3f}")
-            frames.append(frame)
-        predictions[arm] = pd.concat(frames, ignore_index=True)
+            else:
+                rng = np.random.default_rng(split_cfg["seed"] * 1000 + k)
+                inputs = model_inputs(data, stats, control or "aligned", split, rng)
+                print(f"{arm} fold {k + 1}/{len(splits)}: train {len(split.train)}, val {len(split.val)}, "
+                      f"test {len(split.test)}")
+                probs, info = run_fold(model, init, data, inputs, split, control is not None, train_cfg, device)
+                if not args.no_save_weights:
+                    os.makedirs(os.path.join(run_dir, arm), exist_ok=True)
+                    torch.save(model.trainable_state(), weights_path)
+                frame = predictions_table(data, split.test, probs, arm, k, split_cfg["seed"])
+                os.makedirs(os.path.dirname(csv_path), exist_ok=True)
+                frame.to_csv(csv_path, index=False)
+                save_json({"key": key, "info": info, "transductive_reader_norm": fallback}, meta_path)
+            fold_scores[arm] = compute_metrics(frame["true_id"], frame["predicted_id"])["macro_f1"]
+            collected[arm].append(frame)
+        print(f"fold {k + 1} test macro-F1: " + ", ".join(f"{a} {v:.3f}" for a, v in fold_scores.items()))
+    predictions = {arm: pd.concat(frames, ignore_index=True) for arm, frames in collected.items()}
 
     summary = {
         "model": model_name, "dtype": str(dtype), "lora": cfg["lora"], "trainable_parameters": model.n_trainable(),
