@@ -214,23 +214,30 @@ def save_subject(out_dir, subject, trials):
 
 
 def load_word_eeg(cache_dir):
-    """Return a list of trial dicts (subject order, then file order)."""
+    """Return a list of trial dicts (subject order, then file order).
+
+    Each array is read from the ``.npz`` exactly once per subject: every
+    ``npz[key]`` access decompresses the whole array again, and a slice of it
+    keeps that full copy alive. Trials hold views into one array per subject.
+    """
     trials = []
     for path in sorted(glob.glob(os.path.join(cache_dir, "*.npz"))):
         subject = os.path.basename(path)[:-4]
-        data = np.load(path, allow_pickle=False)
-        offsets = data["offsets"]
-        for i, sid in enumerate(data["sample_id"]):
-            start, stop = offsets[i], offsets[i + 1]
+        with np.load(path, allow_pickle=False) as data:
+            arrays = {key: data[key] for key in data.files}
+        offsets = arrays["offsets"]
+        words = [str(w) for w in arrays["words"]]
+        times = {name: arrays.get(f"{name.lower()}_ms", np.full(len(words), np.nan, np.float32))
+                 for name in READING_MEASURES}
+        for i, sid in enumerate(arrays["sample_id"]):
+            start, stop = int(offsets[i]), int(offsets[i + 1])
             trials.append({
                 "sample_id": str(sid), "subject_id": subject,
-                "sentence_id": int(data["sentence_id"][i]), "label": int(data["label"][i]),
-                "words": [str(w) for w in data["words"][start:stop]],
-                "features": data["features"][start:stop],
-                "fixations": data["fixations"][start:stop],
-                **{f"{name.lower()}_ms": (data[f"{name.lower()}_ms"][start:stop] if f"{name.lower()}_ms" in data.files
-                                          else np.full(stop - start, np.nan, np.float32))
-                   for name in READING_MEASURES},
+                "sentence_id": int(arrays["sentence_id"][i]), "label": int(arrays["label"][i]),
+                "words": words[start:stop],
+                "features": arrays["features"][start:stop],
+                "fixations": arrays["fixations"][start:stop],
+                **{f"{name.lower()}_ms": times[name][start:stop] for name in READING_MEASURES},
             })
     if not trials:
         raise FileNotFoundError(f"no word-level EEG cache in {cache_dir}")

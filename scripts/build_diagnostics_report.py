@@ -10,8 +10,11 @@ import argparse
 import json
 import os
 import shutil
+import sys
 
 import pandas as pd
+
+sys.stdout.reconfigure(line_buffering=True)
 
 ALPHA = 0.05
 
@@ -47,7 +50,9 @@ def significant(frame, level, target):
     part = frame[(frame["level"] == level) & (frame["target"] == target)]
     if part.empty or pd.isna(part["p_value"].iloc[0]):
         return None
-    return bool(part["p_value"].iloc[0] < ALPHA and part["score"].iloc[0] > part["null_q95"].iloc[0])
+    score, metric = part["score"].iloc[0], part["metric"].iloc[0]
+    chance = {"R2": 0.0, "AUC": 0.5}.get(metric, part["null_mean"].iloc[0])
+    return bool(part["p_value"].iloc[0] < ALPHA and score > part["null_q95"].iloc[0] and score > chance)
 
 
 def main():

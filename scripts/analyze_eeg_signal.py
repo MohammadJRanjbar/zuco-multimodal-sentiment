@@ -12,6 +12,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.stdout.reconfigure(line_buffering=True)  # show progress in Colab before any crash
 
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
@@ -101,6 +102,7 @@ def main():
     variance = signal.variance_components(meta, X)
     variance.to_csv(os.path.join(args.out_dir, "variance_components.csv"), index=False)
     Z = signal.zscore_per_reader(meta, X)
+    del X  # keep one copy of the word EEG in memory
     reliability, reliability_info = signal.split_half_reliability(meta, Z)
     reliability.to_csv(os.path.join(args.out_dir, "reliability.csv"), index=False)
     n_channels = info["n_channels"]

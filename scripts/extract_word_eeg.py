@@ -9,6 +9,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.stdout.reconfigure(line_buffering=True)  # show progress in Colab before any crash
 
 import pandas as pd  # noqa: E402
 

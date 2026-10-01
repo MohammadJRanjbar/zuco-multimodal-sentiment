@@ -131,3 +131,21 @@ def test_unreadable_file_names_the_file(tmp_path):
         handle.write(b"not a mat file at all")
     with pytest.raises(RuntimeError, match="resultsZXX_SR.mat"):
         list(iter_sentence_words(path))
+
+
+def test_loaded_trials_share_one_array_per_subject(tmp_path):
+    rng = np.random.default_rng(0)
+    trials = []
+    for s in range(30):
+        n = int(rng.integers(3, 8))
+        trials.append({"sample_id": f"ZAB_{s:04d}", "subject_id": "ZAB", "sentence_id": s, "label": 1,
+                       "words": [f"w{i}" for i in range(n)],
+                       "features": rng.standard_normal((n, len(BANDS), N_CHANNELS)).astype(np.float32),
+                       "fixations": np.ones(n, np.float32), "trt_ms": np.full(n, 200.0, np.float32)})
+    save_subject(os.path.join(tmp_path, "cache"), "ZAB", trials)
+    loaded = load_word_eeg(os.path.join(tmp_path, "cache"))
+    # Re-reading the npz per trial made every trial hold its own full copy (the Colab OOM).
+    bases = {id(t["features"].base) for t in loaded}
+    assert len(bases) == 1
+    np.testing.assert_array_equal(loaded[7]["features"], trials[7]["features"])
+    assert loaded[7]["words"] == trials[7]["words"]

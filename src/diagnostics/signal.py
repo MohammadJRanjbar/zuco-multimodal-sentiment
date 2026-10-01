@@ -210,9 +210,10 @@ def ridge_probe(X, y, groups, task="regression", n_splits=5, n_perm=0, perm_unit
     X, y, groups = X[keep], y[keep], np.asarray(groups)[keep]
     units = np.asarray(perm_units)[keep] if perm_units is not None else np.arange(len(y))
     metric = {"regression": "R2", "binary": "AUC", "multiclass": "macro_F1"}[task]
-    if len(y) < 20 or len(np.unique(groups)) < 2 or (task != "regression" and len(np.unique(y)) < 2):
+    constant = task == "regression" and len(y) and float(np.std(y)) < 1e-12
+    if len(y) < 20 or len(np.unique(groups)) < 2 or constant or (task != "regression" and len(np.unique(y)) < 2):
         return {"task": task, "n": int(len(y)), "score": float("nan"), "metric": metric,
-                "skipped": "too few rows, groups, or classes"}
+                "skipped": "too few rows, groups, or classes, or a constant target"}
     Y, classes = _encode(task, y)
     folds = list(GroupKFold(n_splits=min(n_splits, len(np.unique(groups)))).split(X, groups=groups))
     rng = np.random.default_rng(seed)

@@ -12,6 +12,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.stdout.reconfigure(line_buffering=True)  # show progress in Colab before any crash
 
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
@@ -75,7 +76,12 @@ def main():
     os.makedirs(args.out_dir, exist_ok=True)
     started = time.time()
     cfg = load_config(args.config)
-    manifest = json.load(open(os.path.join(args.lora_run_dir, "manifest.json")))
+    manifest_path = os.path.join(args.lora_run_dir, "manifest.json")
+    weights = os.path.join(args.lora_run_dir, args.arm, f"fold_{args.fold}_weights.pt")
+    if not os.path.exists(manifest_path) or not os.path.exists(weights):
+        raise SystemExit(f"no trained model at {weights}: run scripts/run_eeg_text_lora.py first "
+                         "(notebook step 6) and let it finish at least this arm and fold")
+    manifest = json.load(open(manifest_path))
     trained_model = manifest["settings"]["model"]
     model_name = args.model or trained_model
     revision = manifest["settings"].get("revision")
@@ -101,7 +107,6 @@ def main():
     lm, tokenizer = load_for_analysis(model_name, revision, dtype, device)
     model = FusionClassifier(lm, tokenizer, class_words=cfg["class_words"], eeg_dim=data.dim,
                              prompt=cfg["prompt"], lora=cfg["lora"], projector=cfg["projector"]).to(device)
-    weights = os.path.join(args.lora_run_dir, args.arm, f"fold_{args.fold}_weights.pt")
     model.load_trainable_state(torch.load(weights, map_location="cpu"))
     n_layers = len(model.decoder.layers) if hasattr(model.decoder, "layers") else lm.config.num_hidden_layers
     layers = sorted({n_layers // 4, n_layers // 2, n_layers})
