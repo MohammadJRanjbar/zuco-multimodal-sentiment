@@ -3,10 +3,9 @@
 For every reader x sentence trial this reads the sentence's word list and, for
 each word, ZuCo's band power over the word's total reading time
 (``TRT_t1 ... TRT_g2``: 8 frequency bands x 105 electrodes). Words the reader
-skipped have no EEG and are marked as not fixated. The layout follows the ZuCo
-authors' loader (zuco-benchmark ``data_loading_helpers.extract_word_level_data``):
-``sentenceData/word[i]`` references a struct whose fields hold one object
-reference per word.
+skipped have no EEG and are marked as not fixated. ZuCo subject files come in
+two MATLAB formats: v7.3 (HDF5, read with h5py following the ZuCo authors'
+loader, zuco-benchmark ``extract_word_level_data``) and v5 (read with scipy).
 """
 
 import glob
@@ -80,44 +79,113 @@ def read_sentence_words(handle, word_ref, measure="TRT", n_channels=N_CHANNELS):
     return words, features, fixations, times
 
 
-def extract_subject(path, lookup, match_sentence, measure="TRT"):
-    """All labelled trials of one subject file (first occurrence of each sentence)."""
+def _iter_hdf5(path, measure):
     import h5py
 
-    from ..neurolm.dataset import sample_id, subject_from_path
-
-    subject = subject_from_path(path)
-    trials, records, seen = [], [], set()
     with h5py.File(path, "r") as handle:
         data = handle["sentenceData"]
         contents = np.asarray(data["content"]).reshape(-1)
         word_refs = np.asarray(data["word"]).reshape(-1)
         for position, (content_ref, word_ref) in enumerate(zip(contents, word_refs)):
             sentence = decode_string(handle[content_ref]).strip()
-            sentence_id, label = match_sentence(sentence, lookup)
-            record = {"subject_id": subject, "position": position, "sentence_id": sentence_id,
-                      "label": label}
-            if sentence_id is None:
-                records.append({**record, "status": "unlabelled_sentence"})
-                continue
-            if sentence_id in seen:
-                records.append({**record, "status": "duplicate_sentence"})
-                continue
-            seen.add(sentence_id)
-            parsed = read_sentence_words(handle, word_ref, measure)
-            if parsed is None:
-                records.append({**record, "status": "no_word_data"})
-                continue
-            words, features, fixations, times = parsed
-            has_eeg = np.isfinite(features).all(axis=(1, 2))
-            records.append({**record, "status": "ok", "n_words": len(words),
-                            "n_words_with_eeg": int(has_eeg.sum()), "n_words_fixated": int((fixations > 0).sum())})
-            trials.append({
-                "sample_id": sample_id(subject, sentence_id), "subject_id": subject,
-                "sentence_id": int(sentence_id), "label": int(label),
-                "words": words, "features": features, "fixations": fixations,
-                **{f"{name.lower()}_ms": times[name] for name in READING_MEASURES},
-            })
+            yield position, sentence, lambda ref=word_ref: read_sentence_words(handle, ref, measure)
+
+
+def _array(value):
+    return np.asarray(value if value is not None else [], dtype=np.float64).reshape(-1)
+
+
+def read_v5_words(word_struct, measure="TRT", n_channels=N_CHANNELS):
+    """Same output as ``read_sentence_words`` for a MATLAB v5 (scipy) word struct array."""
+    if word_struct is None or (isinstance(word_struct, np.ndarray) and word_struct.size == 0):
+        return None
+    entries = list(np.atleast_1d(word_struct))
+    if not entries or not hasattr(entries[0], "content"):
+        return None
+    words = [str(getattr(entry, "content", "")).strip() for entry in entries]
+    features = np.full((len(words), len(BANDS), n_channels), np.nan, dtype=np.float32)
+    fixations = np.zeros(len(words), dtype=np.float32)
+    times = {name: np.full(len(words), np.nan, dtype=np.float32) for name in READING_MEASURES}
+    for w, entry in enumerate(entries):
+        for b, band in enumerate(BANDS):
+            vector = _array(getattr(entry, f"{measure}_{band}", None))
+            if vector.size == n_channels:
+                features[w, b] = vector
+        count = _array(getattr(entry, "nFixations", None))
+        fixations[w] = float(np.nan_to_num(count[0])) if count.size else 0.0
+        for name in READING_MEASURES:
+            value = _array(getattr(entry, name, None))
+            if value.size:
+                times[name][w] = value[0]
+    return words, features, fixations, times
+
+
+def _load_v5(path):
+    from scipy.io import loadmat
+
+    return loadmat(path, struct_as_record=False, squeeze_me=True, variable_names=["sentenceData"])
+
+
+def _iter_v5(data, measure):
+    for position, sentence in enumerate(np.atleast_1d(data["sentenceData"])):
+        content = str(getattr(sentence, "content", "") or "").strip()
+        yield position, content, lambda s=sentence: read_v5_words(getattr(s, "word", None), measure)
+
+
+def iter_sentence_words(path, measure="TRT"):
+    """``(position, sentence text, parse())`` for MATLAB v7.3 (HDF5) or v5 files."""
+    try:
+        import h5py
+
+        is_hdf5 = h5py.is_hdf5(path)
+    except ImportError:
+        is_hdf5 = False
+    if is_hdf5:
+        yield from _iter_hdf5(path, measure)
+        return
+    try:
+        data = _load_v5(path)
+        if "sentenceData" not in data:
+            raise KeyError("sentenceData")
+    except Exception as error:  # scipy raises several types on unreadable files
+        size = os.path.getsize(path) if os.path.exists(path) else -1
+        raise RuntimeError(
+            f"{path} ({size:,} bytes) is neither MATLAB v7.3/HDF5 nor a readable v5 .mat file "
+            f"({type(error).__name__}: {error}). It may be an incomplete copy: re-copy it from Drive."
+        ) from error
+    yield from _iter_v5(data, measure)
+
+
+def extract_subject(path, lookup, match_sentence, measure="TRT"):
+    """All labelled trials of one subject file (first occurrence of each sentence)."""
+    from ..neurolm.dataset import sample_id, subject_from_path
+
+    subject = subject_from_path(path)
+    trials, records, seen = [], [], set()
+    for position, sentence, parse in iter_sentence_words(path, measure):
+        sentence_id, label = match_sentence(sentence, lookup)
+        record = {"subject_id": subject, "position": position, "sentence_id": sentence_id, "label": label}
+        if sentence_id is None:
+            records.append({**record, "status": "unlabelled_sentence"})
+            continue
+        if sentence_id in seen:
+            records.append({**record, "status": "duplicate_sentence"})
+            continue
+        seen.add(sentence_id)
+        parsed = parse()
+        if parsed is None:
+            records.append({**record, "status": "no_word_data"})
+            continue
+        words, features, fixations, times = parsed
+        has_eeg = np.isfinite(features).all(axis=(1, 2))
+        records.append({**record, "status": "ok", "n_words": len(words),
+                        "n_words_with_eeg": int(has_eeg.sum()), "n_words_fixated": int((fixations > 0).sum())})
+        trials.append({
+            "sample_id": sample_id(subject, sentence_id), "subject_id": subject,
+            "sentence_id": int(sentence_id), "label": int(label),
+            "words": words, "features": features, "fixations": fixations,
+            **{f"{name.lower()}_ms": times[name] for name in READING_MEASURES},
+        })
     return trials, records
 
 

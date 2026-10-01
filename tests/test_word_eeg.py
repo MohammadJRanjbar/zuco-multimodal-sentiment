@@ -6,23 +6,25 @@ import numpy as np
 import pandas as pd
 import pytest
 
-h5py = pytest.importorskip("h5py")
-
 from src.fusion.word_eeg import BANDS, N_CHANNELS, extract_subject, load_word_eeg, save_subject  # noqa: E402
 from src.labels import label_lookup, match_sentence  # noqa: E402
 
 
 def matlab_string(handle, name, text):
+    import h5py  # noqa: F401
     return handle.create_dataset(name, data=np.array([[ord(c)] for c in text], dtype=np.uint16)).ref
 
 
 def matlab_empty(handle, name):
+    import h5py  # noqa: F401
     dataset = handle.create_dataset(name, data=np.zeros(2, dtype=np.uint64))
     dataset.attrs["MATLAB_empty"] = 1
     return dataset.ref
 
 
 def write_zuco_like(path, sentences, rng):
+    import h5py
+
     ref_dtype = h5py.special_dtype(ref=h5py.Reference)
     with h5py.File(path, "w") as f:
         refs = f.create_group("#refs#")
@@ -62,6 +64,7 @@ def write_zuco_like(path, sentences, rng):
 
 
 def test_word_eeg_roundtrip(tmp_path):
+    pytest.importorskip("h5py")
     rng = np.random.default_rng(0)
     sentences = [("A great film .", [1, 1, 0, 1]), ("Dull and long", [1, 0, 1]), ("Not labelled", [1, 1])]
     path = os.path.join(tmp_path, "resultsZAB_SR.mat")
@@ -85,3 +88,46 @@ def test_word_eeg_roundtrip(tmp_path):
     assert [t["words"] for t in loaded] == [t["words"] for t in trials]
     np.testing.assert_array_equal(np.isnan(loaded[1]["features"]), np.isnan(trials[1]["features"]))
     np.testing.assert_array_equal(loaded[0]["trt_ms"], trials[0]["trt_ms"])
+
+
+def test_word_eeg_from_matlab_v5(tmp_path):
+    from scipy.io import savemat
+
+    rng = np.random.default_rng(1)
+    word_fields = ["content", "nFixations", "TRT", "FFD", "GD"] + [f"TRT_{band}" for band in BANDS]
+
+    def words(text, fixated):
+        tokens = text.split(" ")
+        array = np.zeros((len(tokens),), dtype=[(f, "O") for f in word_fields])
+        for w, token in enumerate(tokens):
+            empty = np.zeros((0, 0))
+            values = [token, float(fixated[w]), 250.0 if fixated[w] else empty, 200.0 if fixated[w] else empty,
+                      220.0 if fixated[w] else empty]
+            values += [rng.uniform(1, 2, size=(N_CHANNELS, 1)) if fixated[w] else empty for _ in BANDS]
+            array[w] = tuple(values)
+        return array
+
+    sentences = np.zeros((2,), dtype=[("content", "O"), ("word", "O")])
+    sentences[0] = ("A great film .", words("A great film .", [1, 1, 0, 1]))
+    sentences[1] = ("Not labelled", words("Not labelled", [1, 1]))
+    path = os.path.join(tmp_path, "resultsZDM_SR.mat")
+    savemat(path, {"sentenceData": sentences})
+    labels = os.path.join(tmp_path, "labels.csv")
+    pd.DataFrame({"sentence_id": [3], "sentence": ["A great film ."], "sentiment_label": [1]}).to_csv(labels, index=False)
+    trials, records = extract_subject(path, label_lookup(labels), match_sentence)
+    assert [r["status"] for r in records] == ["ok", "unlabelled_sentence"]
+    trial = trials[0]
+    assert trial["words"] == ["A", "great", "film", "."] and trial["sample_id"] == "ZDM_0003"
+    assert np.isnan(trial["features"][2]).all() and np.isfinite(trial["features"][[0, 1, 3]]).all()
+    np.testing.assert_array_equal(trial["fixations"], [1, 1, 0, 1])
+    np.testing.assert_array_equal(trial["trt_ms"][[0, 1, 3]], [250.0, 250.0, 250.0])
+
+
+def test_unreadable_file_names_the_file(tmp_path):
+    from src.fusion.word_eeg import iter_sentence_words
+
+    path = os.path.join(tmp_path, "resultsZXX_SR.mat")
+    with open(path, "wb") as handle:
+        handle.write(b"not a mat file at all")
+    with pytest.raises(RuntimeError, match="resultsZXX_SR.mat"):
+        list(iter_sentence_words(path))
