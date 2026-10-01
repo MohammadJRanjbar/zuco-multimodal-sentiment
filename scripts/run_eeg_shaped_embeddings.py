@@ -114,6 +114,8 @@ def main():
             probs, choice = static.select_and_predict(S[split.train], y[split.train], S[split.val], y[split.val],
                                                       S[split.test], U)
             entry[f"{arm}_chosen_beta"] = choice["beta"]
+            os.makedirs(os.path.join(args.out_dir, "models"), exist_ok=True)
+            static.save_model(os.path.join(args.out_dir, "models", f"zuco_{arm}_fold_{k}.npz"), U, mean, std, choice)
             collected[arm].append(frame(samples["sentence_id"].iloc[split.test].to_numpy(), y[split.test], probs, arm))
         fold_log.append(entry)
         scores = {arm: compute_metrics(collected[arm][-1]["true_id"], collected[arm][-1]["predicted_id"])["macro_f1"]
@@ -153,6 +155,7 @@ def main():
                 U, _ = static.fit_subspace(Xs, arm_y)
             probs, choice = static.select_and_predict(features["train"], parts["train"][1], features["validation"],
                                                       parts["validation"][1], features["test"], U)
+            static.save_model(os.path.join(args.out_dir, "models", f"sst3_{arm}.npz"), U, mean, std, choice)
             external[arm] = frame(np.arange(len(probs)), parts["test"][1], probs, arm)
             print(f"SST-3 {arm}: macro-F1 {compute_metrics(external[arm]['true_id'], external[arm]['predicted_id'])['macro_f1']:.4f}"
                   f" (beta {choice['beta']})")

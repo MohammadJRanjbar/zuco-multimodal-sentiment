@@ -142,6 +142,8 @@ def main():
                 print(f"{arm} fold {k + 1}/{len(splits)}: train {len(split.train)}, val {len(split.val)}, "
                       f"test {len(split.test)} sentences")
                 probs, info = run_brain_fold(model, init, words, labels, targets, split, weight, train_cfg, device)
+                os.makedirs(os.path.join(run_dir, arm), exist_ok=True)
+                torch.save(model.trainable_state(), os.path.join(run_dir, arm, f"fold_{k}_weights.pt"))
                 r2 = None if arm == "text_only" else aux_r2(model, split.test, words, real_by_sentence,
                                                             device, dtype_eval)
                 predicted = probs.argmax(1)

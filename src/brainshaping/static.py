@@ -62,7 +62,15 @@ def select_and_predict(S_train, y_train, S_val, y_val, S_test, U, betas=BETAS, c
     probs = model.predict_proba(shape(S_test, U, beta))
     full = np.zeros((len(S_test), 3))
     full[:, model.classes_] = probs
-    return full, {"beta": beta, "C": c, "val_macro_f1": float(best[0]), "grid": grid}
+    return full, {"beta": beta, "C": c, "val_macro_f1": float(best[0]), "grid": grid, "model": model}
+
+
+def save_model(path, U, mean, std, choice):
+    """Everything needed to apply a fitted arm to new word vectors."""
+    model = choice["model"]
+    np.savez(path, U=np.zeros((len(mean), 0)) if U is None else U, mean=mean, std=std,
+             beta=choice["beta"], C=choice["C"], coef=model.coef_, intercept=model.intercept_,
+             classes=model.classes_)
 
 
 def alignment_with_sentiment(U, S, y):

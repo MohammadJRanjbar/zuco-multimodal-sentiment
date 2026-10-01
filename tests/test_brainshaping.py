@@ -83,6 +83,8 @@ def test_static_script_end_to_end(tmp_path, monkeypatch):
     report = open(os.path.join(out, "eeg_shaped_embeddings.md")).read()
     assert "eeg − shuffled_eeg" in report and "EEG encoding R²" in report
     assert len(pd.read_csv(os.path.join(out, "zuco_predictions_eeg.csv"))) > 0
+    saved = np.load(os.path.join(out, "models", "zuco_eeg_fold_0.npz"))
+    assert saved["U"].shape[0] == 24 and saved["coef"].shape[1] == 24
 
 
 class PieceTokenizer:
@@ -161,6 +163,7 @@ def test_brain_tuning_script_end_to_end(tmp_path, monkeypatch, capsys):
     runner.main()
     report = open(os.path.join(results, "t", "brain_tuning_results.md")).read()
     assert "eeg − shuffled_eeg" in report and "aux R²" in report
+    assert os.path.exists(os.path.join(results, "t", "eeg", "fold_0_weights.pt"))
     capsys.readouterr()
     runner.main()
     assert capsys.readouterr().out.count("reuse saved predictions") == 4
