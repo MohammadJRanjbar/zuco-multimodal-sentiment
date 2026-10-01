@@ -73,6 +73,10 @@ def parse_args():
     parser.add_argument("--device", default=None)
     parser.add_argument("--report", default="reports/eeg_text_lora_results.md")
     parser.add_argument("--quick", action="store_true", help="small model, 1 fold, 1 epoch, text_only vs text_eeg")
+    parser.add_argument("--no-save-weights", action="store_true",
+                        help="do not save trained LoRA + projector weights (needed for the fusion diagnostics)")
+    parser.add_argument("--retrain-missing-weights", action="store_true",
+                        help="retrain folds whose predictions exist but whose weights were not saved")
     return parser.parse_args()
 
 
@@ -180,7 +184,10 @@ def main():
         for k, split in enumerate(splits):
             csv_path = os.path.join(run_dir, arm, f"fold_{k}.csv")
             meta_path = os.path.join(run_dir, arm, f"fold_{k}.json")
-            if os.path.exists(csv_path) and os.path.exists(meta_path) and json.load(open(meta_path))["key"] == key:
+            weights_path = os.path.join(run_dir, arm, f"fold_{k}_weights.pt")
+            missing_weights = args.retrain_missing_weights and not os.path.exists(weights_path)
+            if (os.path.exists(csv_path) and os.path.exists(meta_path) and not missing_weights
+                    and json.load(open(meta_path))["key"] == key):
                 frames.append(pd.read_csv(csv_path))
                 print(f"{arm} fold {k + 1}: reuse saved predictions")
                 continue
@@ -190,6 +197,9 @@ def main():
             print(f"{arm} fold {k + 1}/{len(splits)}: train {len(split.train)}, val {len(split.val)}, "
                   f"test {len(split.test)}")
             probs, info = run_fold(model, init, data, inputs, split, control is not None, train_cfg, device)
+            if not args.no_save_weights:
+                os.makedirs(os.path.join(run_dir, arm), exist_ok=True)
+                torch.save(model.trainable_state(), weights_path)
             frame = predictions_table(data, split.test, probs, arm, k, split_cfg["seed"])
             os.makedirs(os.path.dirname(csv_path), exist_ok=True)
             frame.to_csv(csv_path, index=False)

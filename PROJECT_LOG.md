@@ -1294,3 +1294,35 @@ LayerNorm because that would erase a word's overall power level.
 
 Status: implemented and tested offline (77 tests). Not yet run on ZuCo; see
 `notebooks/eeg_text_lora_colab.ipynb`.
+
+## 2026-10-02 — Rescope to diagnosing where EEG + text fails
+
+The project now asks where sentiment information is lost between word-level
+EEG and the fusion model's decision, instead of searching architectures for a
+higher score. The plan is in `reports/diagnostics_plan.md`.
+
+Four stages are implemented, each with positive controls (word length,
+frequency, surprisal, reading time, word class):
+
+1. **Signal:** variance components, cross-reader split-half reliability, and
+   ridge probes with permutation nulls on single-reader and reader-averaged
+   word EEG; per-band probes, scalp maps, and valence beyond lexical
+   covariates.
+2. **Representation:** the same probes for word-EEG means, NeuroLM, and
+   handcrafted features at sentence level.
+3. **Fusion internals:** attention and gradient attribution shares, EEG swap
+   tests (shuffled, other reader, feature-free), and probes of the projector
+   output and the hidden EEG-slot states.
+4. **Errors:** EEG effects within linguistic subsets, per-reader effects, and
+   whether EEG predicts text-model errors.
+
+Supporting changes:
+
+- Word-EEG extraction now also stores reading times (TRT, FFD, GD).
+- The LoRA runner saves trained weights and can retrain only the folds whose
+  weights are missing.
+- The ridge probes use an eigen-decomposed GCV ridge; it matches sklearn
+  `RidgeCV`, and each permutation costs one matrix-vector product.
+
+Status: implemented and tested on synthetic data (79 tests). Not yet run on
+ZuCo; see `notebooks/eeg_text_diagnostics_colab.ipynb`.

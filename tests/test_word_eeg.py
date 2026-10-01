@@ -48,6 +48,10 @@ def write_zuco_like(path, sentences, rng):
                     else:
                         cells.append([matlab_empty(refs, name())])
                 group.create_dataset(f"TRT_{band}", data=np.array(cells, dtype=ref_dtype))
+            for measure, scale in (("TRT", 250.0), ("FFD", 200.0), ("GD", 220.0)):
+                group.create_dataset(measure, data=np.array(
+                    [[refs.create_dataset(name(), data=np.array([[scale * fixated[w]]])).ref if fixated[w]
+                      else matlab_empty(refs, name())] for w in range(len(words))], dtype=ref_dtype))
             group.create_dataset("nFixations", data=np.array(
                 [[refs.create_dataset(name(), data=np.array([[float(fixated[w])]])).ref] for w in range(len(words))],
                 dtype=ref_dtype))
@@ -73,8 +77,11 @@ def test_word_eeg_roundtrip(tmp_path):
     assert np.isnan(first["features"][2]).all() and np.isfinite(first["features"][[0, 1, 3]]).all()
     assert first["features"][0, BANDS.index("a1")].mean() > 5
     np.testing.assert_array_equal(first["fixations"], [1, 1, 0, 1])
+    np.testing.assert_array_equal(first["trt_ms"][[0, 1, 3]], [250.0, 250.0, 250.0])
+    assert np.isnan(first["trt_ms"][2])
     out = os.path.join(tmp_path, "cache")
     save_subject(out, "ZAB", trials)
     loaded = load_word_eeg(out)
     assert [t["words"] for t in loaded] == [t["words"] for t in trials]
     np.testing.assert_array_equal(np.isnan(loaded[1]["features"]), np.isnan(trials[1]["features"]))
+    np.testing.assert_array_equal(loaded[0]["trt_ms"], trials[0]["trt_ms"])

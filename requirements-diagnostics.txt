@@ -1,0 +1,4 @@
+# Diagnostics (stages 1-4) on top of the NeuroLM / fusion requirements.
+-r requirements-neurolm.txt
+wordfreq>=3.0
+vaderSentiment>=3.3

@@ -112,18 +112,35 @@ class FusionClassifier(nn.Module):
                 ids.append(EEG_SLOT)
         return ids + self.answer_ids
 
-    def forward(self, batch_words, eeg=None, counts=None, use_eeg=False):
-        """``eeg``: ``[B, max_words, F]``; ``counts``: words per example."""
+    def prepare(self, batch_words, eeg=None, counts=None, use_eeg=False):
+        """Input embeddings, attention mask, token roles, and sequence lengths."""
         device = self.lm.get_input_embeddings().weight.device
-        sequences = [self.build_ids(words, use_eeg) for words in batch_words]
+        sequences, roles = [], []
+        for words in batch_words:
+            ids = list(self.prefix_ids)
+            role = [0] * len(ids)  # 0 prompt, 1 word token, 2 EEG slot, 3 answer cue
+            for word in words:
+                pieces = self._encode_word(word)
+                ids += pieces
+                role += [1] * len(pieces)
+                if use_eeg:
+                    ids.append(EEG_SLOT)
+                    role.append(2)
+            ids += self.answer_ids
+            role += [3] * len(self.answer_ids)
+            sequences.append(ids)
+            roles.append(role)
         lengths = torch.tensor([len(s) for s in sequences], device=device)
         width = int(lengths.max())
         raw = torch.full((len(sequences), width), self.pad_id, dtype=torch.long, device=device)
         mask = torch.zeros((len(sequences), width), dtype=torch.long, device=device)
+        role = torch.full((len(sequences), width), -1, dtype=torch.long, device=device)
         for row, sequence in enumerate(sequences):
             raw[row, :len(sequence)] = torch.tensor(sequence, device=device)
             mask[row, :len(sequence)] = 1
+            role[row, :len(sequence)] = torch.tensor(roles[row], device=device)
         embeds = self.lm.get_input_embeddings()(raw.clamp(min=0))
+        soft = None
         if use_eeg:
             eeg = torch.as_tensor(eeg, dtype=torch.float32, device=device)
             counts = torch.as_tensor(counts, device=device)
@@ -134,12 +151,36 @@ class FusionClassifier(nn.Module):
                 raise RuntimeError("EEG slots and word vectors do not line up")
             embeds = embeds.clone()
             embeds[slots] = soft.to(embeds.dtype)
-        hidden = self.decoder(inputs_embeds=embeds, attention_mask=mask).last_hidden_state
-        last = hidden[torch.arange(len(sequences), device=device), lengths - 1]
+        return {"embeds": embeds, "mask": mask, "role": role, "lengths": lengths, "soft": soft}
+
+    def classify(self, hidden, lengths):
+        last = hidden[torch.arange(len(lengths), device=hidden.device), lengths - 1]
         head = self.lm.get_output_embeddings()
         weight = head.weight[self.class_ids]
         bias = head.bias[self.class_ids] if getattr(head, "bias", None) is not None else None
         return F.linear(last.float(), weight.float(), None if bias is None else bias.float())
+
+    def forward(self, batch_words, eeg=None, counts=None, use_eeg=False):
+        """``eeg``: ``[B, max_words, F]``; ``counts``: words per example."""
+        inputs = self.prepare(batch_words, eeg, counts, use_eeg)
+        hidden = self.decoder(inputs_embeds=inputs["embeds"], attention_mask=inputs["mask"]).last_hidden_state
+        return self.classify(hidden, inputs["lengths"])
+
+    def analyze(self, batch_words, eeg=None, counts=None, use_eeg=False, attentions=True, embeds=None):
+        """Forward pass that also returns attentions, hidden states, and token roles.
+
+        Attention weights need an eager attention implementation
+        (``attn_implementation="eager"`` when loading the LM).
+        """
+        inputs = self.prepare(batch_words, eeg, counts, use_eeg)
+        if embeds is not None:
+            inputs["embeds"] = embeds
+        out = self.decoder(inputs_embeds=inputs["embeds"], attention_mask=inputs["mask"],
+                           output_attentions=attentions, output_hidden_states=True)
+        inputs["logits"] = self.classify(out.last_hidden_state, inputs["lengths"])
+        inputs["hidden_states"] = out.hidden_states
+        inputs["attentions"] = out.attentions if attentions else None
+        return inputs
 
     def trainable_state(self):
         return {name: p.detach().cpu().clone() for name, p in self.named_parameters() if p.requires_grad}

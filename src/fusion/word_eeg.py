@@ -40,8 +40,14 @@ def _scalar(handle, ref):
     return float(array.reshape(-1)[0]) if array.ndim == 2 and array.size >= 1 else np.nan
 
 
+READING_MEASURES = ("TRT", "FFD", "GD")  # total reading time, first fixation, gaze duration (ms)
+
+
 def read_sentence_words(handle, word_ref, measure="TRT", n_channels=N_CHANNELS):
-    """Return ``(words, features [n_words, 8, C], n_fixations [n_words])`` or ``None``."""
+    """Return ``(words, features [n_words, 8, C], n_fixations [n_words], times)`` or ``None``.
+
+    ``times`` maps TRT/FFD/GD to per-word durations in ms (NaN when not fixated).
+    """
     import h5py
 
     if not word_ref:
@@ -64,7 +70,14 @@ def read_sentence_words(handle, word_ref, measure="TRT", n_channels=N_CHANNELS):
     if "nFixations" in group:
         refs = np.asarray(group["nFixations"]).reshape(-1)
         fixations[:] = [np.nan_to_num(_scalar(handle, ref)) for ref in refs[:len(words)]]
-    return words, features, fixations
+    times = {}
+    for name in READING_MEASURES:
+        values = np.full(len(words), np.nan, dtype=np.float32)
+        if name in group:
+            refs = np.asarray(group[name]).reshape(-1)
+            values[:min(len(refs), len(words))] = [_scalar(handle, ref) for ref in refs[:len(words)]]
+        times[name] = values
+    return words, features, fixations, times
 
 
 def extract_subject(path, lookup, match_sentence, measure="TRT"):
@@ -95,7 +108,7 @@ def extract_subject(path, lookup, match_sentence, measure="TRT"):
             if parsed is None:
                 records.append({**record, "status": "no_word_data"})
                 continue
-            words, features, fixations = parsed
+            words, features, fixations, times = parsed
             has_eeg = np.isfinite(features).all(axis=(1, 2))
             records.append({**record, "status": "ok", "n_words": len(words),
                             "n_words_with_eeg": int(has_eeg.sum()), "n_words_fixated": int((fixations > 0).sum())})
@@ -103,6 +116,7 @@ def extract_subject(path, lookup, match_sentence, measure="TRT"):
                 "sample_id": sample_id(subject, sentence_id), "subject_id": subject,
                 "sentence_id": int(sentence_id), "label": int(label),
                 "words": words, "features": features, "fixations": fixations,
+                **{f"{name.lower()}_ms": times[name] for name in READING_MEASURES},
             })
     return trials, records
 
@@ -122,6 +136,10 @@ def save_subject(out_dir, subject, trials):
         "fixations": np.concatenate([t["fixations"] for t in trials]).astype(np.float32)
         if trials else np.zeros(0, np.float32),
     }
+    for name in READING_MEASURES:
+        key = f"{name.lower()}_ms"
+        arrays[key] = (np.concatenate([t.get(key, np.full(len(t["words"]), np.nan)) for t in trials]).astype(np.float32)
+                       if trials else np.zeros(0, np.float32))
     temporary = os.path.join(out_dir, f"{subject}.tmp.npz")
     np.savez_compressed(temporary, **arrays)
     os.replace(temporary, os.path.join(out_dir, f"{subject}.npz"))
@@ -142,6 +160,9 @@ def load_word_eeg(cache_dir):
                 "words": [str(w) for w in data["words"][start:stop]],
                 "features": data["features"][start:stop],
                 "fixations": data["fixations"][start:stop],
+                **{f"{name.lower()}_ms": (data[f"{name.lower()}_ms"][start:stop] if f"{name.lower()}_ms" in data.files
+                                          else np.full(stop - start, np.nan, np.float32))
+                   for name in READING_MEASURES},
             })
     if not trials:
         raise FileNotFoundError(f"no word-level EEG cache in {cache_dir}")

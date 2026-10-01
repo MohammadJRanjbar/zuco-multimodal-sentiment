@@ -303,6 +303,23 @@ python scripts/extract_word_eeg.py --mat-dir RAW --labels-csv LABELS --out-dir W
 python scripts/run_eeg_text_lora.py --word-eeg-dir WORD_EEG --results-dir RESULTS [--quick]
 ```
 
+## Diagnostics: where does EEG + text fail?
+
+`src/diagnostics/` traces sentiment information from word-level EEG to the
+fusion model's decision in four stages, each with positive controls:
+signal, representation, fusion internals, and errors. The plan is in
+`reports/diagnostics_plan.md`. Run
+`notebooks/eeg_text_diagnostics_colab.ipynb`, or:
+
+```bash
+pip install -r requirements-diagnostics.txt
+python scripts/analyze_eeg_signal.py --word-eeg-dir WORD_EEG --labels-csv LABELS --out-dir DIAG/stage1
+python scripts/run_eeg_text_lora.py --word-eeg-dir WORD_EEG --results-dir LORA --run-tag RUN
+python scripts/analyze_fusion_model.py --word-eeg-dir WORD_EEG --lora-run-dir LORA/RUN --word-targets DIAG/stage1/word_targets.csv --out-dir DIAG/stage3
+python scripts/analyze_errors.py --lora-run-dir LORA/RUN --labels-csv LABELS --word-eeg-dir WORD_EEG --out-dir DIAG/stage4
+python scripts/build_diagnostics_report.py --signal-dir DIAG/stage1 --fusion-dir DIAG/stage3 --errors-dir DIAG/stage4
+```
+
 ## Repository layout
 
 ```text
@@ -329,4 +346,5 @@ scripts/                  NeuroLM probe entry points (inspect, map, extract,
 configs/                  NeuroLM probe configs (base + one per protocol)
 reports/                  channel mapping and probe results
 src/fusion/               word-aligned EEG + text LoRA model, data, training
+src/diagnostics/          signal, representation, fusion-internals, and error analyses
 ```
