@@ -34,3 +34,39 @@ def test_small_files_copied_and_large_files_listed(tmp_path, monkeypatch):
     assert "fold_0_weights.pt" in listing and "big.csv" in listing
     log = subprocess.run(["git", "-C", str(repo), "log", "--oneline"], capture_output=True, text=True).stdout
     assert "Save results: demo" in log
+
+
+def test_large_files_uploaded_to_hub(tmp_path, monkeypatch):
+    import types
+
+    calls = {}
+
+    class FakeApi:
+        def __init__(self, token):
+            calls["token"] = token
+
+        def create_repo(self, repo_id, **kwargs):
+            calls["repo"] = (repo_id, kwargs)
+
+        def create_commit(self, repo_id, operations, **kwargs):
+            calls["paths"] = [op.path_in_repo for op in operations]
+
+    class FakeAdd:
+        def __init__(self, path_in_repo, path_or_fileobj):
+            self.path_in_repo = path_in_repo
+
+    monkeypatch.setitem(sys.modules, "huggingface_hub", types.SimpleNamespace(HfApi=FakeApi, CommitOperationAdd=FakeAdd))
+    monkeypatch.setenv("HF_TOKEN", "hf_secret")
+    source = tmp_path / "drive" / "run_v1"
+    (source / "eeg").mkdir(parents=True)
+    (source / "eeg" / "fold_0_weights.pt").write_bytes(b"\0" * 100)
+    (source / "summary.json").write_text("{}")
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    module = load_script()
+    monkeypatch.setattr(sys, "argv", ["x", "--source", str(source), "--name", "demo", "--repo", str(repo),
+                                      "--hf-repo", "me/weights"])
+    module.main()
+    assert calls["repo"][0] == "me/weights" and calls["repo"][1]["private"] is True
+    assert calls["paths"] == ["demo/run_v1/eeg/fold_0_weights.pt"]
+    assert "me/weights/demo/run_v1/eeg/fold_0_weights.pt" in (repo / "saved_results" / "demo" / "LARGE_FILES.md").read_text()

@@ -8,7 +8,9 @@ they can be found and verified later.
 
 --commit commits locally; --push also pushes, authenticating with the
 GITHUB_TOKEN environment variable (in Colab: a secret named GITHUB_TOKEN).
-The token is never printed.
+--hf-repo additionally uploads the large files (weights, caches) to a private
+Hugging Face model repository, authenticating with HF_TOKEN. Tokens are never
+printed.
 """
 
 import argparse
@@ -36,6 +38,8 @@ def parse_args():
     parser.add_argument("--branch", default=None, help="defaults to the current branch")
     parser.add_argument("--author-name", default=os.environ.get("GIT_AUTHOR_NAME", "colab"))
     parser.add_argument("--author-email", default=os.environ.get("GIT_AUTHOR_EMAIL", "colab@users.noreply.github.com"))
+    parser.add_argument("--hf-repo", default=None,
+                        help="also upload large files to this private HF model repo, e.g. user/zuco-eeg-weights")
     return parser.parse_args()
 
 
@@ -67,14 +71,39 @@ def collect(sources, destination, max_bytes):
     return copied, large
 
 
-def write_large_files(destination, large):
+def upload_to_hub(large, sources, name, repo_id):
+    """Upload large files to a private HF model repo in one commit; returns repo paths."""
+    from huggingface_hub import CommitOperationAdd, HfApi
+
+    token = os.environ.get("HF_TOKEN")
+    if not token:
+        raise SystemExit("HF_TOKEN is not set; add it as a Colab secret (a Hugging Face write token)")
+    api = HfApi(token=token)
+    api.create_repo(repo_id, private=True, exist_ok=True, repo_type="model")
+    bases = {os.path.abspath(s): os.path.basename(os.path.abspath(s).rstrip("/")) for s in sources}
+    operations, locations = [], {}
+    for path, _, _ in large:
+        source = max((s for s in bases if path.startswith(s + os.sep)), key=len)
+        in_repo = "/".join([name, bases[source], os.path.relpath(path, source)])
+        operations.append(CommitOperationAdd(path_in_repo=in_repo, path_or_fileobj=path))
+        locations[path] = f"{repo_id}/{in_repo}"
+    if operations:
+        api.create_commit(repo_id=repo_id, operations=operations, repo_type="model",
+                          commit_message=f"Upload large files: {name}")
+    print(f"uploaded {len(operations)} large files to https://huggingface.co/{repo_id} (private)")
+    return locations
+
+
+def write_large_files(destination, large, hub=None):
+    hub = hub or {}
     lines = ["# Large files kept on Drive", "",
-             "These are not in git (too large or binary). Paths are as seen from Colab.", "",
-             "| path | size (MB) | sha256 |", "|---|---:|---|"]
+             "These are not in git (too large or binary). Paths are as seen from Colab."
+             + (" Copies are in the private Hugging Face repo shown." if hub else ""), "",
+             "| path | size (MB) | sha256 | Hugging Face copy |", "|---|---:|---|---|"]
     for path, size, digest in large:
-        lines.append(f"| `{path}` | {size / 1e6:.1f} | `{digest}` |")
+        lines.append(f"| `{path}` | {size / 1e6:.1f} | `{digest}` | {hub.get(path, '—')} |")
     if not large:
-        lines.append("| — | — | — |")
+        lines.append("| — | — | — | — |")
     with open(os.path.join(destination, "LARGE_FILES.md"), "w") as handle:
         handle.write("\n".join(lines) + "\n")
 
@@ -96,7 +125,8 @@ def main():
     destination = os.path.join(args.repo, "saved_results", args.name)
     os.makedirs(destination, exist_ok=True)
     copied, large = collect(args.source, destination, args.max_mb * 1e6)
-    write_large_files(destination, large)
+    hub = upload_to_hub(large, args.source, args.name, args.hf_repo) if args.hf_repo else None
+    write_large_files(destination, large, hub)
     total = sum(size for _, size in copied)
     print(f"copied {len(copied)} files ({total / 1e6:.1f} MB) to {destination}; "
           f"{len(large)} large files listed in LARGE_FILES.md")
