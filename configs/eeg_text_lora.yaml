@@ -1,0 +1,45 @@
+# Word-aligned EEG + text sentiment with a LoRA-tuned LLM (LLaVA-style soft tokens).
+experiment: eeg_text_lora_v1
+
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+base_model_revision: 989aa7980e4cf806f80c7fef2b1adb7bc71aa306
+quick_model: Qwen/Qwen2.5-0.5B-Instruct
+base_dtype: auto          # bf16 on A100/L4, fp16 on T4; use float32 if the loss goes non-finite
+
+eeg:
+  measure: TRT            # band power over each word's total reading time
+  log_power: auto         # log-transform when every value is positive
+
+prompt:
+  instruction: "Classify the sentiment of this movie-review sentence as negative, neutral, or positive.\n"
+  sentence_label: "Sentence:"
+  answer_label: "\nSentiment:"
+class_words: [negative, neutral, positive]
+
+lora: {r: 16, alpha: 32, dropout: 0.05, targets: [q_proj, k_proj, v_proj, o_proj]}
+projector: {hidden: 512, dropout: 0.1}
+
+train:
+  epochs: 2
+  batch_size: 16
+  eval_batch_size: 32
+  lr_lora: 2.0e-4
+  lr_projector: 1.0e-3
+  weight_decay: 0.01
+  warmup_ratio: 0.06
+  evals_per_epoch: 4
+  max_grad_norm: 1.0
+  seed: 42
+
+# Unseen sentences (every reader appears in training): the question is whether
+# a reader's EEG adds information about a sentence the model has never seen.
+split:
+  protocol: text
+  seed: 42
+  params: {n_folds: 5, val_fraction: 0.15}
+
+# Identical models, initial weights, and batch order; only the EEG input differs.
+arms: [text_only, text_eeg, text_shuffled_eeg, text_fixation_only]
+
+bootstrap: {n_boot: 2000, n_perm: 5000}
+decision: {alpha: 0.05}

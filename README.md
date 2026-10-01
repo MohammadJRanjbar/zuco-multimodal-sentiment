@@ -288,6 +288,21 @@ python scripts/build_neurolm_report.py --run-dir RESULTS/probe_v1
 Protocol-specific configs: `configs/neurolm_probe_{joint,text,subject}_holdout.yaml`.
 Tests: `python -m pytest`.
 
+## Word-aligned EEG + text (LoRA LLM)
+
+`src/fusion/` places each word's fixation-locked EEG (ZuCo TRT band power,
+standardized per reader) as a soft token right after that word inside a
+LoRA-tuned Qwen2.5-1.5B-Instruct, and compares text only, text + EEG,
+text + shuffled EEG, and text + fixation pattern under identical training.
+EEG counts as used only if aligned EEG beats shuffled EEG.
+Run `notebooks/eeg_text_lora_colab.ipynb`
+([open in Colab](https://colab.research.google.com/github/MohammadJRanjbar/zuco-multimodal-sentiment/blob/feature/neurolm-eeg-probe/notebooks/eeg_text_lora_colab.ipynb)), or:
+
+```bash
+python scripts/extract_word_eeg.py --mat-dir RAW --labels-csv LABELS --out-dir WORD_EEG
+python scripts/run_eeg_text_lora.py --word-eeg-dir WORD_EEG --results-dir RESULTS [--quick]
+```
+
 ## Repository layout
 
 ```text
@@ -313,4 +328,5 @@ scripts/                  NeuroLM probe entry points (inspect, map, extract,
                           probe, sanity, report)
 configs/                  NeuroLM probe configs (base + one per protocol)
 reports/                  channel mapping and probe results
+src/fusion/               word-aligned EEG + text LoRA model, data, training
 ```

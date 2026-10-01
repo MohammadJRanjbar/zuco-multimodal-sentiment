@@ -1254,3 +1254,43 @@ end-to-end synthetic pipeline test with a stub encoder. The real-architecture
 batch-invariance test needs `einops` and runs in Colab. Nothing has been run on
 the real ZuCo EEG yet, so there are no sentiment results.
 `notebooks/neurolm_probe_colab.ipynb` runs the complete sequence.
+
+## 2026-10-01 — Frozen NeuroLM probe result and the word-aligned EEG + text LoRA model
+
+### Quick probe of frozen NeuroLM (one logistic regression, one seed)
+
+| test | macro-F1 / accuracy | chance |
+| --- | --- | --- |
+| sentiment, new sentences, same readers | 0.338 (95% CI 0.322–0.355; shuffled-label null 0.330, p = 0.24) | 0.33 |
+| same, averaged over readers per sentence | 0.355 | 0.33 |
+| sentiment, new readers + new sentences | 0.338 | 0.33 |
+| reader identification (control) | accuracy 0.811 | 0.083 |
+
+The frozen sentence-level NeuroLM embedding identifies the reader but carries
+no detectable sentiment information. The handcrafted per-trial baseline under
+the joint protocol was 0.322 ± 0.009 (5 seeds).
+
+### Why word-aligned EEG
+
+Sentiment-related EEG responses are brief and tied to individual words.
+Whole-sentence averages wash them out, and reader identity dominates them. The
+next model therefore uses ZuCo's fixation-locked word EEG (TRT band power,
+8 bands × 104 electrodes), standardized per reader on training sentences only.
+Each word's EEG is placed as a soft token directly after that word inside a
+LoRA-tuned LLM (Qwen2.5-1.5B-Instruct, LoRA r = 16 on attention, a small
+projector, verbalizer logits for negative/neutral/positive).
+
+### Design and controls
+
+Four arms share the same initial weights, batch order, and unseen-sentence
+folds: text only, text + aligned EEG, text + shuffled EEG (re-assigned among
+the same reader's words in the same partition), and text + fixation pattern
+only. The predeclared criterion is that aligned EEG must beat shuffled EEG
+(paired sentence-cluster CI above 0 and p < 0.05).
+
+A synthetic test confirms that the model can learn an EEG-only signal while
+the shuffled-EEG and text-only arms cannot. The projector has no input
+LayerNorm because that would erase a word's overall power level.
+
+Status: implemented and tested offline (77 tests). Not yet run on ZuCo; see
+`notebooks/eeg_text_lora_colab.ipynb`.
