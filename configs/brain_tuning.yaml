@@ -1,0 +1,39 @@
+# Version B: brain-tuning a LoRA LLM with word-level EEG as an auxiliary target.
+experiment: brain_tuning_v1
+
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+base_model_revision: 989aa7980e4cf806f80c7fef2b1adb7bc71aa306
+quick_model: Qwen/Qwen2.5-0.5B-Instruct
+base_dtype: auto
+
+prompt:
+  instruction: "Classify the sentiment of this movie-review sentence as negative, neutral, or positive.\n"
+  sentence_label: "Sentence:"
+  answer_label: "\nSentiment:"
+class_words: [negative, neutral, positive]
+lora: {r: 16, alpha: 32, dropout: 0.05, targets: [q_proj, k_proj, v_proj, o_proj]}
+
+aux:
+  k: 32            # EEG principal components per word (fitted on training words)
+  weight: 0.5      # lambda for the auxiliary MSE (0 in the text_only arm)
+  layer: 14        # hidden layer read by the auxiliary head (Qwen2.5-1.5B has 28)
+
+# One example per sentence (EEG targets are averaged over readers).
+train:
+  epochs: 6
+  batch_size: 16
+  eval_batch_size: 32
+  lr_lora: 2.0e-4
+  lr_projector: 1.0e-3   # used for the auxiliary head
+  weight_decay: 0.01
+  warmup_ratio: 0.06
+  evals_per_epoch: 2
+  max_grad_norm: 1.0
+  seed: 42
+
+split:
+  protocol: text
+  seed: 42
+  params: {n_folds: 5, val_fraction: 0.15}
+
+arms: [text_only, eeg, shuffled_eeg, random_targets]

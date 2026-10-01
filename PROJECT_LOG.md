@@ -1326,3 +1326,24 @@ Supporting changes:
 
 Status: implemented and tested on synthetic data (79 tests). Not yet run on
 ZuCo; see `notebooks/eeg_text_diagnostics_colab.ipynb`.
+
+## 2026-10-02 — EEG as a training signal
+
+The diagnostics located the failure at the signal. Word EEG predicts
+reading-process properties (frequency, length, word class, reading time,
+position) but not sentiment; valence is not predicted beyond lexical
+covariates. The fusion model barely reads its EEG tokens, and EEG does not
+predict text-model errors.
+
+The next experiments therefore use EEG only as a training signal:
+
+- **A (static):** amplify the EEG-predictive directions of frozen LaBSE word
+  vectors before a sentiment classifier. This is evaluated on unseen ZuCo
+  sentences and transferred to SST-3, a corpus without EEG.
+- **B (brain-tuning):** the LoRA Qwen sentiment model gets an auxiliary head
+  that predicts each word's reader-averaged EEG components; inference uses
+  text only.
+
+Both use the arms no EEG objective, real EEG, EEG shuffled across words, and
+random targets. Each reports how well real held-out EEG is predicted
+(encoding R²), which checks that EEG information was actually learned.

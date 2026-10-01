@@ -320,6 +320,16 @@ python scripts/analyze_errors.py --lora-run-dir LORA/RUN --labels-csv LABELS --w
 python scripts/build_diagnostics_report.py --signal-dir DIAG/stage1 --fusion-dir DIAG/stage3 --errors-dir DIAG/stage4
 ```
 
+## EEG as a training signal (EEG-shaped representations)
+
+`src/brainshaping/` uses word-level EEG only during training; sentiment is
+predicted from text alone. Version A amplifies the EEG-predictive directions
+of frozen LaBSE word vectors (ZuCo, plus transfer to SST). Version B
+brain-tunes the LoRA Qwen sentiment model with an auxiliary head that predicts
+each word's EEG. Both compare real EEG targets against shuffled and random
+targets. Run `notebooks/eeg_shaped_embeddings_colab.ipynb`, or
+`scripts/run_eeg_shaped_embeddings.py` and `scripts/run_brain_tuning.py`.
+
 ## Repository layout
 
 ```text
@@ -347,4 +357,5 @@ configs/                  NeuroLM probe configs (base + one per protocol)
 reports/                  channel mapping and probe results
 src/fusion/               word-aligned EEG + text LoRA model, data, training
 src/diagnostics/          signal, representation, fusion-internals, and error analyses
+src/brainshaping/         EEG as a training signal: shaped embeddings, brain-tuning
 ```
