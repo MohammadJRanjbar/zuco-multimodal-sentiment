@@ -50,6 +50,12 @@ def _word_texts(sentence, word_dicts):
         f"(word keys: {sorted(first) if isinstance(first, dict) else type(first).__name__})")
 
 
+def _n_fixations(word):
+    """Fixation count of a fixated word (``nFixations``); 1 if the field is missing or empty."""
+    value = np.asarray(word.get("nFixations", 1.0), dtype=np.float64).ravel()
+    return float(value[0]) if value.size and np.isfinite(value[0]) else 1.0
+
+
 def describe_pickle(path, max_words=3):
     """Short structural summary of one participant pickle (for checking the format in Colab)."""
     with open(path, "rb") as handle:
@@ -106,10 +112,11 @@ def load_teco_trials(trt_dir, labels_csv=None, suffix="_trt_total.pickle", log=p
                 if label is None:
                     raise ValueError(f"sentenceId {sentence.get('sentenceId')} of {subject} has no label in {labels_csv}")
             fixated = np.isfinite(features[:, 0]).all(axis=1)
+            counts = [_n_fixations(word) if fixated[j] else 0.0 for j, word in enumerate(word_dicts)]
             trials.append({"sample_id": f"{subject}_{int(sentence['sentenceId']):04d}", "subject_id": subject,
                            "sentence_id": int(sentence["sentenceId"]), "label": int(label),
                            "words": _word_texts(sentence, word_dicts), "features": features,
-                           "fixations": fixated.astype(np.float32)})
+                           "fixations": np.asarray(counts, dtype=np.float32)})
     if empty:
         log(f"TeCo: skipped {len(empty)} trials with no words (participant:sentenceId): {', '.join(empty[:10])}"
             + (" ..." if len(empty) > 10 else ""))

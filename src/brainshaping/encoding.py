@@ -21,6 +21,7 @@ first position that has read the whole word).
 """
 
 import numpy as np
+import pandas as pd
 import torch
 
 from .data import fit_targets, grouped_splits
@@ -234,9 +235,12 @@ def scan_layer(X, folds, codes, mode, alphas=ALPHAS, device="cpu", on_fold=None)
         predict = ridge_predictor(Xtr, Xte)
         P_real = predict(tensors["real_train"], alphas_t[best[0]:best[0] + 1])[0]
         P_shuffled = predict(tensors["shuffled_train"], alphas_t[best[1]:best[1] + 1])[0]
-        stats = _sentence_stats(tensors["real_test"], P_real, P_shuffled, fold["test_codes"])
+        Y = tensors["real_test"]
+        stats = _sentence_stats(Y, P_real, P_shuffled, fold["test_codes"])
         results.append({"stats": stats, "alpha_real": float(alphas[best[0]]),
-                        "alpha_shuffled": float(alphas[best[1]])})
+                        "alpha_shuffled": float(alphas[best[1]]),
+                        "sse_component": ((P_real - Y) ** 2).sum(dim=0).cpu().numpy(),
+                        "sst_component": ((Y - Y.mean(dim=0)) ** 2).sum(dim=0).cpu().numpy()})
         if on_fold is not None:
             on_fold()
     return results
@@ -271,6 +275,96 @@ def summarize_layer(fold_results, n_boot=1000, seed=0, alphas=ALPHAS):
             "delta_ci_low": float(np.percentile(real_boot - shuffled_boot, 2.5)),
             "delta_ci_high": float(np.percentile(real_boot - shuffled_boot, 97.5)),
             "fold_r2": [float(v) for v in real_points],
+            "component_r2": [float(v) for v in np.mean([1 - r["sse_component"] / r["sst_component"]
+                                                        for r in fold_results], axis=0)],
             "alpha_real_median": float(np.median(alpha_real)),
             "alpha_shuffled_median": float(np.median([r["alpha_shuffled"] for r in fold_results])),
             "share_alpha_at_max": float(np.mean(np.isclose(alpha_real, alphas[-1])))}
+
+
+# ----------------------------------------------------------------------------
+# Controls: lexical and reading-behaviour features, noise ceiling
+# ----------------------------------------------------------------------------
+
+
+def strip_punctuation(word):
+    """Remove leading/trailing non-word characters (any script); keeps inner ZWNJ and apostrophes."""
+    import re
+
+    return re.sub(r"^[^\w]+|[^\w]+$", "", str(word))
+
+
+def word_controls(sentences, items, meta, readers_per_sentence, lang):
+    """Per-item control features: (table, lexical columns, reading columns).
+
+    Lexical (from text only): log length, Zipf frequency (wordfreq, ``lang``)
+    and its square, relative position, first/last word, punctuation attached.
+    Reading behaviour (from the eye tracker): share of readers who fixated the
+    word, mean number of fixations, log mean total reading time when available.
+    """
+    from wordfreq import zipf_frequency
+
+    words = [sentences[s][w] for s, w in zip(items["sentence_row"], items["word_index"])]
+    lengths = np.array([len(sentences[s]) for s in items["sentence_row"]])
+    bare = [strip_punctuation(w) for w in words]
+    zipf = np.array([zipf_frequency(b, lang) if b else 0.0 for b in bare])
+    position = items["word_index"].to_numpy()
+    table = pd.DataFrame({
+        "log_length": np.log1p([len(b) for b in bare]),
+        "zipf": zipf, "zipf_sq": zipf ** 2,
+        "relative_position": position / np.maximum(lengths - 1, 1),
+        "is_first": (position == 0).astype(float), "is_last": (position == lengths - 1).astype(float),
+        "punctuation": np.array([b != w for b, w in zip(bare, words)], dtype=float),
+    })
+    lexical = list(table.columns)
+    by_item = meta.groupby("item")
+    keys = items["item"]
+    table["share_fixated"] = (items["n_readers"].to_numpy()
+                              / items["sentence_id"].map(readers_per_sentence).to_numpy())
+    table["n_fixations"] = by_item["n_fixations"].mean().loc[keys].to_numpy()
+    reading = ["share_fixated", "n_fixations"]
+    trt = by_item["trt_ms"].mean().loc[keys].to_numpy()
+    if np.isfinite(trt).all() and (trt > 0).all():
+        table["log_trt"] = np.log(trt)
+        reading.append("log_trt")
+    return table, lexical, reading
+
+
+def residualize_folds(folds, L, codes, centered=True):
+    """Folds whose targets are what training-set OLS on ``L`` cannot explain (train fit only)."""
+    L = center_by_group(np.asarray(L, dtype=np.float64), codes) if centered else np.asarray(L, dtype=np.float64)
+    out = []
+    for f, fold in enumerate(folds):
+        design_train = np.column_stack([np.ones(len(fold["train"])), L[fold["train"]]])
+        design_test = np.column_stack([np.ones(len(fold["test"])), L[fold["test"]]])
+        beta = np.linalg.lstsq(design_train, fold["real_train"], rcond=None)[0]
+        train = (fold["real_train"] - design_train @ beta).astype(np.float32)
+        rng = np.random.default_rng(10_000 + f)
+        out.append({**fold, "real_train": train, "real_test": (fold["real_test"] - design_test @ beta).astype(np.float32),
+                    "shuffled_train": train[rng.permutation(len(train))]})
+    return out
+
+
+def noise_ceiling(meta, Z, eeg_items, groups, k=32, centered=True, n_splits=20, seed=0):
+    """Split-half reliability (Spearman-Brown to all readers) of each EEG target component.
+
+    The components are a PCA of the reader-averaged item EEG (all items); each
+    reader's word EEG is projected onto them (and centered within that reader's
+    sentence when ``centered``). The mean over standardized components bounds
+    the variance-weighted R^2 any model can reach.
+    """
+    from ..diagnostics.signal import split_half_reliability
+
+    codes = np.unique(groups, return_inverse=True)[1]
+    Y = center_by_group(eeg_items.astype(np.float64), codes) if centered else eeg_items
+    mean = Y.mean(axis=0)
+    _, _, vt = np.linalg.svd(Y - mean, full_matrices=False)
+    projected = (Z - Z.mean(axis=0)) @ vt[:k].T
+    if centered:
+        reader_sentence = pd.factorize(meta["reader"].astype(str) + "|" + meta["sentence_id"].astype(str))[0]
+        projected = center_by_group(projected, reader_sentence)
+    counts = meta.groupby("item").size()
+    if (counts >= 4).sum() < 10:
+        return None, {"items": int((counts >= 4).sum())}  # too few words read by >= 4 readers
+    reliability, details = split_half_reliability(meta, projected.astype(np.float32), n_splits=n_splits, seed=seed)
+    return reliability["reliability_all_readers"].to_numpy(), details

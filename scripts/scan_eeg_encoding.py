@@ -24,10 +24,12 @@ sys.stdout.reconfigure(line_buffering=True)
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
-from src.brainshaping.data import item_eeg, sentence_table  # noqa: E402
+from src.brainshaping.data import sentence_table  # noqa: E402
 from src.brainshaping.encoding import (  # noqa: E402
-    ALPHAS, _progress, extract_layer_vectors, prepare_folds, scan_layer, summarize_layer,
+    ALPHAS, _progress, extract_layer_vectors, noise_ceiling, prepare_folds, residualize_folds, scan_layer,
+    summarize_layer, word_controls,
 )
+from src.diagnostics import signal  # noqa: E402
 
 MODELS = {
     "labse": "sentence-transformers/LaBSE",
@@ -57,6 +59,8 @@ def parse_args():
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--device", default=None)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--no-controls", action="store_true",
+                        help="skip the lexical / reading-behaviour controls and the noise ceiling")
     return parser.parse_args()
 
 
@@ -87,8 +91,17 @@ def load_items(args):
             raise SystemExit("--trt-dir is required for TeCo")
         trials, drop = load_teco_trials(args.trt_dir, args.labels_csv), ()
     sentences = sentence_table(trials)
-    items, eeg = item_eeg(trials) if drop is None else item_eeg(trials, drop_channels=drop)
-    return sentences, items, eeg
+    # same steps as item_eeg, keeping the per-reader table for the controls and the noise ceiling
+    meta, X, _ = (signal.long_word_table(trials) if drop is None
+                  else signal.long_word_table(trials, drop_channels=drop))
+    Z = signal.zscore_per_reader(meta, X)
+    del X
+    items, eeg = signal.reader_average(meta, Z)
+    readers = pd.DataFrame({"sentence_id": [t["sentence_id"] for t in trials],
+                            "reader": [t["subject_id"] for t in trials]})
+    readers_per_sentence = readers.drop_duplicates().groupby("sentence_id").size().to_dict()
+    return {"sentences": sentences, "items": items.reset_index(drop=True), "eeg": eeg, "meta": meta, "Z": Z,
+            "readers_per_sentence": readers_per_sentence}
 
 
 def digest(value):
@@ -123,7 +136,8 @@ def main():
 
     device = args.device or ("cuda" if torch.cuda.is_available() else "cpu")
     started = time.time()
-    sentences, items, eeg = load_items(args)
+    data = load_items(args)
+    sentences, items, eeg = data["sentences"], data["items"], data["eeg"]
     row_of = {sid: i for i, sid in enumerate(sentences["sentence_id"])}
     item_sentence = items["sentence_id"].map(row_of).to_numpy()
     item_word = items["word_index"].to_numpy()
@@ -143,6 +157,14 @@ def main():
                         prepare_folds(eeg, groups, args.modes, args.k, args.folds, args.inner_folds, args.seed)}
     explained = {mode: float(np.mean([f["explained"] for f in folds]))
                  for mode, folds in next(iter(prepared_by_mask.values()))["modes"].items()}
+    ceilings = {}
+    if not args.no_controls:
+        for mode in args.modes:
+            reliability, _ = noise_ceiling(data["meta"], data["Z"], eeg, groups, args.k,
+                                           centered=mode == "centered", seed=args.seed)
+            if reliability is not None:
+                ceilings[mode] = reliability
+    del data["Z"]
     frames = []
     for alias, name in model_specs(args.models):
         csv_path = os.path.join(scan_dir, f"{alias}.csv")
@@ -173,7 +195,8 @@ def main():
                 rows.append({"model": alias, "model_name": name, "pool": info["pool"], "layer": layer,
                              "n_layers": n_layers - 1, "depth": layer / max(n_layers - 1, 1), "mode": mode,
                              "n_items": int(found.sum()), **summary,
-                             "fold_r2": json.dumps(summary["fold_r2"]), "settings_key": key})
+                             "fold_r2": json.dumps(summary["fold_r2"]),
+                             "component_r2": json.dumps(summary["component_r2"]), "settings_key": key})
                 best[mode] = max(best.get(mode, -np.inf), summary["r2"])
             bar.set_postfix({f"best R2 {m}": f"{v:.3f}" for m, v in best.items()}, refresh=False)
         bar.close()
@@ -183,20 +206,118 @@ def main():
         del vectors
 
     results = pd.concat(frames, ignore_index=True)
+    controls = None
+    if not args.no_controls and "centered" in args.modes:
+        controls = run_controls(args, results, next(iter(prepared_by_mask.values())), data, item_sentence, item_word,
+                                device)
+        controls["table"].to_csv(os.path.join(scan_dir, f"controls_{args.dataset}.csv"), index=False)
+        json.dump({"baselines": controls["baselines"], "lexical": controls["lexical"],
+                   "reading": controls["reading"], "ceiling": {m: v.tolist() for m, v in ceilings.items()}},
+                  open(os.path.join(scan_dir, f"controls_{args.dataset}.json"), "w"), indent=1, default=float)
     info = {"dataset": args.dataset, "n_sentences": int(len(sentences)), "n_items": int(len(items)),
             "n_features": int(eeg.shape[1]), "k": args.k, "folds": args.folds, "explained": explained,
             "runtime_s": time.time() - started}
     report = os.path.join(scan_dir, f"encoding_scan_{args.dataset}.md")
-    write_report(report, results, info)
+    write_report(report, results, info, controls, ceilings)
     plot(os.path.join(scan_dir, f"encoding_scan_{args.dataset}.png"), results, args.dataset)
     print(open(report).read())
+
+
+def run_controls(args, results, prepared, data, item_sentence, item_word, device):
+    """Best centered layer per model: is its EEG prediction more than lexical / reading features?"""
+    table, lexical, reading = word_controls(data["sentences"]["words"].tolist(),
+                                            data["items"].assign(sentence_row=item_sentence), data["meta"],
+                                            data["readers_per_sentence"], "en" if args.dataset == "zuco" else "fa")
+    usable = [c for c in reading if np.isfinite(table[c]).all()]
+    if len(usable) < len(reading):
+        print(f"controls: reading features with missing values left out: {sorted(set(reading) - set(usable))}")
+    sets = {"lexical": lexical, "lexical+reading": lexical + usable}
+    folds, codes = prepared["modes"]["centered"], prepared["codes"]
+    centered = results[results["mode"] == "centered"]
+    best = centered.loc[centered.groupby("model", sort=False)["r2"].idxmax()]
+    bar = _progress(total=(len(sets) + 3 * len(best)) * args.folds, desc="controls", unit="fold")
+    baselines, residual = {}, {}
+    for name, columns in sets.items():
+        L = table[columns].to_numpy(dtype=np.float64)
+        summary = summarize_layer(scan_layer(L, folds, codes, "centered", ALPHAS, device, on_fold=bar.update),
+                                  args.n_boot, args.seed)
+        baselines[name] = {k: v for k, v in summary.items() if k != "fold_r2"}
+        residual[name] = residualize_folds(folds, L, codes, centered=True)
+    rows = []
+    for _, top in best.iterrows():
+        vectors, found, _ = word_vectors(args, top["model"], top["model_name"], data["sentences"], item_sentence,
+                                         item_word, device)
+        if not found.all():
+            print(f"controls: {top['model']} skipped ({int((~found).sum())} words without a vector)")
+            bar.update(3 * args.folds)
+            continue
+        X = np.array(vectors[int(top["layer"])])
+        full = summarize_layer(scan_layer(X, folds, codes, "centered", ALPHAS, device, on_fold=bar.update),
+                               args.n_boot, args.seed)
+        row = {"model": top["model"], "layer": int(top["layer"]), "n_layers": int(top["n_layers"]),
+               "r2_vectors": full["r2"], "r2_vectors_ci_low": full["r2_ci_low"],
+               "r2_vectors_ci_high": full["r2_ci_high"], "component_r2": json.dumps(full["component_r2"])}
+        for name in sets:
+            summary = summarize_layer(scan_layer(X, residual[name], codes, "centered", ALPHAS, device,
+                                                 on_fold=bar.update), args.n_boot, args.seed)
+            for key in ("r2", "r2_ci_low", "r2_ci_high", "r2_shuffled", "delta_ci_low"):
+                row[f"beyond_{name}_{key}"] = summary[key]
+        rows.append(row)
+        del vectors
+    bar.close()
+    return {"table": pd.DataFrame(rows), "baselines": baselines, "lexical": lexical, "reading": usable}
+
+
+def controls_section(controls, ceilings):
+    lines = ["## Is it more than word length, frequency and reading behaviour? (centered)", ""]
+    ceiling = ceilings.get("centered")
+    if ceiling is not None:
+        lines.append(f"**Noise ceiling:** {100 * np.clip(ceiling, 0, None).mean():.1f}% of the word-to-word EEG "
+                     "variance repeats across readers (split-half reliability of the reader average, mean over the "
+                     f"{len(ceiling)} components; best component {100 * ceiling.max():.1f}%). No model can explain "
+                     "more than this.")
+        lines.append("")
+    for name, values in controls["baselines"].items():
+        columns = controls["lexical"] + (controls["reading"] if name == "lexical+reading" else [])
+        lines.append(f"* **{name} features alone** ({', '.join(columns)}): R² {values['r2']:.4f} "
+                     f"[{values['r2_ci_low']:.4f}, {values['r2_ci_high']:.4f}]")
+    lines += ["", "| model | layer | text vectors R² | beyond lexical R² [95% CI] | beyond lexical + reading R² "
+              "[95% CI] | share of ceiling |", "|---|---:|---|---|---|---:|"]
+    table = controls["table"]
+    for _, row in table.iterrows():
+        share = (f"{100 * row['r2_vectors'] / np.clip(ceiling, 0, None).mean():.0f}%"
+                 if ceiling is not None and np.clip(ceiling, 0, None).mean() > 0 else "—")
+        cells = [f"{row[f'beyond_{n}_r2']:.4f} [{row[f'beyond_{n}_r2_ci_low']:.4f}, {row[f'beyond_{n}_r2_ci_high']:.4f}]"
+                 for n in ("lexical", "lexical+reading")]
+        lines.append(f"| {row['model']} | {row['layer']}/{row['n_layers']} | {row['r2_vectors']:.4f} "
+                     f"[{row['r2_vectors_ci_low']:.4f}, {row['r2_vectors_ci_high']:.4f}] | {cells[0]} | {cells[1]} | "
+                     f"{share} |")
+    lines.append("")
+    for name in ("lexical", "lexical+reading"):
+        survives = table[(table[f"beyond_{name}_r2_ci_low"] > 0) & (table[f"beyond_{name}_delta_ci_low"] > 0)]
+        if len(survives):
+            lines.append(f"* **Beyond {name}: signal remains** in {', '.join(survives['model'])} — the text vectors "
+                         f"predict EEG that {name} features do not.")
+        else:
+            lines.append(f"* **Beyond {name}: nothing remains** — what the text vectors predict about EEG is "
+                         f"accounted for by {name} features.")
+    if len(table):
+        top = table.loc[table["r2_vectors"].idxmax()]
+        components = np.array(json.loads(top["component_r2"]))
+        order = np.argsort(components)[::-1][:5]
+        lines += ["", f"R² per EEG component ({top['model']} layer {top['layer']}; component 1 = largest EEG "
+                  "variance): " + ", ".join(f"#{i + 1} {components[i]:.4f}" for i in order)
+                  + f"; {int((components > 0.005).sum())} of {len(components)} components above 0.005.",
+                  "", "*Beyond* = R² for EEG with the control features' (training-set) linear prediction removed, "
+                  "as a share of what remains."]
+    return lines
 
 
 def passes(frame):
     return (frame["r2_ci_low"] > 0) & (frame["delta_ci_low"] > 0)
 
 
-def write_report(path, results, info):
+def write_report(path, results, info, controls=None, ceilings=None):
     n_candidates = len(results.groupby(["model", "layer"]))
     explained = ", ".join(f"{mode} {100 * v:.0f}%" for mode, v in info["explained"].items())
     lines = [f"# Do word vectors predict word-level EEG? ({info['dataset']})", "",
@@ -232,6 +353,8 @@ def write_report(path, results, info):
               "predict almost nothing (expected when there is no signal).", "",
               f"All layers: one CSV per model next to this report; plot `encoding_scan_{info['dataset']}.png`. "
               f"Runtime {info['runtime_s'] / 60:.1f} min."]
+    if controls is not None:
+        lines += [""] + controls_section(controls, ceilings or {})
     with open(path, "w") as handle:
         handle.write("\n".join(lines) + "\n")
 

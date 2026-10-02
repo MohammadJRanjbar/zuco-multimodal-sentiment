@@ -87,6 +87,34 @@ def test_scan_finds_signal_and_no_sentence_leak():
         assert noise["r2"] > -0.03 and noise["delta_ci_low"] < 0.01, (mode, noise)
 
 
+def test_residualized_targets_separate_lexical_from_other_signal():
+    from src.brainshaping.encoding import residualize_folds
+
+    rng = np.random.default_rng(3)
+    n_sentences, n_words = 150, 10
+    groups = np.repeat(np.arange(n_sentences), n_words)
+    length = rng.integers(2, 12, len(groups)).astype(float)
+    other = rng.standard_normal(len(groups))                       # word property not in the controls
+    lexical = np.log1p(length)[:, None]
+    vectors = rng.standard_normal((len(groups), 32))
+    vectors[:, 0] += 2 * (lexical[:, 0] - lexical.mean())          # vectors encode length ...
+    vectors[:, 1] += 2 * other                                       # ... and the other property
+    mixing = rng.standard_normal((2, 12))
+    for weight, expect_beyond in ((0.0, False), (1.0, True)):
+        drivers = np.column_stack([lexical[:, 0] - lexical.mean(), weight * other])
+        eeg = (drivers @ mixing + 0.8 * rng.standard_normal((len(groups), 12))).astype(np.float32)
+        prepared = prepare_folds(eeg, groups, modes=("centered",), k=4, n_folds=5, n_inner=4, seed=0)
+        folds, codes = prepared["modes"]["centered"], prepared["codes"]
+        full = summarize_layer(scan_layer(vectors, folds, codes, "centered"), n_boot=300)
+        beyond = summarize_layer(scan_layer(vectors, residualize_folds(folds, lexical, codes), codes, "centered"),
+                                 n_boot=300)
+        assert full["r2_ci_low"] > 0
+        if expect_beyond:
+            assert beyond["r2_ci_low"] > 0 and beyond["delta_ci_low"] > 0, beyond
+        else:
+            assert beyond["r2"] < 0.01 and beyond["delta_ci_low"] <= 0.005, beyond
+
+
 def write_teco(tmp_path, n_subjects=3, n_sentences=24, n_values=126, word_text=True):
     rng = np.random.default_rng(0)
     vocab = ["خوب", "بد", "فیلم", "کتاب", "می‌خواهم", "است", "نبود", "زیبا"]
@@ -100,7 +128,8 @@ def write_teco(tmp_path, n_subjects=3, n_sentences=24, n_values=126, word_text=T
             entry = {}
             for j, word in enumerate(words):
                 vector = (np.exp(rng.normal(0, 0.3, n_values)) * (1 + 0.2 * len(word))).tolist()
-                entry[j] = {"TRT_total": vector if rng.random() > 0.15 else [0, 0]}
+                fixated = rng.random() > 0.15
+                entry[j] = {"TRT_total": vector if fixated else [0, 0], "nFixations": int(rng.integers(1, 4)) if fixated else 0}
                 if word_text:
                     entry[j]["content"] = word
             data[f"trial_{i}"] = {"sentenceId": i + 1, "persian_sentence": " ".join(words), "word": entry}
@@ -120,7 +149,8 @@ def test_teco_loader(tmp_path, word_text):
     first = [t for t in trials if t["subject_id"] == "P0" and t["sentence_id"] == 1][0]
     assert first["words"] == sentences[0] and first["label"] == labels[0]
     assert first["features"].shape == (len(sentences[0]), 1, 126)
-    assert np.array_equal(np.isfinite(first["features"][:, 0]).all(axis=1), first["fixations"].astype(bool))
+    assert np.array_equal(np.isfinite(first["features"][:, 0]).all(axis=1), first["fixations"] > 0)
+    assert first["fixations"].max() <= 3
     assert "TRT_total: shape (126,)" in describe_pickle(os.path.join(trt, "P0_trt_total.pickle"))
 
 
@@ -187,6 +217,10 @@ def test_scan_script_zuco_end_to_end(tmp_path, monkeypatch, capsys):
     report = open(os.path.join(scan_dir, "encoding_scan_zuco.md")).read()
     assert "## Verdict" in report and "fake | raw | 2/3" in report
     assert os.path.exists(os.path.join(scan_dir, "encoding_scan_zuco.png"))
+    # synthetic EEG tracks word length only, and the fake vectors' signal is word length
+    assert "**Noise ceiling:**" in report and "Beyond lexical: nothing remains" in report, report
+    controls = pd.read_csv(os.path.join(scan_dir, "controls_zuco.csv"))
+    assert controls["layer"].tolist() == [2] and controls["r2_vectors"].iloc[0] > 0.05
     capsys.readouterr()
     runner.main()
     assert "reusing finished scan" in capsys.readouterr().out

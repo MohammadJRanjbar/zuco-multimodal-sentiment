@@ -1391,3 +1391,43 @@ The next steps depend on the outcome:
 - if layers pass for both languages, the cross-lingual tests (overlap,
   transfer and a joint fit in the shared text space) and then sentiment
   follow.
+
+## 2026-10-02 — Encoding scan results (ZuCo and TeCo) and the lexical control
+
+The centered targets (word-to-word differences within a sentence) pass in
+both languages, but the effect is tiny.
+
+- **ZuCo:** all 92 model-layers pass. The best is LaBSE layer 2, with R²
+  0.0031 [0.0026, 0.0036]. XLM-R, mE5 and Qwen reach 0.0022–0.0023.
+- **TeCo:** 65 of 92 model-layers pass.
+  - The best is LaBSE layer 1, with R² 0.0028 [0.0022, 0.0035].
+  - XLM-R and mE5 reach 0.0017, and 24 of 25 layers pass for each.
+  - Qwen is weakest: 4 of 29 layers pass, and the largest penalty won in 40%
+    of folds.
+- **Raw targets:** R² is below 0 everywhere. The margin over shuffled is the
+  same as for centered (about 0.002–0.003). The difference between sentences
+  is unpredictable and adds error.
+
+In both languages the best layer is an early LaBSE layer, and neither depth
+nor model size helps. This suggests the shared signal is lexical (length,
+frequency) or reading behaviour, rather than meaning.
+
+TeCo loading notes:
+
+- 120 of the 1,980 participant-sentence trials have no words and are skipped;
+  they look like whole blocks missing for some readers.
+- All 165 sentences remain (55/55/55 labels) with 2,999 fixated words.
+
+The scan now ends with controls, computed for each model's best centered
+layer:
+
+- **lexical baseline:** log length, wordfreq Zipf frequency (en/fa) and its
+  square, relative position, first/last word, and attached punctuation;
+- **lexical + reading baseline:** adds the share of readers who fixated the
+  word, mean fixation count (`nFixations` for TeCo) and log reading time
+  (ZuCo);
+- **vectors beyond each baseline:** EEG with the training-set OLS prediction
+  from the controls removed, plus a shuffled control;
+- **noise ceiling:** split-half reliability of the reader-averaged targets,
+  with Spearman–Brown correction;
+- **R² per component.**
