@@ -151,11 +151,14 @@ def summarize(root, sentiment_model=None, device="cpu", n_boot=2000):
                                     "effect": "(EEG - noise) in joint minus (EEG - noise) in single-language",
                                     "diff": ci[0], "ci_low": ci[1], "ci_high": ci[2]})
     codes = {name: m.get("vq_code_usage") for name, (_, m) in runs.items() if m.get("vq_code_usage")}
+    mapping = [{"run": name, "input": key, **q} for name, (_, m) in runs.items()
+               for key, q in (m.get("mapping_quality") or {}).items() if q]
     summary = {"runs": table.to_dict("records"), "positive_control": positive, "comparisons": comparisons,
-               "multilingual_interaction": interaction, "vq_code_usage": codes}
+               "multilingual_interaction": interaction, "vq_code_usage": codes, "mapping_quality": mapping}
     json.dump(summary, open(os.path.join(root, "eeg_to_text_summary.json"), "w"), indent=1, default=float)
     table.to_csv(os.path.join(root, "eeg_to_text_runs.csv"), index=False)
-    write_markdown(os.path.join(root, "eeg_to_text_report.md"), table, comparisons, interaction, codes, positive)
+    write_markdown(os.path.join(root, "eeg_to_text_report.md"), table, comparisons, interaction, codes, positive,
+                   mapping)
     return summary
 
 
@@ -163,7 +166,7 @@ def _fmt(row):
     return f"{row['diff']:+.4f} [{row['ci_low']:+.4f}, {row['ci_high']:+.4f}]"
 
 
-def write_markdown(path, table, comparisons, interaction, codes, positive=()):
+def write_markdown(path, table, comparisons, interaction, codes, positive=(), mapping=()):
     lines = ["# EEG-to-text generation (English ZuCo, Persian TeCo)", "",
              "Test sentences were never seen in training (by any reader). *Teacher-forced*: each token is predicted "
              "from the true previous tokens (how many published EEG-to-text results were scored). *Free-running*: "
@@ -181,6 +184,14 @@ def write_markdown(path, table, comparisons, interaction, codes, positive=()):
         for c in positive:
             lines.append(f"| {c['setting']} | {c['encoder']} | {c['input']} | {c['lang']} | {c['test']} | {_fmt(c)} | "
                          f"{'PASS' if c['passed'] else 'FAIL'} |")
+        lines.append("")
+    if mapping:
+        lines += ["## Input -> mBART word embedding (ridge map, validation + test words)", "",
+                  "How well each input predicts the read word's mBART embedding (the generator's input). Cosine "
+                  "0 and R² <= 0 mean the input carries no information about the word's embedding.", "",
+                  "| run | language/input | words | mean cosine | R² |", "|---|---|---:|---:|---:|"]
+        for q in mapping:
+            lines.append(f"| {q['run']} | {q['input']} | {q['words']} | {q['cosine']:.3f} | {q['r2']:.3f} |")
         lines.append("")
     cols = ["setting", "encoder", "trained_on", "tested_on", "n_trials", "tf_accuracy", "tf_bleu4", "free_bleu1",
             "free_bleu4", "rouge1", "wer"] + [c for c in ("sentiment_f1_generated", "sentiment_f1_real_text")

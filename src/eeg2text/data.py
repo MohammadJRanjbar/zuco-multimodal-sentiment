@@ -175,6 +175,14 @@ def build_inputs(corpus, condition, seed=0):
     return out
 
 
+def vectors_by_word(corpus, name):
+    """Per trial [n_words, D] vectors of input ``name`` (NaN rows for words without one)."""
+    table = corpus.static[name]
+    dim = len(next(iter(table.values())))
+    missing = np.full(dim, np.nan, np.float32)
+    return [np.stack([table.get(w, missing) for w in words]).astype(np.float32) for words in corpus.words]
+
+
 def unique_words(corpus):
     return sorted({w for words in corpus.words for w in words})
 

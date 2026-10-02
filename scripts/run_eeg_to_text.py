@@ -30,6 +30,7 @@ import pandas as pd  # noqa: E402
 import torch  # noqa: E402
 
 from src.eeg2text import data as d  # noqa: E402
+from src.eeg2text import mapping  # noqa: E402
 from src.eeg2text.augment import Augment, average_by_sentence  # noqa: E402
 from src.eeg2text.metrics import corpus_bleu  # noqa: E402
 from src.eeg2text.model import EEGToText, MBartCodec, code_usage, word_token_vectors  # noqa: E402
@@ -69,6 +70,9 @@ def parse_args():
     parser.add_argument("--lr-lora", type=float, default=1e-4)
     parser.add_argument("--lora-r", type=int, default=16)
     parser.add_argument("--full-finetune", action="store_true")
+    parser.add_argument("--input-mapping", default="ridge", choices=["ridge", "none"],
+                        help="ridge: map each word's input to its mBART embedding by ridge regression first "
+                             "(src/eeg2text/mapping.py); none: the generator's input layer learns the mapping")
     parser.add_argument("--source-layout", default="mbart", choices=["mbart", "plain"],
                         help="mbart: [language code] words [</s>] as in mBART-50 training; plain: words only")
     parser.add_argument("--vq-codes", type=int, default=512)
@@ -93,8 +97,21 @@ def langs_of(setting):
     return ["en", "fa"] if setting == "joint" else [setting]
 
 
-def items_for(corpus, condition, labels, seed):
+def condition_inputs(corpus, condition, seed, input_mapping, device, ridge_map=None):
+    """Inputs of one condition; with ridge mapping, each fixated word's predicted mBART embedding.
+
+    Returns (inputs, fitted map or None, mapping quality on held-out words or None)."""
     inputs = d.build_inputs(corpus, condition, seed)
+    if input_mapping == "none":
+        return inputs, None, None
+    targets = d.vectors_by_word(corpus, "mbart_vectors")
+    if ridge_map is not None:
+        mapped = mapping.apply_map(ridge_map, inputs)
+        return mapped, ridge_map, mapping.quality(mapped, targets, corpus.part != "train")
+    return mapping.map_inputs(inputs, targets, corpus.part, corpus.sentence_id, device=str(device), seed=seed)
+
+
+def items_for(corpus, inputs, labels):
     out = {"train": [], "val": [], "test": []}
     for i, ((x, fixated), part) in enumerate(zip(inputs, corpus.part)):
         out[part].append({"x": x, "fixated": fixated, "labels": labels[i], "trial": f"{corpus.lang}:{i}",
@@ -112,6 +129,9 @@ def attach_mbart_vectors(corpora, model_name):
 
 def main():
     args = parse_args()
+    import transformers
+
+    transformers.logging.set_verbosity_error()  # mBART's generation config repeats a max_length warning every batch
     device = torch.device(args.device or ("cuda" if torch.cuda.is_available() else "cpu"))
     root = os.path.join(args.results_dir, args.run_tag)
     os.makedirs(root, exist_ok=True)
@@ -135,7 +155,7 @@ def main():
         sessions = pd.Series(corpus.session).value_counts().to_dict()
         print(f"{lang}: {len(corpus.words)} trials, {len(np.unique(corpus.sentence_id))} sentences, "
               f"{corpus.dim} EEG features per word; trials per part {counts}; per recording {sessions}")
-    if "mbart_vectors" in args.inputs:
+    if "mbart_vectors" in args.inputs or args.input_mapping == "ridge":
         attach_mbart_vectors(corpora, args.model)
     pd.concat([pd.DataFrame({"lang": lang, "sentence_id": c.sentence_id, "text": c.texts, "label": c.label,
                              "part": c.part}).drop_duplicates("sentence_id") for lang, c in corpora.items()]
@@ -148,7 +168,7 @@ def main():
                         max_new_tokens=args.max_new_tokens, num_beams=args.num_beams, augment=augment)
     key_base = {"model": args.model, "settings": settings.to_dict(), "lora_r": args.lora_r, "fold": args.fold,
                 "full_finetune": args.full_finetune, "vq": [args.vq_codes, args.vq_dim],
-                "source_layout": args.source_layout,
+                "source_layout": args.source_layout, "input_mapping": args.input_mapping,
                 "extra": sorted(os.path.basename(os.path.normpath(p)) for p in args.zuco_extra_dirs),
                 "reader_average": not args.no_reader_average}
     for encoder in args.encoders:
@@ -167,7 +187,14 @@ def main():
                 lm, codec = load_seq2seq(args.model)
                 langs = langs_of(setting)
                 labels = {lang: codec.encode(corpora[lang].texts, lang) for lang in langs}
-                data = {lang: items_for(corpora[lang], condition, labels[lang], args.seed) for lang in langs}
+                data, maps, map_quality = {}, {}, {}
+                for lang in langs:
+                    inputs, maps[lang], map_quality[f"{lang}/{condition}"] = condition_inputs(
+                        corpora[lang], condition, args.seed, args.input_mapping, device)
+                    data[lang] = items_for(corpora[lang], inputs, labels[lang])
+                    if map_quality[f"{lang}/{condition}"]:
+                        print(f"  {lang} {condition} -> mBART embeddings, held-out words: "
+                              f"{map_quality[f'{lang}/{condition}']}")
                 dims = {lang: data[lang]["train"][0]["x"].shape[1] for lang in langs}
                 vq = {"codes": args.vq_codes, "dim": args.vq_dim} if encoder == "vq" else None
                 model = EEGToText(lm, codec, dims, lora={"r": args.lora_r, "alpha": 2 * args.lora_r, "dropout": 0.05,
@@ -179,8 +206,13 @@ def main():
                 for lang in langs:
                     tested = [condition] + ([] if args.no_test_swaps or condition != "eeg" else ["noise", "shuffled_eeg"])
                     for test_condition in tested:
-                        items = (data[lang]["test"] if test_condition == condition else
-                                 items_for(corpora[lang], test_condition, labels[lang], args.seed + 1)["test"])
+                        if test_condition == condition:
+                            items = data[lang]["test"]
+                        else:
+                            inputs, _, map_quality[f"{lang}/{test_condition}"] = condition_inputs(
+                                corpora[lang], test_condition, args.seed + 1, args.input_mapping, device,
+                                ridge_map=maps[lang])
+                            items = items_for(corpora[lang], inputs, labels[lang])["test"]
                         test_sets = [(test_condition, items)]
                         if not args.no_reader_average:
                             test_sets.append((f"{test_condition}_avg", average_by_sentence(items)))
@@ -210,6 +242,7 @@ def main():
                     print(f"  {lang} tested on {test_condition}: {summary[f'{lang}/{test_condition}']}")
                 json.dump({"key": key, "setting": setting, "encoder": encoder, "input": condition, "langs": langs,
                            "train": info, "test": summary, "runtime_min": (time.time() - started) / 60,
+                           "input_mapping": args.input_mapping, "mapping_quality": map_quality,
                            "vq_code_usage": code_usage(codes_by_lang, args.vq_codes) if codes_by_lang else None,
                            "examples": generations[generations["condition"] == condition].head(8)[
                                ["lang", "gold", "tf_text", "free_text"]].to_dict("records")},

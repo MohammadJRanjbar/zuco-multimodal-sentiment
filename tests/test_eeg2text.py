@@ -179,6 +179,10 @@ def test_script_end_to_end(tmp_path, monkeypatch):
     assert summary["multilingual_interaction"], "joint vs single-language interaction missing"
     assert {(c["input"], c["test"]) for c in summary["positive_control"] if c["setting"] == "en"} == {
         (v, t) for v in ("word_vectors", "mbart_vectors") for t in ("single reader", "reader average")}
+    eeg_metrics = json.load(open(os.path.join(run_root, "en_continuous_eeg", "metrics.json")))
+    assert eeg_metrics["input_mapping"] == "ridge"
+    assert set(eeg_metrics["mapping_quality"]) == {"en/eeg", "en/noise", "en/shuffled_eeg"}  # swaps reuse the EEG map
+    assert "Input -> mBART word embedding" in report
     os.utime(os.path.join(run_root, "en_continuous_eeg", "metrics.json"))
     runner.main()  # finished runs are reused
 
@@ -293,3 +297,28 @@ def test_fetch_skips_a_failing_download_and_retries_it(tmp_path, monkeypatch):
     assert calls == ["resultsZAB_NR.mat", "resultsZDM_NR.mat", "resultsZJS_NR.mat", "resultsZDM_NR.mat"]
     assert sorted(f for f in os.listdir(out) if f.endswith(".npz")) == ["ZAB.npz", "ZDM.npz", "ZJS.npz"]
     assert not [f for f in os.listdir(str(tmp_path)) if f.endswith(".mat")]  # downloads deleted
+
+
+def test_ridge_map_recovers_embeddings_from_informative_inputs_only():
+    from src.eeg2text import mapping
+
+    rng = np.random.default_rng(0)
+    n_sentences, words_per, dim_in, dim_out = 60, 8, 20, 6
+    A = rng.standard_normal((dim_in, dim_out))
+    part = np.array(["train"] * 40 + ["val"] * 8 + ["test"] * 12)
+    targets, informative, noise = [], [], []
+    for s in range(n_sentences):
+        x = rng.standard_normal((words_per, dim_in))
+        fixated = rng.random(words_per) > 0.2
+        targets.append((x @ A).astype(np.float32))
+        informative.append(((x + 0.3 * rng.standard_normal(x.shape)) * fixated[:, None], fixated))
+        noise.append((rng.standard_normal(x.shape) * fixated[:, None], fixated))
+    targets[0][1] = np.nan  # a word without an embedding is skipped in fitting, still predicted
+    mapped, fitted, good = mapping.map_inputs(informative, targets, part, np.arange(n_sentences))
+    _, _, bad = mapping.map_inputs(noise, targets, part, np.arange(n_sentences))
+    assert good["cosine"] > 0.9 and good["r2"] > 0.8, good
+    assert abs(bad["cosine"]) < 0.2 and bad["r2"] < 0.05, bad
+    assert all(len(x) == words_per and (x[~m] == 0).all() for x, m in mapped)
+    again = mapping.apply_map(fitted, informative)
+    held_out = [i for i in range(n_sentences) if part[i] != "train"]
+    assert all(np.allclose(again[i][0], mapped[i][0], atol=1e-5) for i in held_out)
