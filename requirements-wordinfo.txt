@@ -1,0 +1,3 @@
+# Word-information experiments (raw word epochs, pretrained EEG models) on top of the diagnostics requirements.
+-r requirements-diagnostics.txt
+braindecode>=1.8

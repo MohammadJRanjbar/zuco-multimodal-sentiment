@@ -31,15 +31,23 @@ ALPHAS = np.logspace(-1, 6, 15)
 
 
 def long_word_table(trials, drop_channels=(ZUCO_REFERENCE_CHANNEL_INDEX,), log_power="auto"):
-    """Rows = (reader, sentence, word) with EEG; returns (meta DataFrame, X float32)."""
-    keep = None
+    """Rows = (reader, sentence, word) with EEG; returns (meta DataFrame, X float32).
+
+    Trial features are either [words, bands, channels] (band power or window means; the reference channel
+    is dropped) or [words, features] (any per-word representation, e.g. a pretrained EEG model's output,
+    used as is and never log-transformed)."""
+    keep, generic, n_channels = None, False, 0
     meta, blocks = [], []
     for trial in trials:
         block = np.asarray(trial["features"], dtype=np.float32)
-        if keep is None:
-            keep = [c for c in range(block.shape[2]) if c not in set(drop_channels)]
-            n_channels = len(keep)
-        flat = block[:, :, keep].reshape(len(block), block.shape[1] * len(keep))  # also valid for 0 words
+        if block.ndim == 2:
+            generic = True
+            flat = block
+        else:
+            if keep is None:
+                keep = [c for c in range(block.shape[2]) if c not in set(drop_channels)]
+                n_channels = len(keep)
+            flat = block[:, :, keep].reshape(len(block), block.shape[1] * len(keep))  # also valid for 0 words
         present = np.isfinite(flat).all(axis=1)
         for index in np.flatnonzero(present):
             meta.append({"reader": trial["subject_id"], "sentence_id": trial["sentence_id"],
@@ -49,12 +57,13 @@ def long_word_table(trials, drop_channels=(ZUCO_REFERENCE_CHANNEL_INDEX,), log_p
                          "n_fixations": float(trial["fixations"][index])})
         blocks.append(flat[present])
     X = np.concatenate(blocks).astype(np.float32)
-    use_log = log_power is True or (log_power == "auto" and (X > 0).all())
+    use_log = log_power is True or (log_power == "auto" and not generic and (X > 0).all())
     if use_log:
         X = np.log(X)
     frame = pd.DataFrame(meta)
     frame["item"] = frame["sentence_id"].astype(str) + ":" + frame["word_index"].astype(str)
-    return frame, X, {"log_transformed": bool(use_log), "n_channels": n_channels, "n_bands": len(BANDS)}
+    return frame, X, {"log_transformed": bool(use_log), "n_channels": n_channels,
+                      "n_bands": 0 if generic else len(BANDS), "n_features": int(X.shape[1])}
 
 
 def zscore_per_reader(meta, X):

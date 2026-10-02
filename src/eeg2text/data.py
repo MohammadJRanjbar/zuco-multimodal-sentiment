@@ -62,7 +62,8 @@ def _from_trials(lang, trials, flatten, session=""):
         reader.append(str(trial["subject_id"]))
         label.append(LABEL_TO_ID.get(int(trial["label"]), -1))
     finite = np.concatenate([f[np.isfinite(f).all(axis=1)] for f in features])
-    if len(finite) and (finite > 0).all():  # band power -> log scale
+    generic = np.asarray(trials[0]["features"]).ndim == 2 if trials else False
+    if len(finite) and not generic and (finite > 0).all():  # band power -> log scale
         features = [np.where(np.isfinite(f), np.log(np.where(f > 0, f, 1.0)), np.nan).astype(np.float32)
                     for f in features]
     return Corpus(lang, features, words, np.array(sentence_id), np.array(reader), np.array(label),
@@ -72,7 +73,9 @@ def _from_trials(lang, trials, flatten, session=""):
 def load_zuco(word_eeg_dir, session="SR"):
     from ..fusion.word_eeg import load_word_eeg
 
-    def flatten(block):  # [n, bands, 105] -> [n, bands * 104] without the flat Cz reference
+    def flatten(block):  # [n, bands, 105] -> [n, bands * 104] without the flat Cz reference; [n, F] as is
+        if block.ndim == 2:
+            return block
         keep = [c for c in range(block.shape[2]) if c != ZUCO_REFERENCE_CHANNEL_INDEX]
         return block[:, :, keep].reshape(len(block), -1)
 
