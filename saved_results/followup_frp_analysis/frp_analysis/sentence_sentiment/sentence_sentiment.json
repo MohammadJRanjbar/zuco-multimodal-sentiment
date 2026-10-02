@@ -1,0 +1,132 @@
+{
+ "n_sentences": 400,
+ "n_readers": 9,
+ "label_counts": [
+  123,
+  137,
+  140
+ ],
+ "n_perm": 1000,
+ "probes": [
+  {
+   "probe": "FRP",
+   "rows": "reader-averaged",
+   "macro_F1": 0.30956337645277654,
+   "null_mean": 0.2528702154136198,
+   "null_q95": 0.30517754131069263,
+   "p_value": 0.03996003996003996
+  },
+  {
+   "probe": "FRP window 0-100 ms",
+   "rows": "reader-averaged",
+   "macro_F1": 0.3542227389847053,
+   "null_mean": 0.25599643621811086,
+   "null_q95": 0.31710203149820415,
+   "p_value": 0.01990049751243781
+  },
+  {
+   "probe": "FRP window 100-200 ms",
+   "rows": "reader-averaged",
+   "macro_F1": 0.2363734484619536,
+   "null_mean": 0.25752217679731304,
+   "null_q95": 0.31821943121361396,
+   "p_value": 0.7661691542288557
+  },
+  {
+   "probe": "FRP window 200-300 ms",
+   "rows": "reader-averaged",
+   "macro_F1": 0.3092392086855737,
+   "null_mean": 0.25482002698758677,
+   "null_q95": 0.3145851891417331,
+   "p_value": 0.07960199004975124
+  },
+  {
+   "probe": "FRP window 300-400 ms",
+   "rows": "reader-averaged",
+   "macro_F1": 0.2514851010826866,
+   "null_mean": 0.25318159779085186,
+   "null_q95": 0.31255107061541393,
+   "p_value": 0.3880597014925373
+  },
+  {
+   "probe": "FRP window 400-500 ms",
+   "rows": "reader-averaged",
+   "macro_F1": 0.25259973529967855,
+   "null_mean": 0.24997558552405735,
+   "null_q95": 0.3038441305865804,
+   "p_value": 0.35323383084577115
+  },
+  {
+   "probe": "FRP window 500-600 ms",
+   "rows": "reader-averaged",
+   "macro_F1": 0.28047229791099,
+   "null_mean": 0.2509481310212051,
+   "null_q95": 0.30371958173836333,
+   "p_value": 0.12437810945273632
+  },
+  {
+   "probe": "FRP window 600-700 ms",
+   "rows": "reader-averaged",
+   "macro_F1": 0.30886241253158037,
+   "null_mean": 0.2492949842092004,
+   "null_q95": 0.2982166640104065,
+   "p_value": 0.03980099502487562
+  },
+  {
+   "probe": "FRP window N400 300-500 ms",
+   "rows": "reader-averaged",
+   "macro_F1": 0.25542603285276777,
+   "null_mean": 0.25136538585371115,
+   "null_q95": 0.3092363646390163,
+   "p_value": 0.31840796019900497
+  },
+  {
+   "probe": "text form",
+   "rows": "reader-averaged",
+   "macro_F1": 0.3921064325016941,
+   "null_mean": 0.251872215440427,
+   "null_q95": 0.3134720241146359,
+   "p_value": 0.000999000999000999
+  },
+  {
+   "probe": "text form + text sentiment",
+   "rows": "reader-averaged",
+   "macro_F1": 0.5191455178974803,
+   "null_mean": 0.25093082753073326,
+   "null_q95": 0.30471136856992853,
+   "p_value": 0.000999000999000999
+  },
+  {
+   "probe": "presentation order",
+   "rows": "reader-averaged",
+   "macro_F1": 0.21504731726116558,
+   "null_mean": 0.24795596244431473,
+   "null_q95": 0.2971384512619394,
+   "p_value": 0.965034965034965
+  },
+  {
+   "probe": "FRP with form and presentation order regressed out",
+   "rows": "reader-averaged",
+   "macro_F1": 0.32106106052964545,
+   "null_mean": 0.2524291844689786,
+   "null_q95": 0.30623203356744594,
+   "p_value": 0.03196803196803197
+  },
+  {
+   "probe": "FRP with form + text sentiment and presentation order regressed out",
+   "rows": "reader-averaged",
+   "macro_F1": 0.3019985903546811,
+   "null_mean": 0.25234156374597577,
+   "null_q95": 0.30609803342703656,
+   "p_value": 0.059940059940059943
+  },
+  {
+   "probe": "FRP",
+   "rows": "single reader",
+   "macro_F1": 0.271787630274351,
+   "null_mean": 0.252133607861531,
+   "null_q95": 0.2841547238030506,
+   "p_value": 0.12087912087912088
+  }
+ ]
+}
