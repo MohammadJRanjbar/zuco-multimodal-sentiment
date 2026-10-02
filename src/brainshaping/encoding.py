@@ -372,3 +372,27 @@ def noise_ceiling(meta, Z, eeg_items, groups, k=32, centered=True, n_splits=20, 
         return None, {"items": int((counts >= 4).sum())}  # too few words read by >= 4 readers
     reliability, details = split_half_reliability(meta, projected.astype(np.float32), n_splits=n_splits, seed=seed)
     return reliability["reliability_all_readers"].to_numpy(), details
+
+
+def static_word_vectors(sentences, item_sentence, item_word, model_name, revision=None, **kwargs):
+    """Non-contextual word-identity vectors: mean input-embedding row of the word's tokens.
+
+    Unlike hidden layer 0 (which adds position embeddings), this carries no
+    information about where the word stands in the sentence.
+    """
+    from transformers import AutoModel, AutoTokenizer
+
+    tokenizer = AutoTokenizer.from_pretrained(model_name, revision=revision)
+    table = AutoModel.from_pretrained(model_name, revision=revision).get_input_embeddings().weight.detach()
+    table = table.float().cpu().numpy()
+    cache, vectors = {}, np.zeros((len(item_sentence), table.shape[1]), dtype=np.float32)
+    found = np.zeros(len(item_sentence), dtype=bool)
+    for row, (s, w) in enumerate(zip(item_sentence, item_word)):
+        word = sentences[int(s)][int(w)]
+        if word not in cache:
+            ids = tokenizer(word, add_special_tokens=False)["input_ids"]
+            cache[word] = table[ids].mean(axis=0) if ids else None
+        if cache[word] is not None:
+            vectors[row] = cache[word]
+            found[row] = True
+    return vectors, found

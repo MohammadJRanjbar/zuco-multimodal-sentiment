@@ -1,20 +1,21 @@
 """Decoding the read word from EEG: a controlled form of "EEG-to-text".
 
 A ridge map from a word's reader-averaged EEG to the word's text-model vector
-(by default the model's non-contextual input layer, i.e. word identity) is fit
+(by default the model's input embeddings, i.e. word identity without position) is fit
 on training sentences and evaluated on unseen sentences:
 
 * 2-vs-2: for two test words, does pairing each prediction with its own word
   beat the swapped pairing? Chance is 50%.
-* matched 2-vs-2: the same, using only pairs of words with equal length and
-  similar frequency, so that length and frequency cannot decide.
+* matched 2-vs-2: the same, using only pairs of words with equal length,
+  similar frequency and similar position, so that these cannot decide.
 * retrieval: rank of the true word among all word types in the test
   sentences; the top-ranked word per position gives the "decoded text".
 
 The same pipeline runs on four inputs: real EEG; EEG shuffled across training
 words (the map is learned without pairing); Gaussian noise; and word features
-alone (length, frequency, position) in place of EEG. EEG plus word features is
-also compared with word features alone. Nothing is ever conditioned on the
+alone (length, frequency, position) in place of EEG. To test EEG beyond word
+features, EEG is fitted to what the word-feature model leaves unexplained (each
+with its own penalty) and the sum is compared with word features alone. Nothing is ever conditioned on the
 true previous word, so there is no teacher forcing.
 """
 
@@ -46,8 +47,10 @@ def _unit(a):
     return a / np.maximum(np.linalg.norm(a, axis=1, keepdims=True), 1e-12)
 
 
-def sample_pairs(word_ids, rng, n_pairs, lengths=None, zipf=None, max_zipf_gap=0.5):
-    """Random pairs of items with different words; matched pairs share length and similar frequency."""
+def sample_pairs(word_ids, rng, n_pairs, lengths=None, zipf=None, max_zipf_gap=0.5, position=None,
+                 max_position_gap=0.15):
+    """Random pairs of items with different words; matched pairs share length and have similar frequency
+    (and similar relative position in the sentence when ``position`` is given)."""
     n = len(word_ids)
     if lengths is None:
         i = rng.integers(0, n, size=4 * n_pairs)
@@ -65,7 +68,8 @@ def sample_pairs(word_ids, rng, n_pairs, lengths=None, zipf=None, max_zipf_gap=0
     for _ in range(20 * n_pairs):
         g = groups[rng.choice(len(groups), p=sizes / sizes.sum())]
         i, j = rng.choice(g, 2, replace=False)
-        if word_ids[i] != word_ids[j] and abs(zipf[i] - zipf[j]) <= max_zipf_gap:
+        close = position is None or abs(position[i] - position[j]) <= max_position_gap
+        if word_ids[i] != word_ids[j] and abs(zipf[i] - zipf[j]) <= max_zipf_gap and close:
             pairs.append((i, j))
             if len(pairs) >= n_pairs:
                 break

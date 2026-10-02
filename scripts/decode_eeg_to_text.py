@@ -29,11 +29,13 @@ from sklearn.metrics import f1_score  # noqa: E402
 
 from src.brainshaping import scan_io  # noqa: E402
 from src.brainshaping.data import grouped_splits  # noqa: E402
-from src.brainshaping.encoding import extract_layer_vectors, strip_punctuation, word_controls  # noqa: E402
+from src.brainshaping.encoding import (  # noqa: E402
+    extract_layer_vectors, static_word_vectors, strip_punctuation, word_controls,
+)
 from src.followup import decoding  # noqa: E402
 from src.progress import progress  # noqa: E402
 
-INPUTS = ("eeg", "shuffled_eeg", "noise", "word_features", "eeg+word_features")
+INPUTS = ("eeg", "shuffled_eeg", "noise", "word_features", "word_features+eeg")
 
 
 def parse_args():
@@ -46,7 +48,9 @@ def parse_args():
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--vector-cache-dir", default=None)
     parser.add_argument("--model", default="labse", help="text model alias or alias=path (see scan_io.MODELS)")
-    parser.add_argument("--layer", type=int, default=0, help="0 = non-contextual input layer (word identity)")
+    parser.add_argument("--target", default="static", choices=["static", "layer"],
+                        help="static: input-embedding word identity (no position); layer: hidden layer --layer")
+    parser.add_argument("--layer", type=int, default=0, help="hidden layer when --target layer")
     parser.add_argument("--folds", type=int, default=5)
     parser.add_argument("--inner-folds", type=int, default=4)
     parser.add_argument("--n-pairs", type=int, default=20000)
@@ -72,11 +76,19 @@ def main():
     controls, lexical, _ = word_controls(sentences["words"].tolist(), items, data["meta"],
                                          data["readers_per_sentence"], lang)
     (alias, name), = scan_io.model_specs([args.model])
-    cache_dir = args.vector_cache_dir or os.path.join(args.out_dir, "vectors")
-    vectors, found, _ = scan_io.word_vectors(cache_dir, args.tag, alias, name, sentences, item_sentence, item_word,
-                                             device, extractor=extract_layer_vectors, batch_size=args.batch_size)
+    if args.target == "static":
+        all_vectors, found = static_word_vectors(sentences["words"].tolist(), item_sentence, item_word, name,
+                                                 revision=scan_io.REVISIONS.get(name))
+        target_name = f"{alias} input embeddings (word identity, no position)"
+    else:
+        cache_dir = args.vector_cache_dir or os.path.join(args.out_dir, "vectors")
+        vectors, found, _ = scan_io.word_vectors(cache_dir, args.tag, alias, name, sentences, item_sentence,
+                                                 item_word, device, extractor=extract_layer_vectors,
+                                                 batch_size=args.batch_size)
+        all_vectors = np.asarray(vectors[args.layer])
+        target_name = f"{alias} layer {args.layer}"
     keep = np.flatnonzero(found)
-    V = np.array(vectors[args.layer])[keep].astype(np.float64)
+    V = np.array(all_vectors)[keep].astype(np.float64)
     X_eeg = eeg[keep].astype(np.float64)
     L = controls[lexical].to_numpy(dtype=np.float64)[keep]
     groups = items["sentence_id"].to_numpy()[keep]
@@ -89,11 +101,12 @@ def main():
     type_mean /= np.bincount(type_ids)[:, None]
     lengths = np.round(np.expm1(controls["log_length"].to_numpy()[keep])).astype(int)
     zipf = controls["zipf"].to_numpy()[keep]
+    position = controls["relative_position"].to_numpy()[keep]
     labels = sentences["label_id"].to_numpy()
     rng = np.random.default_rng(args.seed)
     noise = rng.standard_normal(X_eeg.shape)
     print(f"{args.tag}: {len(keep)} words with EEG ({len(types)} word types) in {len(np.unique(groups))} sentences; "
-          f"target = {alias} layer {args.layer}; inputs {INPUTS}")
+          f"target = {target_name}; inputs {INPUTS}")
 
     outcome = {kind: {name: [] for name in INPUTS} for kind in ("pairs", "matched")}
     clusters = {"pairs": [], "matched": []}
@@ -110,20 +123,26 @@ def main():
         types_te, local = np.unique(type_ids[te], return_inverse=True)
         type_vectors = (type_mean[types_te] - mean) / std
         perm = rng.permutation(len(tr))
-        inputs = {"eeg": X_eeg, "noise": noise, "word_features": L, "eeg+word_features": np.hstack([X_eeg, L])}
         shuffled = X_eeg.copy()
         shuffled[tr] = X_eeg[tr][perm]
-        inputs["shuffled_eeg"] = shuffled
+        inputs = {"eeg": X_eeg, "shuffled_eeg": shuffled, "noise": noise, "word_features": L}
         predictions = {}
-        for name in INPUTS:
+        for name in INPUTS[:4]:
             predictions[name], _ = decoding.fit_predict(inputs[name][tr], T[tr], inputs[name][te], groups[tr],
                                                         args.inner_folds, device=device, seed=args.seed + f)
             bar.update()
+        # word features first (own penalty), then EEG on what they leave unexplained (own penalty)
+        fitted, _ = decoding.fit_predict(L[tr], T[tr], L[tr], groups[tr], args.inner_folds, device=device,
+                                         seed=args.seed + f)
+        residual, _ = decoding.fit_predict(X_eeg[tr], T[tr] - fitted, X_eeg[te], groups[tr], args.inner_folds,
+                                           device=device, seed=args.seed + f)
+        predictions["word_features+eeg"] = predictions["word_features"] + residual
+        bar.update()
         fold_rng = np.random.default_rng(args.seed * 100 + f)
         n_pairs = max(1, args.n_pairs // len(folds))
         for kind, (i, j) in {"pairs": decoding.sample_pairs(type_ids[te], fold_rng, n_pairs),
                              "matched": decoding.sample_pairs(type_ids[te], fold_rng, n_pairs, lengths[te],
-                                                              zipf[te])}.items():
+                                                              zipf[te], position=position[te])}.items():
             for name in INPUTS:
                 outcome[kind][name].append(decoding.two_vs_two(predictions[name], T[te], i, j))
             clusters[kind].append(groups[te][i])
@@ -148,14 +167,15 @@ def main():
         sentence_rows.append(pd.DataFrame(record))
         if f == 0:
             for r in test_rows[:15]:
-                sel = rows[te] == r
+                sel = np.flatnonzero(rows[te] == r)
+                sel = sel[np.argsort(item_word[keep][te][sel])]
                 examples.append({"sentence_id": int(sentences["sentence_id"].iloc[r]), "label": int(labels[r]),
                                  "real (words with EEG)": " ".join(np.array(words, dtype=object)[te][sel]),
                                  **{f"decoded from {name}": " ".join(types[types_te[decoded[name][sel]]])
                                     for name in ("eeg", "shuffled_eeg", "noise", "word_features")}})
     bar.close()
 
-    summary = {"tag": args.tag, "target": f"{alias} layer {args.layer}", "n_items": int(len(keep)),
+    summary = {"tag": args.tag, "target": target_name, "n_items": int(len(keep)),
                "n_types": int(len(types)), "folds": len(folds), "two_vs_two": {}, "retrieval": {}, "sentiment": {}}
     for kind in ("pairs", "matched"):
         cl = np.concatenate(clusters[kind]) if clusters[kind] else np.zeros(0)
@@ -163,7 +183,7 @@ def main():
         for name in INPUTS:
             values = np.concatenate(outcome[kind][name]).astype(float)
             res[name] = decoding.cluster_bootstrap_mean(values, cl, args.n_boot, args.seed) if len(cl) else None
-        for a, b in (("eeg", "shuffled_eeg"), ("eeg", "noise"), ("eeg+word_features", "word_features")):
+        for a, b in (("eeg", "shuffled_eeg"), ("eeg", "noise"), ("word_features+eeg", "word_features")):
             if len(cl):
                 res[f"{a} - {b}"] = decoding.paired_difference(np.concatenate(outcome[kind][a]),
                                                                np.concatenate(outcome[kind][b]), cl, args.n_boot,
@@ -203,11 +223,11 @@ def write_report(path, s):
              f"{s['n_items']:,} words with EEG, {s['n_types']:,} word types, {s['folds']} folds split by sentence. "
              f"Target: {s['target']}. No teacher forcing: every word is decoded from its own EEG only.", "",
              "## 2-vs-2 accuracy (chance 0.5)", "",
-             "| input | all pairs | pairs matched on length and frequency |", "|---|---|---|"]
+             "| input | all pairs | pairs matched on length, frequency and position |", "|---|---|---|"]
     for name in INPUTS:
         lines.append(f"| {name} | {fmt(tv['pairs'][name])} | {fmt(tv['matched'][name])} |")
     lines += ["", "| difference | all pairs | matched pairs |", "|---|---|---|"]
-    for key in ("eeg - shuffled_eeg", "eeg - noise", "eeg+word_features - word_features"):
+    for key in ("eeg - shuffled_eeg", "eeg - noise", "word_features+eeg - word_features"):
         lines.append(f"| {key} | {fmt(tv['pairs'].get(key))} | {fmt(tv['matched'].get(key))} |")
     lines += ["", f"Pairs: {tv['pairs']['n_pairs']:,} (all), {tv['matched']['n_pairs']:,} (matched).", "",
               "## Retrieval among the test vocabulary", "",
@@ -224,16 +244,19 @@ def write_report(path, s):
         lines.append(f"| decoded from {name} | {fmt(se[name])} |")
     pairs, matched = tv["pairs"], tv["matched"]
     eeg_info = pairs["eeg - shuffled_eeg"][1] > 0
-    beyond = matched["eeg+word_features - word_features"][1] > 0 if matched["n_pairs"] else False
-    sentiment = se["eeg"][1] > max(se["shuffled_eeg"][2], 0.34)
+    beyond_all = pairs["word_features+eeg - word_features"][1] > 0
+    beyond = matched["word_features+eeg - word_features"][1] > 0 if matched["n_pairs"] else False
+    sentiment = se["eeg"][1] > max(se["shuffled_eeg"][2], se["noise"][2])
     lines += ["", "## Reading", "",
               "* **EEG carries information about the read word:** "
               + ("yes, real EEG beats shuffled EEG in 2-vs-2." if eeg_info else "not detected (EEG ~ shuffled EEG)."),
-              "* **Beyond length and frequency:** "
-              + ("adding EEG to word features improves matched pairs." if beyond else
-                 "not detected; on length- and frequency-matched pairs EEG adds nothing to word features."),
+              "* **Beyond word features** (EEG fitted to what length, frequency and position leave unexplained): "
+              + ("EEG adds to word features on all pairs" if beyond_all else "EEG adds nothing on all pairs")
+              + ("; and on pairs matched for length, frequency and position." if beyond else
+                 "; nothing on matched pairs."),
               "* **Sentiment from decoded text:** "
-              + ("above shuffled EEG." if sentiment else "not above the shuffled-EEG control."),
+              + ("above the shuffled-EEG and noise controls." if sentiment else
+                 "not above the shuffled-EEG and noise controls."),
               "", "Examples: `decoded_examples_" + s["tag"] + ".csv`."]
     with open(path, "w") as handle:
         handle.write("\n".join(lines) + "\n")

@@ -37,6 +37,21 @@ def fake_extractor(dim=24, n_layers=3):
     return extract
 
 
+def fake_static(dim=24):
+    def static(sentences, item_sentence, item_word, model_name, **kwargs):
+        rng = np.random.default_rng(1)
+        table = {}
+        out = np.zeros((len(item_sentence), dim), np.float32)
+        for row, (s, w) in enumerate(zip(item_sentence, item_word)):
+            word = sentences[s][w]
+            if word not in table:
+                table[word] = rng.standard_normal(dim)
+            out[row] = table[word]
+            out[row, 0] += 3 * len(word)
+        return out, np.ones(len(item_sentence), bool)
+    return static
+
+
 def zuco_cache(tmp_path):
     sys.path.insert(0, os.path.dirname(__file__))
     from test_diagnostics import word_trials, write_cache
@@ -72,7 +87,7 @@ def test_two_vs_two_and_retrieval():
 def test_decode_script_detects_lexical_but_not_beyond(tmp_path, monkeypatch):
     cache = zuco_cache(tmp_path)
     runner = load_script("decode_eeg_to_text")
-    monkeypatch.setattr(runner, "extract_layer_vectors", fake_extractor())
+    monkeypatch.setattr(runner, "static_word_vectors", fake_static())
     out = os.path.join(str(tmp_path), "decoding")
     monkeypatch.setattr(sys, "argv", ["x", "--dataset", "zuco", "--word-eeg-dir", cache, "--out-dir", out,
                                       "--n-pairs", "4000", "--n-boot", "200", "--device", "cpu"])
@@ -81,6 +96,8 @@ def test_decode_script_detects_lexical_but_not_beyond(tmp_path, monkeypatch):
     pairs, matched = summary["two_vs_two"]["pairs"], summary["two_vs_two"]["matched"]
     assert pairs["eeg"][0] > 0.6 and pairs["eeg - shuffled_eeg"][1] > 0  # EEG tracks word length here
     assert abs(matched["eeg"][0] - 0.5) < 0.1  # nothing beyond length
+    beyond = pairs["word_features+eeg - word_features"]
+    assert beyond[1] <= 0.01, beyond  # EEG only repeats word length, which word features already have
     assert set(summary["sentiment"]) >= {"real_text", "eeg", "shuffled_eeg"}
     assert os.path.exists(os.path.join(out, "decoded_examples_zuco.csv"))
 

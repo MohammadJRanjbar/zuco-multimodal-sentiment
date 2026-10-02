@@ -3,7 +3,7 @@
 1. Overlap of the two languages' EEG subspaces (LaBSE word vectors -> top-k EEG
    components, within-sentence centered), against a null from EEG targets
    shuffled across words, before and after removing word-feature directions
-   (length, frequency, position) of both languages.
+   (length, frequency and its square, position, first/last word, punctuation) of both languages.
 2. Transfer: held-out R^2 for one language's EEG from its word vectors
    projected onto the other language's EEG subspace, compared with the full
    space, random subspaces, the shuffled-EEG subspace and the other language's
@@ -30,7 +30,7 @@ from src.brainshaping.encoding import (  # noqa: E402
 from src.followup import crosslingual as cl  # noqa: E402
 from src.progress import progress  # noqa: E402
 
-WORD_FEATURES = ["log_length", "zipf", "relative_position"]
+WORD_FEATURES = ["log_length", "zipf", "zipf_sq", "relative_position", "is_first", "is_last", "punctuation"]
 NAMES = {"en": "English (ZuCo)", "fa": "Persian (TeCo)"}
 
 
@@ -44,7 +44,7 @@ def parse_args():
     parser.add_argument("--model", default="labse")
     parser.add_argument("--layer", type=int, default=2)
     parser.add_argument("--k", type=int, default=32)
-    parser.add_argument("--n-null", type=int, default=20)
+    parser.add_argument("--n-null", type=int, default=50)
     parser.add_argument("--folds", type=int, default=5)
     parser.add_argument("--inner-folds", type=int, default=4)
     parser.add_argument("--n-boot", type=int, default=1000)
@@ -167,9 +167,9 @@ def write_report(path, s):
     lines += ["## Reading", "",
               "* **Shared EEG directions:** " + ("the overlap exceeds the shuffled-EEG null." if shared else
                                                  "the overlap is within the shuffled-EEG null."),
-              "* **Beyond word features:** " + ("the overlap remains after removing length, frequency and position."
-                                                if beyond else "no overlap remains once length, frequency and position "
-                                                "directions are removed.")]
+              "* **Beyond word features:** " + ("the overlap remains after removing the word-feature directions."
+                                                if beyond else "no overlap remains once the word-feature directions "
+                                                "are removed.")]
     with open(path, "w") as handle:
         handle.write("\n".join(lines) + "\n")
 
