@@ -24,6 +24,7 @@ import torch  # noqa: E402
 
 from src.brainshaping.brain_tuning import BrainTunedClassifier, aux_r2, run_brain_fold  # noqa: E402
 from src.brainshaping.data import arm_targets, fit_targets, item_eeg, sentence_table  # noqa: E402
+from src.brainshaping.encoding import center_by_group  # noqa: E402
 from src.fusion.train import TrainConfig, precision_for  # noqa: E402
 from src.fusion.word_eeg import load_word_eeg  # noqa: E402
 from src.neurolm.config import load_config, run_manifest, save_json  # noqa: E402
@@ -56,6 +57,8 @@ def parse_args():
     parser.add_argument("--base-dtype", default=None, choices=["auto", "float32", "float16", "bfloat16"])
     parser.add_argument("--device", default=None)
     parser.add_argument("--quick", action="store_true", help="small model, 1 epoch, text_only vs eeg")
+    parser.add_argument("--targets", default="centered", choices=["centered", "raw"],
+                        help="centered: each sentence's mean removed from its words' EEG (the part text predicts)")
     return parser.parse_args()
 
 
@@ -92,6 +95,9 @@ def main():
     trials = load_word_eeg(args.word_eeg_dir)
     sentences = sentence_table(trials)
     items, eeg = item_eeg(trials)
+    if args.targets == "centered":
+        codes = np.unique(items["sentence_id"].to_numpy(), return_inverse=True)[1]
+        eeg = center_by_group(eeg.astype(np.float64), codes).astype(np.float32)
     words = sentences["words"].tolist()
     labels = sentences["label_id"].to_numpy()
     samples = pd.DataFrame({"sample_id": sentences["sentence_id"].astype(str), "subject_id": "all",
@@ -111,7 +117,7 @@ def main():
     os.makedirs(run_dir, exist_ok=True)
     settings = {"model": model_name, "revision": revision, "dtype": str(dtype), "train": train_cfg.to_dict(),
                 "aux": {**aux, "layer": layer}, "prompt": cfg["prompt"], "lora": cfg["lora"], "split": split_cfg,
-                "n_sentences": int(len(sentences))}
+                "n_sentences": int(len(sentences)), "targets": args.targets}
     key = hashlib.sha256(json.dumps(settings, sort_keys=True, default=str).encode()).hexdigest()[:16]
     save_json(run_manifest(cfg, {"settings": settings, "settings_key": key, "arms": arms}),
               os.path.join(run_dir, "manifest.json"))

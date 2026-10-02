@@ -336,6 +336,26 @@ tests that for several multilingual models (LaBSE, XLM-R, mE5, Qwen) and
 every layer, on ZuCo (English) and TeCo (Persian). It uses sentence-grouped
 ridge and a shuffled-target control.
 
+## Follow-up experiments
+
+`notebooks/followup_experiments_colab.ipynb` runs the following experiments and pushes each stage's
+reports to `saved_results/followup_<stage>/`:
+
+- **Decoding the read word from EEG** (`scripts/decode_eeg_to_text.py`): 2-vs-2, the same on pairs
+  matched for length and frequency, retrieval, and the sentiment of the decoded text. It is compared
+  against shuffled EEG, noise and word-feature baselines, without teacher forcing.
+- **English–Persian comparison** (`scripts/crosslingual_subspaces.py`): how far the two languages'
+  EEG directions in LaBSE space overlap, and whether one language's directions predict the other's
+  EEG.
+- **Fixation-related potentials** (`scripts/extract_frp.py`, `scripts/analyze_frp.py`):
+  - each fixation's onset is located inside ZuCo's raw sentence EEG;
+  - epochs run from -100 to 700 ms with window means, including the N400 window;
+  - a timing check uses the occipital lambda response;
+  - an N400 regression uses surprisal as a positive control plus valence terms;
+  - the encoding scan runs with a surprisal control.
+- **Brain-tuning with within-sentence EEG targets** (`run_brain_tuning.py --targets centered`), and
+  optionally all five folds of the LLM with EEG tokens.
+
 ## Repository layout
 
 ```text

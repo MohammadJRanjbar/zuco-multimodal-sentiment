@@ -45,6 +45,7 @@ def long_word_table(trials, drop_channels=(ZUCO_REFERENCE_CHANNEL_INDEX,), log_p
             meta.append({"reader": trial["subject_id"], "sentence_id": trial["sentence_id"],
                          "word_index": int(index), "label": trial["label"],
                          "trt_ms": float(trial.get("trt_ms", np.full(len(block), np.nan))[index]),
+                         "ffd_ms": float(trial.get("ffd_ms", np.full(len(block), np.nan))[index]),
                          "n_fixations": float(trial["fixations"][index])})
         blocks.append(flat[present])
     X = np.concatenate(blocks).astype(np.float32)

@@ -41,6 +41,8 @@ def parse_args():
     parser.add_argument("--labels-csv", required=True)
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--surprisal-model", default="gpt2", help="'none' to skip")
+    parser.add_argument("--band-names", default=None,
+                        help="comma-separated names for the 8 feature groups (e.g. FRP time windows)")
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--n-perm", type=int, default=50, help="permutations for reader-averaged probes")
     parser.add_argument("--n-perm-single", type=int, default=20, help="permutations for single-reader probes")
@@ -106,8 +108,9 @@ def main():
     reliability, reliability_info = signal.split_half_reliability(meta, Z)
     reliability.to_csv(os.path.join(args.out_dir, "reliability.csv"), index=False)
     n_channels = info["n_channels"]
+    names = args.band_names.split(",") if args.band_names else list(BANDS)
     plot_topomaps(reliability["reliability_all_readers"].to_numpy().reshape(len(BANDS), n_channels),
-                  [f"{band}" for band in BANDS], os.path.join(plots, "reliability_all_readers.png"),
+                  names, os.path.join(plots, "reliability_all_readers.png"),
                   "Split-half reliability of reader-averaged word EEG", cmap="viridis")
 
     item_meta, A = signal.reader_average(meta, Z)
@@ -122,7 +125,7 @@ def main():
     pd.DataFrame(rows).to_csv(os.path.join(args.out_dir, "word_probes.csv"), index=False)
 
     band_rows = []
-    for band, columns in signal.band_slices(n_channels).items():
+    for band, columns in zip(names, signal.band_slices(n_channels).values()):
         for target in ["surprisal", "zipf", "length", "trt_ms", "valence", "abs_valence"]:
             if target in item_targets and item_targets[target].notna().any():
                 result = signal.ridge_probe(A[:, columns], item_targets[target].to_numpy(),
@@ -133,7 +136,7 @@ def main():
     for target in ["surprisal", "zipf", "trt_ms", "valence", "abs_valence"]:
         if target in item_targets and item_targets[target].notna().sum() > 50:
             maps = signal.feature_correlations(A, item_targets[target].to_numpy(dtype=float))
-            plot_topomaps(maps, BANDS, os.path.join(plots, f"correlation_{target}.png"),
+            plot_topomaps(maps, names, os.path.join(plots, f"correlation_{target}.png"),
                           f"Correlation of reader-averaged word EEG with {target}")
 
     covariate_rows = []
@@ -171,7 +174,7 @@ def main():
     print(stage2.round(4).to_string(index=False))
 
     band_reliability = {band: float(np.median(reliability["reliability_all_readers"].to_numpy()[columns]))
-                        for band, columns in signal.band_slices(n_channels).items()}
+                        for band, columns in zip(names, signal.band_slices(n_channels).values())}
     save_json({
         "n_trials": len(trials), "n_word_observations": int(len(meta)), "n_items": int(len(item_meta)),
         "feature_info": info, "lexicon_size": len(lexicon), "surprisal_model": args.surprisal_model,

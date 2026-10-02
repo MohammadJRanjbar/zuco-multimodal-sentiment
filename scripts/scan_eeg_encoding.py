@@ -24,29 +24,23 @@ sys.stdout.reconfigure(line_buffering=True)
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
-from src.brainshaping.data import sentence_table  # noqa: E402
+from src.brainshaping import scan_io  # noqa: E402
 from src.brainshaping.encoding import (  # noqa: E402
     ALPHAS, _progress, extract_layer_vectors, noise_ceiling, prepare_folds, residualize_folds, scan_layer,
     summarize_layer, word_controls,
 )
-from src.diagnostics import signal  # noqa: E402
 
-MODELS = {
-    "labse": "sentence-transformers/LaBSE",
-    "xlmr-large": "FacebookAI/xlm-roberta-large",
-    "me5-large": "intfloat/multilingual-e5-large",
-    "qwen2.5-1.5b": "Qwen/Qwen2.5-1.5B-Instruct",
-}
-REVISIONS = {"Qwen/Qwen2.5-1.5B-Instruct": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306"}
+MODELS, REVISIONS, model_specs, digest = scan_io.MODELS, scan_io.REVISIONS, scan_io.model_specs, scan_io.digest
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--dataset", required=True, choices=["zuco", "teco"])
-    parser.add_argument("--word-eeg-dir", help="ZuCo word-level EEG cache (extract_word_eeg.py)")
+    parser.add_argument("--word-eeg-dir", help="ZuCo word-level EEG cache (extract_word_eeg.py or extract_frp.py)")
     parser.add_argument("--trt-dir", help="TeCo folder with <Name>_trt_total.pickle files")
     parser.add_argument("--labels-csv", help="TeCo teco_sentiment_labels_task1.csv")
     parser.add_argument("--out-dir", required=True)
+    parser.add_argument("--tag", default=None, help="name for caches and the report (default: --dataset)")
     parser.add_argument("--vector-cache-dir", default=None, help="word-vector cache (default: <out-dir>/vectors)")
     parser.add_argument("--models", nargs="+", default=list(MODELS),
                         help=f"aliases ({', '.join(MODELS)}), alias=name_or_path, or HF names")
@@ -61,73 +55,22 @@ def parse_args():
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--no-controls", action="store_true",
                         help="skip the lexical / reading-behaviour controls and the noise ceiling")
-    return parser.parse_args()
-
-
-def model_specs(entries):
-    specs = []
-    for entry in entries:
-        if "=" in entry:
-            alias, name = entry.split("=", 1)
-        elif entry in MODELS:
-            alias, name = entry, MODELS[entry]
-        else:
-            alias, name = entry.rstrip("/").split("/")[-1].lower(), entry
-        specs.append((alias, name))
-    return specs
+    parser.add_argument("--surprisal-model", default=None,
+                        help="causal LM for a word-surprisal control (e.g. gpt2, Qwen/Qwen2.5-1.5B-Instruct)")
+    args = parser.parse_args()
+    args.tag = args.tag or args.dataset
+    return args
 
 
 def load_items(args):
-    if args.dataset == "zuco":
-        from src.fusion.word_eeg import load_word_eeg
-
-        if not args.word_eeg_dir:
-            raise SystemExit("--word-eeg-dir is required for ZuCo")
-        trials, drop = load_word_eeg(args.word_eeg_dir), None
-    else:
-        from src.brainshaping.teco import load_teco_trials
-
-        if not args.trt_dir:
-            raise SystemExit("--trt-dir is required for TeCo")
-        trials, drop = load_teco_trials(args.trt_dir, args.labels_csv), ()
-    sentences = sentence_table(trials)
-    # same steps as item_eeg, keeping the per-reader table for the controls and the noise ceiling
-    meta, X, _ = (signal.long_word_table(trials) if drop is None
-                  else signal.long_word_table(trials, drop_channels=drop))
-    Z = signal.zscore_per_reader(meta, X)
-    del X
-    items, eeg = signal.reader_average(meta, Z)
-    readers = pd.DataFrame({"sentence_id": [t["sentence_id"] for t in trials],
-                            "reader": [t["subject_id"] for t in trials]})
-    readers_per_sentence = readers.drop_duplicates().groupby("sentence_id").size().to_dict()
-    return {"sentences": sentences, "items": items.reset_index(drop=True), "eeg": eeg, "meta": meta, "Z": Z,
-            "readers_per_sentence": readers_per_sentence}
-
-
-def digest(value):
-    return hashlib.sha256(json.dumps(value, sort_keys=True, default=str).encode()).hexdigest()[:16]
+    return scan_io.load_items(args.dataset, args.word_eeg_dir, args.trt_dir, args.labels_csv)
 
 
 def word_vectors(args, alias, name, sentences, item_sentence, item_word, device):
-    """Load cached vectors for (dataset, model) or extract them; returns a memory-mapped array."""
+    """Load cached vectors for (tag, model) or extract them; returns a memory-mapped array."""
     cache_dir = args.vector_cache_dir or os.path.join(args.out_dir, "vectors")
-    os.makedirs(cache_dir, exist_ok=True)
-    stem = os.path.join(cache_dir, f"{args.dataset}_{alias}")
-    revision = REVISIONS.get(name)
-    key = digest([name, revision, sentences["words"].tolist(), item_sentence.tolist(), item_word.tolist()])
-    if os.path.exists(stem + ".json") and os.path.exists(stem + ".npy"):
-        meta = json.load(open(stem + ".json"))
-        if meta["key"] == key:
-            print(f"{alias}: reusing cached word vectors")
-            return np.load(stem + ".npy", mmap_mode="r"), np.array(meta["found"], dtype=bool), meta["info"]
-    print(f"{alias}: extracting word vectors from every layer of {name}")
-    vectors, found, info = extract_layer_vectors(sentences["words"].tolist(), item_sentence, item_word, name, device,
-                                                 batch_size=args.batch_size, revision=revision,
-                                                 desc=f"{alias}: word vectors")
-    np.save(stem + ".npy", vectors)
-    json.dump({"key": key, "found": found.tolist(), "info": info}, open(stem + ".json", "w"))
-    del vectors
-    return np.load(stem + ".npy", mmap_mode="r"), found, info
+    return scan_io.word_vectors(cache_dir, args.tag, alias, name, sentences, item_sentence, item_word, device,
+                                extractor=extract_layer_vectors, batch_size=args.batch_size)
 
 
 def main():
@@ -145,7 +88,7 @@ def main():
     print(f"{args.dataset}: {len(sentences)} sentences, {len(items)} words with EEG, "
           f"{eeg.shape[1]} EEG features per word (reader-averaged); ridge on {device}")
 
-    scan_dir = os.path.join(args.out_dir, f"encoding_scan_{args.dataset}")
+    scan_dir = os.path.join(args.out_dir, f"encoding_scan_{args.tag}")
     os.makedirs(scan_dir, exist_ok=True)
     settings = {"dataset": args.dataset, "n_items": int(len(items)), "k": args.k, "folds": args.folds,
                 "inner_folds": args.inner_folds, "modes": args.modes, "alphas": ALPHAS.tolist(),
@@ -210,16 +153,16 @@ def main():
     if not args.no_controls and "centered" in args.modes:
         controls = run_controls(args, results, next(iter(prepared_by_mask.values())), data, item_sentence, item_word,
                                 device)
-        controls["table"].to_csv(os.path.join(scan_dir, f"controls_{args.dataset}.csv"), index=False)
+        controls["table"].to_csv(os.path.join(scan_dir, f"controls_{args.tag}.csv"), index=False)
         json.dump({"baselines": controls["baselines"], "lexical": controls["lexical"],
-                   "reading": controls["reading"], "ceiling": {m: v.tolist() for m, v in ceilings.items()}},
-                  open(os.path.join(scan_dir, f"controls_{args.dataset}.json"), "w"), indent=1, default=float)
-    info = {"dataset": args.dataset, "n_sentences": int(len(sentences)), "n_items": int(len(items)),
+                   "reading": controls["reading"], "sets": controls["sets"], "ceiling": {m: v.tolist() for m, v in ceilings.items()}},
+                  open(os.path.join(scan_dir, f"controls_{args.tag}.json"), "w"), indent=1, default=float)
+    info = {"dataset": args.tag, "n_sentences": int(len(sentences)), "n_items": int(len(items)),
             "n_features": int(eeg.shape[1]), "k": args.k, "folds": args.folds, "explained": explained,
             "runtime_s": time.time() - started}
-    report = os.path.join(scan_dir, f"encoding_scan_{args.dataset}.md")
+    report = os.path.join(scan_dir, f"encoding_scan_{args.tag}.md")
     write_report(report, results, info, controls, ceilings)
-    plot(os.path.join(scan_dir, f"encoding_scan_{args.dataset}.png"), results, args.dataset)
+    plot(os.path.join(scan_dir, f"encoding_scan_{args.tag}.png"), results, args.tag)
     print(open(report).read())
 
 
@@ -232,6 +175,14 @@ def run_controls(args, results, prepared, data, item_sentence, item_word, device
     if len(usable) < len(reading):
         print(f"controls: reading features with missing values left out: {sorted(set(reading) - set(usable))}")
     sets = {"lexical": lexical, "lexical+reading": lexical + usable}
+    if args.surprisal_model:
+        cache = os.path.join(args.vector_cache_dir or os.path.join(args.out_dir, "vectors"),
+                             f"{args.tag}_surprisal_{args.surprisal_model.replace('/', '_')}.json")
+        per_sentence = scan_io.word_surprisal(data["sentences"]["words"].tolist(), args.surprisal_model, device,
+                                              cache_path=cache)
+        table["surprisal"] = [float(per_sentence[s][w]) for s, w in zip(item_sentence, data["items"]["word_index"])]
+        sets["lexical+surprisal"] = lexical + ["surprisal"]
+        sets["lexical+reading+surprisal"] = lexical + usable + ["surprisal"]
     folds, codes = prepared["modes"]["centered"], prepared["codes"]
     centered = results[results["mode"] == "centered"]
     best = centered.loc[centered.groupby("model", sort=False)["r2"].idxmax()]
@@ -265,7 +216,8 @@ def run_controls(args, results, prepared, data, item_sentence, item_word, device
         rows.append(row)
         del vectors
     bar.close()
-    return {"table": pd.DataFrame(rows), "baselines": baselines, "lexical": lexical, "reading": usable}
+    return {"table": pd.DataFrame(rows), "baselines": baselines, "lexical": lexical, "reading": usable,
+            "sets": sets}
 
 
 NEGLIGIBLE_SHARE = 0.10  # beyond-control R^2 below this share of the text vectors' R^2 counts as negligible
@@ -280,29 +232,30 @@ def controls_section(controls, ceilings):
                      f"{len(ceiling)} components; best component {100 * ceiling.max():.1f}%). No model can explain "
                      "more than this.")
         lines.append("")
+    sets = controls.get("sets") or {"lexical": controls["lexical"],
+                                    "lexical+reading": controls["lexical"] + controls["reading"]}
     for name, values in controls["baselines"].items():
-        columns = controls["lexical"] + (controls["reading"] if name == "lexical+reading" else [])
-        lines.append(f"* **{name} features alone** ({', '.join(columns)}): R² {values['r2']:.4f} "
+        lines.append(f"* **{name} features alone** ({', '.join(sets[name])}): R² {values['r2']:.4f} "
                      f"[{values['r2_ci_low']:.4f}, {values['r2_ci_high']:.4f}]")
-    lines += ["", "| model | layer | text vectors R² | beyond lexical R² [95% CI] | beyond lexical + reading R² "
-              "[95% CI] | share of ceiling |", "|---|---:|---|---|---|---:|"]
+    lines += ["", "| model | layer | text vectors R² | " + " | ".join(f"beyond {n} R² [95% CI]" for n in sets)
+              + " | share of ceiling |", "|---|---:|---|" + "---|" * len(sets) + "---:|"]
     table = controls["table"]
     for _, row in table.iterrows():
         share = (f"{100 * row['r2_vectors'] / np.clip(ceiling, 0, None).mean():.0f}%"
                  if ceiling is not None and np.clip(ceiling, 0, None).mean() > 0 else "—")
         cells = [f"{row[f'beyond_{n}_r2']:.5f} [{row[f'beyond_{n}_r2_ci_low']:.5f}, {row[f'beyond_{n}_r2_ci_high']:.5f}] "
                  f"({100 * row[f'beyond_{n}_r2'] / max(row['r2_vectors'], 1e-12):.0f}% of text vectors)"
-                 for n in ("lexical", "lexical+reading")]
+                 for n in sets]
         lines.append(f"| {row['model']} | {row['layer']}/{row['n_layers']} | {row['r2_vectors']:.4f} "
-                     f"[{row['r2_vectors_ci_low']:.4f}, {row['r2_vectors_ci_high']:.4f}] | {cells[0]} | {cells[1]} | "
-                     f"{share} |")
+                     f"[{row['r2_vectors_ci_low']:.4f}, {row['r2_vectors_ci_high']:.4f}] | " + " | ".join(cells)
+                     + f" | {share} |")
     lines.append("")
     best_vectors = table["r2_vectors"].max() if len(table) else np.nan
     for name, values in controls["baselines"].items():
         if values["r2"] >= best_vectors:
             lines.append(f"* **{name} features alone predict EEG at least as well as every text model** "
                          f"(R² {values['r2']:.4f} vs best text model {best_vectors:.4f}).")
-    for name in ("lexical", "lexical+reading"):
+    for name in sets:
         detected = (table[f"beyond_{name}_r2_ci_low"] > 0) & (table[f"beyond_{name}_delta_ci_low"] > 0)
         share = table[f"beyond_{name}_r2"] / table["r2_vectors"].clip(lower=1e-12)
         meaningful = detected & (share >= NEGLIGIBLE_SHARE)

@@ -1459,3 +1459,45 @@ Implications:
   models already encode those directions, and they carry no sentiment. This
   explains the version A null result.
 - The cross-lingual agreement is the universal lexical effect on reading.
+
+## 2026-10-02 — Follow-up experiments
+
+The follow-up experiments are implemented and tested on synthetic data in
+both MATLAB formats. None has been run on real data yet.
+`notebooks/followup_experiments_colab.ipynb` runs them and pushes each
+stage's reports to GitHub.
+
+- **Fixation-related potentials.**
+  - ZuCo stores no fixation onsets, but it does store each fixation's EEG
+    (`word.rawEEG`).
+  - Every segment is located inside the sentence `rawData`, by exact match or
+    with a constant per-channel offset. The match rate and the correlation
+    between segment length and ZuCo's FFD are reported, and the run stops
+    after the first subject if under 50% of fixations are located.
+  - Epochs are average-referenced (which restores Cz), filtered with a 30 Hz
+    low-pass, and baseline-corrected on -100..0 ms.
+  - Features are window means for 0–700 ms in 100 ms steps, plus 300–500 ms
+    (the N400 window). They are stored in the word-EEG cache format, so the
+    existing analyses run on them unchanged.
+  - Timing check: the occipital lambda/P1 response at 60–160 ms.
+  - The N400 regression has reader fixed effects and a sentence bootstrap. It
+    includes surprisal (the positive control), frequency, length, position,
+    word class, first-fixation duration, time to the next fixation (overlap
+    with the following response), and valence.
+- **Decoding the read word.** A ridge map from word EEG to the LaBSE
+  input-layer vector, with the penalty chosen by sentence-grouped CV.
+  - Measures: 2-vs-2, 2-vs-2 on pairs matched for length and frequency,
+    retrieval among the test vocabulary, and the sentiment of the decoded
+    word sequence.
+  - Inputs: EEG, shuffled EEG, noise, word features, and EEG plus word
+    features.
+- **English–Persian subspaces.**
+  - Subspace overlap against a shuffled-target null, before and after
+    removing both languages' word-feature directions.
+  - Transfer of one language's EEG subspace to the other language's held-out
+    EEG.
+- **Brain-tuning with within-sentence (centered) EEG targets** — the only
+  word-EEG targets that text predicts on unseen sentences.
+- **Encoding scan additions.** An optional surprisal control
+  (`--surprisal-model`), a first-fixation-duration reading control, and a
+  `--tag` option for alternative word-EEG caches.

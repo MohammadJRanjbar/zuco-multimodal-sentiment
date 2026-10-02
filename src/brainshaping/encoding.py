@@ -300,7 +300,8 @@ def word_controls(sentences, items, meta, readers_per_sentence, lang):
     Lexical (from text only): log length, Zipf frequency (wordfreq, ``lang``)
     and its square, relative position, first/last word, punctuation attached.
     Reading behaviour (from the eye tracker): share of readers who fixated the
-    word, mean number of fixations, log mean total reading time when available.
+    word, mean number of fixations, and log mean total reading time and
+    first-fixation duration when available.
     """
     from wordfreq import zipf_frequency
 
@@ -323,10 +324,13 @@ def word_controls(sentences, items, meta, readers_per_sentence, lang):
                               / items["sentence_id"].map(readers_per_sentence).to_numpy())
     table["n_fixations"] = by_item["n_fixations"].mean().loc[keys].to_numpy()
     reading = ["share_fixated", "n_fixations"]
-    trt = by_item["trt_ms"].mean().loc[keys].to_numpy()
-    if np.isfinite(trt).all() and (trt > 0).all():
-        table["log_trt"] = np.log(trt)
-        reading.append("log_trt")
+    for column, name in (("trt_ms", "log_trt"), ("ffd_ms", "log_ffd")):
+        if column not in meta:
+            continue
+        values = by_item[column].mean().loc[keys].to_numpy()
+        if np.isfinite(values).all() and (values > 0).all():
+            table[name] = np.log(values)
+            reading.append(name)
     return table, lexical, reading
 
 
