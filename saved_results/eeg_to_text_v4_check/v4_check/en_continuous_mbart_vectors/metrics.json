@@ -1,0 +1,117 @@
+{
+ "key": "46760e3adc51e16d",
+ "setting": "en",
+ "encoder": "continuous",
+ "input": "mbart_vectors",
+ "langs": [
+  "en"
+ ],
+ "train": {
+  "best_val_loss": 0.8058185901469005,
+  "history": [
+   {
+    "epoch": 1,
+    "train_loss": 4.585016225148173,
+    "val_loss": 3.405479908497857
+   },
+   {
+    "epoch": 2,
+    "train_loss": 1.8101362357440505,
+    "val_loss": 0.8058185901469005
+   },
+   {
+    "epoch": 3,
+    "train_loss": 7.12434622732181,
+    "val_loss": 6.510342476972893
+   },
+   {
+    "epoch": 4,
+    "train_loss": 1.1277167253123903,
+    "val_loss": 0.8935097781325708
+   },
+   {
+    "epoch": 5,
+    "train_loss": 0.6366708034161225,
+    "val_loss": 0.8721013450419216
+   },
+   {
+    "epoch": 6,
+    "train_loss": 0.5810564420755627,
+    "val_loss": 0.8681331046862897
+   }
+  ]
+ },
+ "test": {
+  "en/mbart_vectors": {
+   "tf_accuracy": 0.8266308866883363,
+   "tf_bleu4": 0.5745988022873788,
+   "free_bleu4": 0.5329206472605219
+  },
+  "en/mbart_vectors_avg": {
+   "tf_accuracy": 0.943950177935943,
+   "tf_bleu4": 0.8300337108366567,
+   "free_bleu4": 0.8038193992354296
+  }
+ },
+ "runtime_min": 26.294961170355478,
+ "input_mapping": "ridge",
+ "mapping_quality": {
+  "en/mbart_vectors": {
+   "words": 16582,
+   "cosine": 0.9999999951457158,
+   "r2": 0.9999999715124511
+  }
+ },
+ "input_layer": "identity",
+ "vq_code_usage": null,
+ "examples": [
+  {
+   "lang": "en",
+   "gold": "Presents a good case while failing to provide a reason for us to care beyond the very basic dictums of human decency.",
+   "tf_text": "Presents a very case while failing to provide a reason for people to care beyond the very basic dictums of human decency.",
+   "free_text": "Presents a very case while failing to provide a reason for people to care beyond the very basic dictums of human decency."
+  },
+  {
+   "lang": "en",
+   "gold": "Bread, My Sweet has so many flaws it would be easy for critics to shred it.",
+   "tf_text": "Bread Bre My Sweet has so many flaws that would be easy for critics to shred it.",
+   "free_text": "Bread Bread My Sweet has so many flaws that would be easy for critics to shred and"
+  },
+  {
+   "lang": "en",
+   "gold": "If Deuces Wild had been tweaked up a notch it would have become a camp adventure, one of those movies that's so bad it starts to become good.",
+   "tf_text": "If Decesces hade been tweaked up a notch, would have become a camp adventure, one of those movies that's so good it starts to become..",
+   "free_text": "If Deces had been tweaked up a notch, it would have become a camp adventure, one of those movies that's so good, it starts to become."
+  },
+  {
+   "lang": "en",
+   "gold": "I love the robust middle of this picture.",
+   "tf_text": "I love the robust middle of this picture.",
+   "free_text": "I love the robust middle of this picture."
+  },
+  {
+   "lang": "en",
+   "gold": "The Ring is worth a look, if you don't demand much more than a few cheap thrills from your Halloween entertainment.",
+   "tf_text": "The movie is worth a trip if if you don't demand much more than a few cheap shotjunklls from the Halloween entertainment.",
+   "free_text": "The movie is worth a watch if you don't demand much more than a few cheap shots from the Halloween entertainment."
+  },
+  {
+   "lang": "en",
+   "gold": "I like the new footage and still love the old stuff.",
+   "tf_text": "I love the new footage and still love the old one.",
+   "free_text": "I love the new footage and still love the old one."
+  },
+  {
+   "lang": "en",
+   "gold": "It briefly flirts with player masochism, but the point of real interest -- audience sadism -- is evaded completely.",
+   "tf_text": "It briefly flirts with player masochism, to to point is real life in the --ness -- is evaded completely.",
+   "free_text": "It briefly flirts with player masochism, to the point of realising that the audience of the film is evaded completely."
+  },
+  {
+   "lang": "en",
+   "gold": "Could The Country Bears really be as bad as its trailers?",
+   "tf_text": "Could The Country Bears really be as bad as its trailers?",
+   "free_text": "Could The Country Bears really be as bad as its trailers?"
+  }
+ ]
+}
