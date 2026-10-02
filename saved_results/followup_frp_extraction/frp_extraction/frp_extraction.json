@@ -181,6 +181,650 @@
      2.0
     ]
    }
+  },
+  "ZJN": {
+   "subject": "ZJN",
+   "sentences": 384,
+   "fixation_counts": {
+    "exact": 9898,
+    "unmatched": 337,
+    "raw_unreadable": 16
+   },
+   "match_rate": 0.9670737664875427,
+   "words_with_epoch": 5245,
+   "words_fixated": 5450,
+   "ffd_vs_segment_r": 1.0,
+   "ffd_minus_segment_ms_median": -132.0,
+   "layout_first_sentence": {
+    "raw_shape": [
+     105,
+     5090
+    ],
+    "n_words": 22,
+    "segments_per_word": [
+     3,
+     0,
+     4,
+     2,
+     2,
+     2,
+     0,
+     2,
+     0,
+     2,
+     0,
+     0,
+     1,
+     1,
+     1,
+     0,
+     2,
+     1,
+     2,
+     1,
+     3,
+     2
+    ],
+    "segment_shapes": [
+     [
+      105,
+      138
+     ],
+     [
+      105,
+      148
+     ],
+     [
+      105,
+      151
+     ],
+     [
+      105,
+      133
+     ],
+     [
+      105,
+      214
+     ]
+    ],
+    "fixations_field": [
+     3.0,
+     0.0,
+     4.0,
+     2.0,
+     2.0,
+     2.0,
+     0.0,
+     2.0,
+     0.0,
+     2.0,
+     0.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     2.0,
+     1.0,
+     2.0,
+     1.0,
+     3.0,
+     2.0
+    ]
+   },
+   "format": "MATLAB v5"
+  },
+  "ZJS": {
+   "subject": "ZJS",
+   "sentences": 338,
+   "fixation_counts": {
+    "raw_unreadable": 62,
+    "exact": 4899,
+    "unmatched": 312
+   },
+   "match_rate": 0.9401266551525619,
+   "words_with_epoch": 3431,
+   "words_fixated": 3952,
+   "ffd_vs_segment_r": 1.0,
+   "ffd_minus_segment_ms_median": -111.0,
+   "layout_first_sentence": {
+    "raw_shape": [
+     105,
+     3178
+    ],
+    "n_words": 22,
+    "segments_per_word": [
+     1,
+     1,
+     2,
+     2,
+     0,
+     1,
+     1,
+     1,
+     1,
+     1,
+     0,
+     2,
+     0,
+     1,
+     1,
+     1,
+     1,
+     2,
+     0,
+     1,
+     0,
+     1
+    ],
+    "segment_shapes": [
+     [
+      105,
+      123
+     ],
+     [
+      105,
+      143
+     ],
+     [
+      105,
+      117
+     ],
+     [
+      105,
+      141
+     ],
+     [
+      105,
+      143
+     ]
+    ],
+    "fixations_field": [
+     1.0,
+     1.0,
+     2.0,
+     2.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.0,
+     2.0,
+     0.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     2.0,
+     0.0,
+     1.0,
+     0.0,
+     1.0
+    ]
+   },
+   "format": "MATLAB v5"
+  },
+  "ZKB": {
+   "subject": "ZKB",
+   "sentences": 399,
+   "fixation_counts": {
+    "exact": 8216,
+    "unmatched": 374,
+    "raw_unreadable": 1
+   },
+   "match_rate": 0.9564610011641443,
+   "words_with_epoch": 4406,
+   "words_fixated": 4820,
+   "ffd_vs_segment_r": 0.9999999999999998,
+   "ffd_minus_segment_ms_median": -97.0,
+   "layout_first_sentence": {
+    "raw_shape": [
+     105,
+     5002
+    ],
+    "n_words": 22,
+    "segments_per_word": [
+     1,
+     1,
+     3,
+     2,
+     3,
+     5,
+     2,
+     3,
+     3,
+     4,
+     2,
+     0,
+     1,
+     2,
+     1,
+     0,
+     1,
+     1,
+     4,
+     0,
+     1,
+     0
+    ],
+    "segment_shapes": [
+     [
+      105,
+      233
+     ],
+     [
+      105,
+      84
+     ],
+     [
+      105,
+      97
+     ],
+     [
+      105,
+      90
+     ],
+     [
+      105,
+      88
+     ]
+    ],
+    "fixations_field": [
+     1.0,
+     1.0,
+     3.0,
+     2.0,
+     3.0,
+     5.0,
+     2.0,
+     3.0,
+     3.0,
+     4.0,
+     2.0,
+     0.0,
+     1.0,
+     2.0,
+     1.0,
+     0.0,
+     1.0,
+     1.0,
+     4.0,
+     0.0,
+     1.0,
+     0.0
+    ]
+   },
+   "format": "MATLAB v5"
+  },
+  "ZKH": {
+   "subject": "ZKH",
+   "sentences": 392,
+   "fixation_counts": {
+    "exact": 6738,
+    "unmatched": 359,
+    "raw_unreadable": 8
+   },
+   "match_rate": 0.9494152458785402,
+   "words_with_epoch": 4424,
+   "words_fixated": 4900,
+   "ffd_vs_segment_r": 1.0,
+   "ffd_minus_segment_ms_median": -123.0,
+   "layout_first_sentence": {
+    "raw_shape": [
+     105,
+     3165
+    ],
+    "n_words": 22,
+    "segments_per_word": [
+     1,
+     1,
+     2,
+     1,
+     1,
+     1,
+     1,
+     2,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     2,
+     1,
+     1,
+     1,
+     2,
+     0,
+     1,
+     1
+    ],
+    "segment_shapes": [
+     [
+      105,
+      167
+     ],
+     [
+      105,
+      163
+     ],
+     [
+      105,
+      187
+     ],
+     [
+      105,
+      106
+     ],
+     [
+      105,
+      57
+     ]
+    ],
+    "fixations_field": [
+     1.0,
+     1.0,
+     2.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     2.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     2.0,
+     1.0,
+     1.0,
+     1.0,
+     2.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   },
+   "format": "MATLAB v5"
+  },
+  "ZKW": {
+   "subject": "ZKW",
+   "sentences": 399,
+   "fixation_counts": {
+    "exact": 9200,
+    "unmatched": 360,
+    "raw_unreadable": 1
+   },
+   "match_rate": 0.9623430962343096,
+   "words_with_epoch": 4828,
+   "words_fixated": 5229,
+   "ffd_vs_segment_r": 0.9999999999999999,
+   "ffd_minus_segment_ms_median": -124.0,
+   "layout_first_sentence": {
+    "raw_shape": [
+     105,
+     9464
+    ],
+    "n_words": 22,
+    "segments_per_word": [
+     5,
+     2,
+     5,
+     3,
+     3,
+     6,
+     0,
+     4,
+     0,
+     5,
+     1,
+     0,
+     3,
+     4,
+     4,
+     1,
+     4,
+     7,
+     2,
+     1,
+     2,
+     2
+    ],
+    "segment_shapes": [
+     [
+      105,
+      175
+     ],
+     [
+      105,
+      54
+     ],
+     [
+      105,
+      140
+     ],
+     [
+      105,
+      112
+     ],
+     [
+      105,
+      286
+     ]
+    ],
+    "fixations_field": [
+     5.0,
+     2.0,
+     5.0,
+     3.0,
+     3.0,
+     6.0,
+     0.0,
+     4.0,
+     0.0,
+     5.0,
+     1.0,
+     0.0,
+     3.0,
+     4.0,
+     4.0,
+     1.0,
+     4.0,
+     7.0,
+     2.0,
+     1.0,
+     2.0,
+     2.0
+    ]
+   },
+   "format": "MATLAB v5"
+  },
+  "ZMG": {
+   "subject": "ZMG",
+   "sentences": 386,
+   "fixation_counts": {
+    "exact": 5843,
+    "unmatched": 339,
+    "raw_unreadable": 14
+   },
+   "match_rate": 0.9451633775477192,
+   "words_with_epoch": 3679,
+   "words_fixated": 4129,
+   "ffd_vs_segment_r": 1.0,
+   "ffd_minus_segment_ms_median": -104.0,
+   "layout_first_sentence": {
+    "raw_shape": [
+     105,
+     4243
+    ],
+    "n_words": 22,
+    "segments_per_word": [
+     2,
+     0,
+     3,
+     3,
+     1,
+     2,
+     0,
+     2,
+     0,
+     4,
+     1,
+     0,
+     0,
+     2,
+     3,
+     0,
+     2,
+     2,
+     2,
+     0,
+     2,
+     1
+    ],
+    "segment_shapes": [
+     [
+      105,
+      117
+     ],
+     [
+      105,
+      86
+     ],
+     [
+      105,
+      59
+     ],
+     [
+      105,
+      125
+     ],
+     [
+      105,
+      88
+     ]
+    ],
+    "fixations_field": [
+     2.0,
+     0.0,
+     3.0,
+     3.0,
+     1.0,
+     2.0,
+     0.0,
+     2.0,
+     0.0,
+     4.0,
+     1.0,
+     0.0,
+     0.0,
+     2.0,
+     3.0,
+     0.0,
+     2.0,
+     2.0,
+     2.0,
+     0.0,
+     2.0,
+     1.0
+    ]
+   },
+   "format": "MATLAB v5"
+  },
+  "ZPH": {
+   "subject": "ZPH",
+   "sentences": 393,
+   "fixation_counts": {
+    "exact": 6859,
+    "unmatched": 355,
+    "raw_unreadable": 7
+   },
+   "match_rate": 0.9507901303021902,
+   "words_with_epoch": 4218,
+   "words_fixated": 4621,
+   "ffd_vs_segment_r": 1.0,
+   "ffd_minus_segment_ms_median": -100.0,
+   "layout_first_sentence": {
+    "raw_shape": [
+     105,
+     4603
+    ],
+    "n_words": 22,
+    "segments_per_word": [
+     3,
+     1,
+     1,
+     2,
+     3,
+     6,
+     0,
+     2,
+     0,
+     4,
+     0,
+     0,
+     1,
+     1,
+     2,
+     0,
+     1,
+     1,
+     3,
+     0,
+     2,
+     0
+    ],
+    "segment_shapes": [
+     [
+      105,
+      95
+     ],
+     [
+      105,
+      85
+     ],
+     [
+      105,
+      116
+     ],
+     [
+      105,
+      66
+     ],
+     [
+      105,
+      92
+     ]
+    ],
+    "fixations_field": [
+     3.0,
+     1.0,
+     1.0,
+     2.0,
+     3.0,
+     6.0,
+     0.0,
+     2.0,
+     0.0,
+     4.0,
+     0.0,
+     0.0,
+     1.0,
+     1.0,
+     2.0,
+     0.0,
+     1.0,
+     1.0,
+     3.0,
+     0.0,
+     2.0,
+     0.0
+    ]
+   },
+   "format": "MATLAB v5"
   }
  },
  "windows_ms": [
@@ -229,5 +873,22 @@
  ],
  "sfreq": 500.0,
  "pre_ms": 100,
- "post_ms": 700
+ "post_ms": 700,
+ "skipped": {
+  "ZDN": {
+   "reason": "no per-fixation EEG (word.rawEEG)",
+   "format": "MATLAB v5",
+   "detail": "ZDN: word struct has no 'rawEEG' field; available fields: ['FFD', 'FFD_a1', 'FFD_a1_diff', 'FFD_a2', 'FFD_a2_diff', 'FFD_b1', 'FFD_b1_diff', 'FFD_b2', 'FFD_b2_diff', 'FFD_g1', 'FFD_g1_diff', 'FFD_g2', 'FFD_g2_diff', 'FFD_pupilsize', 'FFD_t1', 'FFD_t1_diff', 'FFD_t2', 'FFD_t2_diff', 'GD', 'GD_a1', 'GD_a1_diff', 'GD_a2', 'GD_a2_diff', 'GD_b1', 'GD_b1_diff', 'GD_b2', 'GD_b2_diff', 'GD_g1', 'GD_g1_diff', 'GD_g2', 'GD_g2_diff', 'GD_pupilsize', 'GD_t1', 'GD_t1_diff', 'GD_t2', 'GD_t2_diff', 'GPT', 'GPT_a1', 'GPT_a1_diff', 'GPT_a2', 'GPT_a2_diff', 'GPT_b1', 'GPT_b1_diff', 'GPT_b2', 'GPT_b2_diff', 'GPT_g1', 'GPT_g1_diff', 'GPT_g2', 'GPT_g2_diff', 'GPT_pupilsize', 'GPT_t1', 'GPT_t1_diff', 'GPT_t2', 'GPT_t2_diff', 'TRT', 'TRT_a1', 'TRT_a1_diff', 'TRT_a2', 'TRT_a2_diff', 'TRT_b1', 'TRT_b1_diff', 'TRT_b2', 'TRT_b2_diff', 'TRT_g1', 'TRT_g1_diff', 'TRT_g2', 'TRT_g2_diff', 'TRT_pupilsize', 'TRT_t1', 'TRT_t1_diff', 'TRT_t2', 'TRT_t2_diff', 'content', 'fixPositions', 'meanPupilSize', 'nFixations']"
+  },
+  "ZGW": {
+   "reason": "no per-fixation EEG (word.rawEEG)",
+   "format": "MATLAB v5",
+   "detail": "ZGW: word struct has no 'rawEEG' field; available fields: ['FFD', 'FFD_a1', 'FFD_a1_diff', 'FFD_a2', 'FFD_a2_diff', 'FFD_b1', 'FFD_b1_diff', 'FFD_b2', 'FFD_b2_diff', 'FFD_g1', 'FFD_g1_diff', 'FFD_g2', 'FFD_g2_diff', 'FFD_pupilsize', 'FFD_t1', 'FFD_t1_diff', 'FFD_t2', 'FFD_t2_diff', 'GD', 'GD_a1', 'GD_a1_diff', 'GD_a2', 'GD_a2_diff', 'GD_b1', 'GD_b1_diff', 'GD_b2', 'GD_b2_diff', 'GD_g1', 'GD_g1_diff', 'GD_g2', 'GD_g2_diff', 'GD_pupilsize', 'GD_t1', 'GD_t1_diff', 'GD_t2', 'GD_t2_diff', 'GPT', 'GPT_a1', 'GPT_a1_diff', 'GPT_a2', 'GPT_a2_diff', 'GPT_b1', 'GPT_b1_diff', 'GPT_b2', 'GPT_b2_diff', 'GPT_g1', 'GPT_g1_diff', 'GPT_g2', 'GPT_g2_diff', 'GPT_pupilsize', 'GPT_t1', 'GPT_t1_diff', 'GPT_t2', 'GPT_t2_diff', 'TRT', 'TRT_a1', 'TRT_a1_diff', 'TRT_a2', 'TRT_a2_diff', 'TRT_b1', 'TRT_b1_diff', 'TRT_b2', 'TRT_b2_diff', 'TRT_g1', 'TRT_g1_diff', 'TRT_g2', 'TRT_g2_diff', 'TRT_pupilsize', 'TRT_t1', 'TRT_t1_diff', 'TRT_t2', 'TRT_t2_diff', 'content', 'fixPositions', 'meanPupilSize', 'nFixations']"
+  },
+  "ZJM": {
+   "reason": "no per-fixation EEG (word.rawEEG)",
+   "format": "MATLAB v5",
+   "detail": "ZJM: word struct has no 'rawEEG' field; available fields: ['FFD', 'FFD_a1', 'FFD_a1_diff', 'FFD_a2', 'FFD_a2_diff', 'FFD_b1', 'FFD_b1_diff', 'FFD_b2', 'FFD_b2_diff', 'FFD_g1', 'FFD_g1_diff', 'FFD_g2', 'FFD_g2_diff', 'FFD_pupilsize', 'FFD_t1', 'FFD_t1_diff', 'FFD_t2', 'FFD_t2_diff', 'GD', 'GD_a1', 'GD_a1_diff', 'GD_a2', 'GD_a2_diff', 'GD_b1', 'GD_b1_diff', 'GD_b2', 'GD_b2_diff', 'GD_g1', 'GD_g1_diff', 'GD_g2', 'GD_g2_diff', 'GD_pupilsize', 'GD_t1', 'GD_t1_diff', 'GD_t2', 'GD_t2_diff', 'GPT', 'GPT_a1', 'GPT_a1_diff', 'GPT_a2', 'GPT_a2_diff', 'GPT_b1', 'GPT_b1_diff', 'GPT_b2', 'GPT_b2_diff', 'GPT_g1', 'GPT_g1_diff', 'GPT_g2', 'GPT_g2_diff', 'GPT_pupilsize', 'GPT_t1', 'GPT_t1_diff', 'GPT_t2', 'GPT_t2_diff', 'TRT', 'TRT_a1', 'TRT_a1_diff', 'TRT_a2', 'TRT_a2_diff', 'TRT_b1', 'TRT_b1_diff', 'TRT_b2', 'TRT_b2_diff', 'TRT_g1', 'TRT_g1_diff', 'TRT_g2', 'TRT_g2_diff', 'TRT_pupilsize', 'TRT_t1', 'TRT_t1_diff', 'TRT_t2', 'TRT_t2_diff', 'content', 'fixPositions', 'meanPupilSize', 'nFixations']"
+  }
+ }
 }
