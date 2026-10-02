@@ -1,7 +1,7 @@
 {
-  "n_trials": 776,
-  "n_word_observations": 8283,
-  "n_items": 5574,
+  "n_trials": 3467,
+  "n_word_observations": 38514,
+  "n_items": 6929,
   "feature_info": {
     "log_transformed": false,
     "n_channels": 104,
@@ -10,27 +10,27 @@
   "lexicon_size": 7506,
   "surprisal_model": "gpt2",
   "variance_components_median": {
-    "reader": 0.0011700479498583652,
-    "word_item": 0.6486815142202298,
-    "residual": 0.349153189366715
+    "reader": 0.00246602595510246,
+    "word_item": 0.18261033282293643,
+    "residual": 0.81450633498451
   },
   "reliability": {
-    "items": 0,
-    "readers_per_half": NaN,
-    "readers_per_item": NaN,
-    "median_all_readers": NaN,
-    "q90_all_readers": NaN,
-    "median_single_reader": NaN,
+    "items": 5310,
+    "readers_per_half": 3.061393596986817,
+    "readers_per_item": 6.60075329566855,
+    "median_all_readers": 0.05580647268062977,
+    "q90_all_readers": 0.10016393861118937,
+    "median_single_reader": 0.008874800373880554,
     "median_all_readers_by_band": {
-      "0-100ms": NaN,
-      "100-200ms": NaN,
-      "200-300ms": NaN,
-      "300-400ms": NaN,
-      "400-500ms": NaN,
-      "500-600ms": NaN,
-      "600-700ms": NaN,
-      "N400_300-500ms": NaN
+      "0-100ms": 0.0826355402323733,
+      "100-200ms": 0.049277097258338065,
+      "200-300ms": 0.047705987603893676,
+      "300-400ms": 0.04554903752643896,
+      "400-500ms": 0.05276779866426465,
+      "500-600ms": 0.06368073352921955,
+      "600-700ms": 0.06628916967980192,
+      "N400_300-500ms": 0.054926442746445724
     }
   },
-  "runtime_s": 114.62606143951416
+  "runtime_s": 225.9098961353302
 }

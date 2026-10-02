@@ -1,4 +1,4 @@
 model,target,R2
-covariates only,valence (lexicon words),0.11060904741543698
-covariates + EEG,valence (lexicon words),-0.015540614190177493
-EEG only,valence (lexicon words),-0.005805225117952562
+covariates only,valence (lexicon words),0.12828301835091216
+covariates + EEG,valence (lexicon words),-0.026522574012265876
+EEG only,valence (lexicon words),-0.004325560792311833
