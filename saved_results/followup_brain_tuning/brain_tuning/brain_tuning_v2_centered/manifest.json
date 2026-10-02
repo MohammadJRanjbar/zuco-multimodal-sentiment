@@ -1,0 +1,135 @@
+{
+  "experiment": "brain_tuning_v1",
+  "config": {
+    "experiment": "brain_tuning_v1",
+    "base_model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "base_model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+    "quick_model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "base_dtype": "auto",
+    "prompt": {
+      "instruction": "Classify the sentiment of this movie-review sentence as negative, neutral, or positive.\n",
+      "sentence_label": "Sentence:",
+      "answer_label": "\nSentiment:"
+    },
+    "class_words": [
+      "negative",
+      "neutral",
+      "positive"
+    ],
+    "lora": {
+      "r": 16,
+      "alpha": 32,
+      "dropout": 0.05,
+      "targets": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ]
+    },
+    "aux": {
+      "k": 32,
+      "weight": 0.5,
+      "layer": 14
+    },
+    "train": {
+      "epochs": 6,
+      "batch_size": 16,
+      "eval_batch_size": 32,
+      "lr_lora": 0.0002,
+      "lr_projector": 0.001,
+      "weight_decay": 0.01,
+      "warmup_ratio": 0.06,
+      "evals_per_epoch": 2,
+      "max_grad_norm": 1.0,
+      "seed": 42
+    },
+    "split": {
+      "protocol": "text",
+      "seed": 42,
+      "params": {
+        "n_folds": 5,
+        "val_fraction": 0.15
+      }
+    },
+    "arms": [
+      "text_only",
+      "eeg",
+      "shuffled_eeg",
+      "random_targets"
+    ],
+    "config_path": "/content/zuco-multimodal-sentiment/configs/brain_tuning.yaml"
+  },
+  "git": {
+    "commit": "0c9099e2c6d965d51930115d1bd0c21bc97c3c0a",
+    "branch": "feature/neurolm-eeg-probe",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.13.15",
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+    "numpy": "2.1.3",
+    "scipy": "1.16.3",
+    "sklearn": "1.6.1",
+    "torch": "2.11.0+cu130",
+    "pandas": "2.2.3",
+    "h5py": "3.16.0",
+    "cuda_device": "Tesla T4"
+  },
+  "created_unix": 1790944481.2571354,
+  "settings": {
+    "model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+    "dtype": "torch.bfloat16",
+    "train": {
+      "epochs": 6,
+      "batch_size": 16,
+      "eval_batch_size": 32,
+      "lr_lora": 0.0002,
+      "lr_projector": 0.001,
+      "weight_decay": 0.01,
+      "warmup_ratio": 0.06,
+      "evals_per_epoch": 2,
+      "max_grad_norm": 1.0,
+      "seed": 42
+    },
+    "aux": {
+      "k": 32,
+      "weight": 0.5,
+      "layer": 14
+    },
+    "prompt": {
+      "instruction": "Classify the sentiment of this movie-review sentence as negative, neutral, or positive.\n",
+      "sentence_label": "Sentence:",
+      "answer_label": "\nSentiment:"
+    },
+    "lora": {
+      "r": 16,
+      "alpha": 32,
+      "dropout": 0.05,
+      "targets": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ]
+    },
+    "split": {
+      "protocol": "text",
+      "seed": 42,
+      "params": {
+        "n_folds": 5,
+        "val_fraction": 0.15
+      }
+    },
+    "n_sentences": 400,
+    "targets": "centered"
+  },
+  "settings_key": "84a6647aa62360cd",
+  "arms": [
+    "text_only",
+    "eeg",
+    "shuffled_eeg",
+    "random_targets"
+  ]
+}
