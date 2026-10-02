@@ -26,7 +26,7 @@
 
 *Penalty at grid max*: share of folds where the strongest penalty won, i.e. the model chose to predict almost nothing (expected when there is no signal).
 
-All layers: one CSV per model next to this report; plot `encoding_scan_zuco_frp.png`. Runtime 18.4 min.
+All layers: one CSV per model next to this report; plot `encoding_scan_zuco_frp.png`. Runtime 1.7 min.
 
 ## Is it more than word length, frequency and reading behaviour? (centered)
 
