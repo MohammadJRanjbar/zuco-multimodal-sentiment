@@ -237,3 +237,20 @@ def test_scan_script_teco_end_to_end(tmp_path, monkeypatch):
     runner.main()
     table = pd.read_csv(os.path.join(out, "encoding_scan_teco", "fake.csv"))
     assert table.set_index("layer")["r2"].idxmax() == 1
+
+
+def test_controls_section_calls_tiny_residual_signal_negligible():
+    runner = load_script("scan_eeg_encoding")
+    row = {"model": "labse", "layer": 2, "n_layers": 12, "r2_vectors": 0.0031, "r2_vectors_ci_low": 0.0026,
+           "r2_vectors_ci_high": 0.0036, "component_r2": json.dumps([0.02, 0.01])}
+    for name, r2 in (("lexical", 0.00003), ("lexical+reading", 0.0)):
+        row.update({f"beyond_{name}_r2": r2, f"beyond_{name}_r2_ci_low": r2 / 3 if r2 else -1e-5,
+                    f"beyond_{name}_r2_ci_high": 2 * r2 + 1e-5, f"beyond_{name}_r2_shuffled": 0.0,
+                    f"beyond_{name}_delta_ci_low": r2 / 3 if r2 else -1e-5})
+    baseline = {"r2": 0.0041, "r2_ci_low": 0.0035, "r2_ci_high": 0.0047}
+    controls = {"table": pd.DataFrame([row]), "baselines": {"lexical": baseline, "lexical+reading": baseline},
+                "lexical": ["log_length"], "reading": ["n_fixations"]}
+    text = "\n".join(runner.controls_section(controls, {"centered": np.full(32, 0.023)}))
+    assert "Beyond lexical: negligible" in text and "1% of what the text vectors predict" in text
+    assert "Beyond lexical+reading: nothing remains" in text
+    assert "lexical features alone predict EEG at least as well as every text model" in text

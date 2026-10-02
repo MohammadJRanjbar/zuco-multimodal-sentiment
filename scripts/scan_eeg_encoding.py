@@ -268,6 +268,9 @@ def run_controls(args, results, prepared, data, item_sentence, item_word, device
     return {"table": pd.DataFrame(rows), "baselines": baselines, "lexical": lexical, "reading": usable}
 
 
+NEGLIGIBLE_SHARE = 0.10  # beyond-control R^2 below this share of the text vectors' R^2 counts as negligible
+
+
 def controls_section(controls, ceilings):
     lines = ["## Is it more than word length, frequency and reading behaviour? (centered)", ""]
     ceiling = ceilings.get("centered")
@@ -287,17 +290,30 @@ def controls_section(controls, ceilings):
     for _, row in table.iterrows():
         share = (f"{100 * row['r2_vectors'] / np.clip(ceiling, 0, None).mean():.0f}%"
                  if ceiling is not None and np.clip(ceiling, 0, None).mean() > 0 else "—")
-        cells = [f"{row[f'beyond_{n}_r2']:.4f} [{row[f'beyond_{n}_r2_ci_low']:.4f}, {row[f'beyond_{n}_r2_ci_high']:.4f}]"
+        cells = [f"{row[f'beyond_{n}_r2']:.5f} [{row[f'beyond_{n}_r2_ci_low']:.5f}, {row[f'beyond_{n}_r2_ci_high']:.5f}] "
+                 f"({100 * row[f'beyond_{n}_r2'] / max(row['r2_vectors'], 1e-12):.0f}% of text vectors)"
                  for n in ("lexical", "lexical+reading")]
         lines.append(f"| {row['model']} | {row['layer']}/{row['n_layers']} | {row['r2_vectors']:.4f} "
                      f"[{row['r2_vectors_ci_low']:.4f}, {row['r2_vectors_ci_high']:.4f}] | {cells[0]} | {cells[1]} | "
                      f"{share} |")
     lines.append("")
+    best_vectors = table["r2_vectors"].max() if len(table) else np.nan
+    for name, values in controls["baselines"].items():
+        if values["r2"] >= best_vectors:
+            lines.append(f"* **{name} features alone predict EEG at least as well as every text model** "
+                         f"(R² {values['r2']:.4f} vs best text model {best_vectors:.4f}).")
     for name in ("lexical", "lexical+reading"):
-        survives = table[(table[f"beyond_{name}_r2_ci_low"] > 0) & (table[f"beyond_{name}_delta_ci_low"] > 0)]
-        if len(survives):
-            lines.append(f"* **Beyond {name}: signal remains** in {', '.join(survives['model'])} — the text vectors "
-                         f"predict EEG that {name} features do not.")
+        detected = (table[f"beyond_{name}_r2_ci_low"] > 0) & (table[f"beyond_{name}_delta_ci_low"] > 0)
+        share = table[f"beyond_{name}_r2"] / table["r2_vectors"].clip(lower=1e-12)
+        meaningful = detected & (share >= NEGLIGIBLE_SHARE)
+        if meaningful.any():
+            lines.append(f"* **Beyond {name}: signal remains** in {', '.join(table.loc[meaningful, 'model'])} — the "
+                         f"text vectors predict EEG that {name} features do not.")
+        elif detected.any():
+            lines.append(f"* **Beyond {name}: negligible** — statistically above 0 in "
+                         f"{', '.join(table.loc[detected, 'model'])}, but at most {100 * share[detected].max():.0f}% "
+                         f"of what the text vectors predict; practically all of it is accounted for by {name} "
+                         "features.")
         else:
             lines.append(f"* **Beyond {name}: nothing remains** — what the text vectors predict about EEG is "
                          f"accounted for by {name} features.")

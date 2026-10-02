@@ -1431,3 +1431,31 @@ layer:
 - **noise ceiling:** split-half reliability of the reader-averaged targets,
   with Spearman–Brown correction;
 - **R² per component.**
+
+### Control results (centered, best layer per model)
+
+| | ZuCo (English) | TeCo (Persian) |
+|---|---|---|
+| Noise ceiling: reliable word-to-word EEG variance | 2.3% (best component 12.2%) | 4.9% (best component 43.6%) |
+| Lexical features alone | R² 0.0041 | R² 0.0033 |
+| Lexical + reading features alone | R² 0.0050 | R² 0.0041 |
+| Best text model | LaBSE L2: 0.0031 (13% of the ceiling) | LaBSE L1: 0.0028 (6% of the ceiling) |
+| Text vectors beyond lexical | ≤ 0.00005, every model | ≤ 0.00005, every model |
+
+Most word-level band power over total reading time is not reliable across
+readers. Simple lexical features (length, frequency, position) predict the
+reliable part better than any text model. Everything the text vectors
+predict about EEG is accounted for by those features, in both languages.
+
+The beyond-lexical residual is statistically above 0 for LaBSE in both
+languages, and for XLM-R in ZuCo, but it is under 2% of what the vectors
+predict. The report verdict now says "negligible" when the beyond-control R²
+is under 10% of the text vectors' R².
+
+Implications:
+
+- EEG-shaped embeddings (version A) and brain-tuning (version B) can only
+  inject length and frequency directions with these EEG features. Text
+  models already encode those directions, and they carry no sentiment. This
+  explains the version A null result.
+- The cross-lingual agreement is the universal lexical effect on reading.

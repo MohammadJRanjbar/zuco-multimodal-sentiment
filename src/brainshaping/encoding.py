@@ -215,7 +215,7 @@ def _sentence_stats(Y, P_real, P_shuffled, codes):
 def scan_layer(X, folds, codes, mode, alphas=ALPHAS, device="cpu", on_fold=None):
     """Held-out-sentence encoding for one layer: per-fold sentence stats and chosen penalties."""
     alphas_t = torch.as_tensor(alphas, dtype=torch.float64, device=device)
-    Xt = torch.as_tensor(np.asarray(X), dtype=torch.float64, device=device)
+    Xt = torch.tensor(np.asarray(X), dtype=torch.float64, device=device)  # copy: inputs may be read-only
     if mode == "centered":
         Xt = center_by_group(Xt, codes)
     results = []
