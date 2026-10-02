@@ -21,7 +21,7 @@ LANGUAGE = "en"
 
 
 def subject_from_path(path):
-    match = re.search(r"results([A-Za-z0-9]+)_SR", os.path.basename(str(path)))
+    match = re.search(r"results([A-Za-z0-9]+)_(?:SR|NR|TSR)\b", os.path.basename(str(path)))
     if not match:
         raise ValueError(f"cannot read a subject ID from {path}")
     return match.group(1)
@@ -191,13 +191,14 @@ def iter_subject_trials(path, labels_csv=None, lookup=None, sfreq=500.0, limit=N
             return
 
 
-def subject_files(mat_dir, subjects=None):
-    files = sorted(glob.glob(os.path.join(mat_dir, "results*_SR.mat")))
+def subject_files(mat_dir, subjects=None, task="SR"):
+    """ZuCo 1.0 subject files of one task (SR sentiment reading, NR normal reading, TSR task-specific reading)."""
+    files = sorted(glob.glob(os.path.join(mat_dir, f"results*_{task}.mat")))
     if subjects:
         wanted = set(subjects)
         files = [f for f in files if subject_from_path(f) in wanted]
     if not files:
-        raise FileNotFoundError(f"no results*_SR.mat files in {mat_dir}")
+        raise FileNotFoundError(f"no results*_{task}.mat files in {mat_dir}")
     return files
 
 

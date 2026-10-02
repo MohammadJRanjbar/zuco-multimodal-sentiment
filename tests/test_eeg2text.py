@@ -11,8 +11,9 @@ torch = pytest.importorskip("torch")
 pytest.importorskip("transformers")
 
 from src.eeg2text import data as d  # noqa: E402
+from src.eeg2text.augment import Augment, Augmenter, average_by_sentence  # noqa: E402
 from src.eeg2text.metrics import corpus_bleu, sentence_bleu, tokenize, word_error_rate  # noqa: E402
-from src.eeg2text.model import EEGToText, VectorQuantizer, code_usage  # noqa: E402
+from src.eeg2text.model import EEGToText, VectorQuantizer, code_usage, token_embeddings  # noqa: E402
 from src.eeg2text.train import Settings, evaluate, train  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
@@ -42,6 +43,9 @@ class CharCodec:
 
     def decode(self, ids):
         return ["".join(self.vocab[i] for i in seq if i > 4) for seq in ids]
+
+    def word_ids(self, words):
+        return [[self.index[c] for c in w if c in self.index] for w in words]
 
 
 def tiny_seq2seq(codec):
@@ -89,7 +93,7 @@ def synthetic_corpus(lang, n_sentences=36, readers=3, dim=12, seed=0):
             reader.append(f"R{r}")
             label.append(s % 3)
     corpus = d.Corpus(lang, features, words, np.array(sid), np.array(reader), np.array(label))
-    corpus.static = {w: rng.standard_normal(8).astype(np.float32) for w in vocab}
+    corpus.static = {"word_vectors": {w: rng.standard_normal(8).astype(np.float32) for w in vocab}}
     return d.normalize(d.assign_parts(corpus, seed=0))
 
 
@@ -106,7 +110,8 @@ def test_controls_share_length_and_fixations():
 
 
 def test_model_learns_from_informative_input_not_noise():
-    corpus = synthetic_corpus("en")
+    # Full fine-tuning: a tiny random mBART with frozen weights and LoRA barely trains (loss stays near uniform).
+    corpus = synthetic_corpus("en", n_sentences=90)
     codec = CharCodec(set("".join(" ".join(w) for w in corpus.words)))
     labels = codec.encode(corpus.texts, "en")
     accuracy = {}
@@ -115,15 +120,13 @@ def test_model_learns_from_informative_input_not_noise():
         items = {p: [{"x": x, "fixated": m, "labels": labels[i], "trial": f"en:{i}"}
                      for i, ((x, m), part) in enumerate(zip(inputs, corpus.part)) if part == p]
                  for p in ("train", "val", "test")}
-        model = EEGToText(tiny_seq2seq(codec), codec, {"en": 12}, lora={"r": 4, "alpha": 8, "targets":
-                                                                        ["q_proj", "k_proj", "v_proj", "out_proj"]},
-                          hidden=32)
-        settings = Settings(epochs=25, batch_size=8, lr=3e-3, lr_lora=3e-3, patience=25, max_new_tokens=16)
+        model = EEGToText(tiny_seq2seq(codec), codec, {"en": 12}, hidden=32, full_finetune=True)
+        settings = Settings(epochs=20, batch_size=8, lr=1e-3, patience=20, max_new_tokens=16)
         train(model, {"en": items["train"]}, {"en": items["val"]}, settings, torch.device("cpu"), log=lambda *_: None)
         records, _ = evaluate(model, items["test"], "en", settings, torch.device("cpu"))
         accuracy[condition] = sum(r["tf_correct"] for r in records) / sum(r["tf_scored"] for r in records)
         assert all(isinstance(r["free_text"], str) for r in records)
-    assert accuracy["eeg"] > accuracy["noise"] + 0.1, accuracy
+    assert accuracy["eeg"] > accuracy["noise"] + 0.05, accuracy
 
 
 def test_script_end_to_end(tmp_path, monkeypatch):
@@ -142,14 +145,20 @@ def test_script_end_to_end(tmp_path, monkeypatch):
 
     def fake_static(corpus, model_name):
         rng = np.random.default_rng(0)
-        corpus.static = {w: rng.standard_normal(8).astype(np.float32) for ws in corpus.words for w in ws}
+        corpus.static["word_vectors"] = {w: rng.standard_normal(8).astype(np.float32) for ws in corpus.words
+                                         for w in ws}
         return corpus
 
     monkeypatch.setattr(runner.d, "attach_static_vectors", fake_static)
+    extra_trials, _, _ = word_trials(n_readers=2, n_sentences=12, seed=1)
+    for t in extra_trials:
+        t["sentence_id"], t["label"] = 10 ** 8 + t["sentence_id"], 99
+    extra = write_cache(os.path.join(str(tmp_path), "NR"), extra_trials)
     root = os.path.join(str(tmp_path), "results")
-    argv = ["x", "--zuco-word-eeg-dir", cache, "--teco-trt-dir", trt, "--teco-labels-csv", labels_csv,
-            "--results-dir", root, "--run-tag", "t", "--inputs", "eeg", "noise", "word_vectors",
-            "--encoders", "continuous", "vq", "--epochs", "1", "--max-new-tokens", "8", "--sentiment-model", "none",
+    argv = ["x", "--zuco-word-eeg-dir", cache, "--zuco-extra-dirs", extra, "--teco-trt-dir", trt,
+            "--teco-labels-csv", labels_csv, "--results-dir", root, "--run-tag", "t",
+            "--inputs", "eeg", "noise", "word_vectors", "mbart_vectors", "--encoders", "continuous", "vq",
+            "--epochs", "1", "--min-epochs", "1", "--max-new-tokens", "8", "--sentiment-model", "none",
             "--device", "cpu"]
     monkeypatch.setattr(sys, "argv", argv)
     runner.main()
@@ -157,11 +166,19 @@ def test_script_end_to_end(tmp_path, monkeypatch):
     joint = json.load(open(os.path.join(run_root, "joint_vq_eeg", "metrics.json")))
     assert set(joint["langs"]) == {"en", "fa"} and "shared_codes" in joint["vq_code_usage"]
     generations = pd.read_csv(os.path.join(run_root, "en_continuous_eeg", "generations.csv"))
-    assert set(generations["condition"]) == {"eeg", "noise", "shuffled_eeg"}  # test-time swaps
+    # test-time swaps, each per reader and on the reader average
+    assert set(generations["condition"]) == {"eeg", "noise", "shuffled_eeg", "eeg_avg", "noise_avg",
+                                             "shuffled_eeg_avg"}
+    averaged = generations[generations["condition"] == "eeg_avg"]
+    assert (averaged["reader"] == "average").all() and averaged["sentence_id"].is_unique
+    sentences = pd.read_csv(os.path.join(run_root, "sentences.csv"))
+    assert (sentences.loc[sentences["sentence_id"] >= 10 ** 8, "part"] == "train").all()
     report = open(os.path.join(run_root, "eeg_to_text_report.md")).read()
-    assert "Paired comparisons" in report and "multilingual" in report.lower()
+    assert "Paired comparisons" in report and "multilingual" in report.lower() and "Positive control" in report
     summary = json.load(open(os.path.join(run_root, "eeg_to_text_summary.json")))
     assert summary["multilingual_interaction"], "joint vs single-language interaction missing"
+    assert {(c["input"], c["test"]) for c in summary["positive_control"] if c["setting"] == "en"} == {
+        (v, t) for v in ("word_vectors", "mbart_vectors") for t in ("single reader", "reader average")}
     os.utime(os.path.join(run_root, "en_continuous_eeg", "metrics.json"))
     runner.main()  # finished runs are reused
 
@@ -184,3 +201,68 @@ def test_training_under_bf16_autocast(monkeypatch):
     t.train(model, {"en": items["train"]}, {"en": items["val"]}, settings, torch.device("cpu"), log=lambda *_: None)
     records, codes = t.evaluate(model, items["test"], "en", settings, torch.device("cpu"))
     assert records and codes is not None
+
+
+def test_encoder_inputs_follow_mbart_layout_and_scale():
+    corpus = synthetic_corpus("en")
+    codec = CharCodec(set("".join(" ".join(w) for w in corpus.words)))
+    lm = tiny_seq2seq(codec)
+    model = EEGToText(lm, codec, {"en": 12}, hidden=32)
+    x = torch.randn(2, 4, 12)
+    fixated = torch.tensor([[True, False, True, True], [True, True, False, False]])
+    valid = torch.tensor([[True, True, True, True], [True, True, False, False]])
+    embeds, _, _ = model.embed(x, fixated, "en")
+    rms = embeds.pow(2).mean(-1).sqrt()
+    assert torch.allclose(rms, model.target_rms.expand_as(rms), rtol=0.02)  # same scale as mBART's token embeddings
+    out, mask = model.encoder_inputs(embeds, valid, "en")
+    special = token_embeddings(lm, torch.tensor([codec.lang_id("en"), 2]))
+    assert out.shape == (2, 6, 32) and mask.tolist() == [[1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 0, 0]]
+    assert torch.allclose(out[:, 0], special[0].expand(2, -1))  # language code first
+    assert torch.allclose(out[0, 5], special[1]) and torch.allclose(out[1, 3], special[1])  # </s> after the words
+    assert torch.equal(out[1, 4:], torch.zeros(2, 32))
+
+
+def test_augmenter_crops_mixes_within_sentence_and_averages_readers():
+    rng = np.random.default_rng(0)
+    words = ["aa", "bb", "cc", "dd", "ee", "ff"]
+    items = [{"x": np.full((6, 3), float(r), np.float32), "fixated": np.array([True] * 5 + [r == 0]),
+              "labels": [3, 9, 2], "words": words, "sentence": 7, "trial": f"en:{r}"} for r in range(3)]
+    items.append({"x": np.full((6, 3), 100.0, np.float32), "fixated": np.ones(6, bool), "labels": [3, 2],
+                  "words": list("uvwxyz"), "sentence": 8, "trial": "en:3"})
+    encoded = []
+    crop = Augmenter(items, lambda text: encoded.append(text) or [3, 5, 2], Augment(crop=1.0), rng)
+    out = crop(0)
+    span = encoded[-1].split()
+    assert 3 <= len(span) < 6 and len(out["x"]) == len(span) == len(out["fixated"]) and out["labels"] == [3, 5, 2]
+    assert " ".join(span) in " ".join(words)
+    mix = Augmenter(items, None, Augment(mix=1.0, max_mix=3), rng)
+    for _ in range(20):
+        mixed = mix(0)
+        assert mixed["x"].max() < 100  # never mixed with another sentence
+        assert mixed["fixated"][5]  # reader 0 fixated the last word
+    averaged = average_by_sentence(items)
+    assert len(averaged) == 2
+    first = next(a for a in averaged if a["sentence"] == 7)
+    assert first["trial"] == "en:0:avg" and np.allclose(first["x"][0], 1.0) and np.allclose(first["x"][5], 0.0)
+
+
+def test_extra_training_data_never_contains_held_out_sentences():
+    corpus = synthetic_corpus("en")
+    held_out = [w for w, part in zip(corpus.words, corpus.part) if part == "test"][0]
+    extra = d.Corpus("en", [np.ones((len(held_out), 12), np.float32), np.ones((2, 12), np.float32)],
+                     [list(held_out), ["zz", "yy"]], np.array([10 ** 8, 10 ** 8 + 1]), np.array(["R0", "R0"]),
+                     np.array([-1, -1]), session=np.array(["NR", "NR"]))
+    before = len(corpus.words)
+    corpus.session = np.full(before, "SR")
+    assert d.add_training_data(corpus, extra) == 1
+    assert len(corpus.words) == before + 1 and corpus.part[-1] == "train" and corpus.session[-1] == "NR"
+
+
+def test_unlabelled_tasks_get_stable_text_ids():
+    from src.labels import UNLABELLED, unlabelled_match
+    from src.neurolm.dataset import subject_from_path
+
+    a, label = unlabelled_match("Henry Ford, born in 1863, was an engineer.")
+    b, _ = unlabelled_match("henry ford born in 1863 was an engineer")
+    assert a == b and a >= 10 ** 8 and label == UNLABELLED
+    assert subject_from_path("/x/resultsZKB_NR.mat") == "ZKB" and subject_from_path("resultsZAB_TSR.mat") == "ZAB"

@@ -1,5 +1,6 @@
 """Sentence-label matching shared by feature extraction and training."""
 
+import hashlib
 import re
 
 import pandas as pd
@@ -37,3 +38,20 @@ def label_lookup(path):
 
 def match_sentence(content, lookup):
     return lookup.get(normalize_text(content), (None, None))
+
+
+UNLABELLED = 99  # label of sentences without a sentiment label (ZuCo NR and TSR tasks)
+TEXT_ID_OFFSET = 10 ** 8  # text-derived sentence ids start here, far above the SR ids
+
+
+def text_sentence_id(content):
+    """Stable sentence id from the normalized text: the same sentence gets the same id in every reader's file."""
+    digest = hashlib.md5(normalize_text(content).encode()).hexdigest()
+    return TEXT_ID_OFFSET + int(digest[:7], 16)
+
+
+def unlabelled_match(content, lookup=None):
+    """``match_sentence`` for unlabelled tasks: every sentence is kept, with a text-derived id."""
+    if not normalize_text(content):
+        return None, None
+    return text_sentence_id(content), UNLABELLED

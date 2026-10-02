@@ -2,28 +2,32 @@
 
 import math
 from contextlib import nullcontext
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
+from functools import partial
 
 import numpy as np
 import torch
 
 from ..progress import progress
+from .augment import Augment, Augmenter
 
 
 @dataclass
 class Settings:
-    epochs: int = 15
+    epochs: int = 25
     batch_size: int = 16
     eval_batch_size: int = 32
     lr: float = 3e-4          # input projections, missing vectors, EEG tokenizer
     lr_lora: float = 1e-4
     weight_decay: float = 0.01
     warmup_ratio: float = 0.06
-    patience: int = 3
+    patience: int = 4
+    min_epochs: int = 6       # no early stop before this: validation loss can rise while the input layer still learns
     max_grad_norm: float = 1.0
     seed: int = 42
     max_new_tokens: int = 128
     num_beams: int = 1
+    augment: Augment = field(default_factory=Augment)
 
     def to_dict(self):
         return asdict(self)
@@ -57,6 +61,10 @@ def collate(items, device):
         labels[b, :len(item["labels"])] = item["labels"]
     t = lambda a: torch.as_tensor(a, device=device)  # noqa: E731
     return t(x), t(fixated), t(valid), t(labels)
+
+
+def _encode_one(codec, text, lang):
+    return codec.encode([text], lang)[0]
 
 
 def _batches(n, size, rng):
@@ -109,13 +117,17 @@ def train(model, train_by_lang, val_by_lang, settings, device, log=print):
     warmup = max(1, int(settings.warmup_ratio * total))
     schedule = torch.optim.lr_scheduler.LambdaLR(
         optimizer, lambda s: min(1.0, (s + 1) / warmup) * max(0.0, 0.5 * (1 + math.cos(math.pi * s / total))))
+    augment_rng = np.random.default_rng(settings.seed + 1)
+    augmenters = {lang: Augmenter(items, partial(_encode_one, model.codec, lang=lang), settings.augment, augment_rng)
+                  for lang, items in train_by_lang.items()} if settings.augment.active else None
     best, best_state, waited, history = math.inf, model.trainable_state(), 0, []
     for epoch in range(settings.epochs):
         model.train()
         running = []
         for lang, index in progress(epoch_plan(train_by_lang, settings.batch_size, rng),
                                     desc=f"epoch {epoch + 1}/{settings.epochs}", unit="batch", leave=False):
-            x, fixated, valid, labels = collate([train_by_lang[lang][i] for i in index], device)
+            batch = [augmenters[lang](i) if augmenters else train_by_lang[lang][i] for i in index]
+            x, fixated, valid, labels = collate(batch, device)
             with autocast(device, dtype):
                 loss, _, _ = model(x, fixated, valid, labels, lang)
             if not torch.isfinite(loss):
@@ -141,7 +153,7 @@ def train(model, train_by_lang, val_by_lang, settings, device, log=print):
             best, best_state, waited = val, model.trainable_state(), 0
         else:
             waited += 1
-            if waited >= settings.patience:
+            if waited >= settings.patience and epoch + 1 >= settings.min_epochs:
                 break
     model.load_trainable(best_state)
     return {"best_val_loss": best, "history": history}

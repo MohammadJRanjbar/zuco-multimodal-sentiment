@@ -10,6 +10,8 @@ import pandas as pd
 from .metrics import corpus_bleu, per_trial
 
 TRIAL_METRICS = ("tf_accuracy", "bleu4", "bleu1", "rouge1", "wer")
+VECTOR_INPUTS = ("word_vectors", "mbart_vectors")
+TEST_MODES = (("", "single reader"), ("_avg", "reader average"))
 
 
 def load_runs(root):
@@ -68,7 +70,7 @@ def summarize(root, sentiment_model=None, device="cpu", n_boot=2000):
     classifiers = {}
     if sentiment_model:
         for lang, group in sentences.groupby("lang"):
-            train = group[group["part"] == "train"]
+            train = group[(group["part"] == "train") & (group["label"] >= 0)]
             clf = LogisticRegression(C=1.0, max_iter=3000, class_weight="balanced")
             clf.fit(embed_texts(train["text"].tolist(), sentiment_model, device), train["label"])
             classifiers[lang] = clf
@@ -104,26 +106,40 @@ def summarize(root, sentiment_model=None, device="cpu", n_boot=2000):
             comparisons.append({"comparison": label, "lang": a_key[2], "metric": metric, "diff": ci[0],
                                 "ci_low": ci[1], "ci_high": ci[2]})
 
+    positive = []
     for (name, condition, lang) in list(scores):
         metrics = runs[name][1]
-        if metrics["input"] != "eeg" or condition != "eeg":
-            continue
         prefix = f"{metrics['setting']}_{metrics['encoder']}"
-        for control in ("noise", "shuffled_eeg"):
-            paired((name, "eeg", lang), (f"{prefix}_{control}", control, lang),
-                   f"{prefix}: EEG model - {control} model")
-            paired((name, "eeg", lang), (name, control, lang), f"{prefix}: EEG model fed EEG - fed {control} at test")
+        for suffix, mode in TEST_MODES:
+            if metrics["input"] in VECTOR_INPUTS and condition == metrics["input"] + suffix:
+                before = len(comparisons)
+                paired((name, condition, lang), (f"{prefix}_noise", "noise" + suffix, lang),
+                       f"{prefix}: positive control, {metrics['input']} model - noise model ({mode})")
+                for c in comparisons[before:]:
+                    if c["metric"] == "bleu4":
+                        positive.append({"setting": metrics["setting"], "encoder": metrics["encoder"],
+                                         "input": metrics["input"], "lang": lang, "test": mode, **c,
+                                         "passed": c["ci_low"] > 0})
+            if metrics["input"] != "eeg" or condition != "eeg" + suffix:
+                continue
+            for control in ("noise", "shuffled_eeg"):
+                paired((name, condition, lang), (f"{prefix}_{control}", control + suffix, lang),
+                       f"{prefix}: EEG model - {control} model ({mode})")
+                paired((name, condition, lang), (name, control + suffix, lang),
+                       f"{prefix}: EEG model fed EEG - fed {control} at test ({mode})")
     for lang, setting in (("en", "en"), ("fa", "fa")):
         for encoder in sorted({m["encoder"] for _, m in runs.values()}):
-            for condition in ("eeg", "noise", "shuffled_eeg", "word_vectors"):
-                paired((f"joint_{encoder}_{condition}", condition, lang), (f"{setting}_{encoder}_{condition}", condition,
-                                                                           lang),
-                       f"{encoder} {condition}: joint - {setting}-only training")
+            for condition in ("eeg", "noise", "shuffled_eeg") + VECTOR_INPUTS:
+                for suffix, mode in TEST_MODES:
+                    paired((f"joint_{encoder}_{condition}", condition + suffix, lang),
+                           (f"{setting}_{encoder}_{condition}", condition + suffix, lang),
+                           f"{encoder} {condition}: joint - {setting}-only training ({mode})")
     interaction = []
     for lang, setting in (("en", "en"), ("fa", "fa")):
-        for encoder in sorted({m["encoder"] for _, m in runs.values()}):
-            keys = {s: (f"{s}_{encoder}_eeg", "eeg", lang) for s in ("joint", setting)}
-            nkeys = {s: (f"{s}_{encoder}_noise", "noise", lang) for s in ("joint", setting)}
+        for encoder, (suffix, mode) in ((e, t) for e in sorted({m["encoder"] for _, m in runs.values()})
+                                        for t in TEST_MODES):
+            keys = {s: (f"{s}_{encoder}_eeg", "eeg" + suffix, lang) for s in ("joint", setting)}
+            nkeys = {s: (f"{s}_{encoder}_noise", "noise" + suffix, lang) for s in ("joint", setting)}
             if all(k in scores for k in list(keys.values()) + list(nkeys.values())):
                 gap = {}
                 for s in ("joint", setting):
@@ -131,15 +147,15 @@ def summarize(root, sentiment_model=None, device="cpu", n_boot=2000):
                     gap[s] = merged.assign(gap=merged["bleu4_e"] - merged["bleu4_n"])[["trial", "gap", "sentence_id_e"]]
                 merged = gap["joint"].merge(gap[setting], on="trial", suffixes=("_j", "_m"))
                 ci = cluster_ci(merged["gap_j"] - merged["gap_m"], merged["sentence_id_e_j"], n_boot)
-                interaction.append({"lang": lang, "encoder": encoder, "metric": "bleu4",
+                interaction.append({"lang": lang, "encoder": encoder, "test": mode, "metric": "bleu4",
                                     "effect": "(EEG - noise) in joint minus (EEG - noise) in single-language",
                                     "diff": ci[0], "ci_low": ci[1], "ci_high": ci[2]})
     codes = {name: m.get("vq_code_usage") for name, (_, m) in runs.items() if m.get("vq_code_usage")}
-    summary = {"runs": table.to_dict("records"), "comparisons": comparisons, "multilingual_interaction": interaction,
-               "vq_code_usage": codes}
+    summary = {"runs": table.to_dict("records"), "positive_control": positive, "comparisons": comparisons,
+               "multilingual_interaction": interaction, "vq_code_usage": codes}
     json.dump(summary, open(os.path.join(root, "eeg_to_text_summary.json"), "w"), indent=1, default=float)
     table.to_csv(os.path.join(root, "eeg_to_text_runs.csv"), index=False)
-    write_markdown(os.path.join(root, "eeg_to_text_report.md"), table, comparisons, interaction, codes)
+    write_markdown(os.path.join(root, "eeg_to_text_report.md"), table, comparisons, interaction, codes, positive)
     return summary
 
 
@@ -147,13 +163,25 @@ def _fmt(row):
     return f"{row['diff']:+.4f} [{row['ci_low']:+.4f}, {row['ci_high']:+.4f}]"
 
 
-def write_markdown(path, table, comparisons, interaction, codes):
+def write_markdown(path, table, comparisons, interaction, codes, positive=()):
     lines = ["# EEG-to-text generation (English ZuCo, Persian TeCo)", "",
              "Test sentences were never seen in training (by any reader). *Teacher-forced*: each token is predicted "
              "from the true previous tokens (how many published EEG-to-text results were scored). *Free-running*: "
              "the model writes the whole sentence from its own previous tokens. Every input condition has the same "
-             "sentence length and fixation pattern; `word_vectors` is the positive control (input contains the text).",
-             ""]
+             "sentence length and fixation pattern; `word_vectors` and `mbart_vectors` are positive controls (the "
+             "input contains the text). Conditions ending in `_avg` are tested on the reader average of each test "
+             "sentence.", ""]
+    if positive:
+        lines += ["## Positive control (must pass before the EEG rows mean anything)", "",
+                  "A control model must write unseen sentences better than the noise model (free-running BLEU-4, "
+                  "paired by trial). If it does not, the generator is not using its input, and EEG = noise says "
+                  "nothing about the EEG.", "",
+                  "| setting | encoder | input | language | test | BLEU-4 difference [95% CI] | verdict |",
+                  "|---|---|---|---|---|---|---|"]
+        for c in positive:
+            lines.append(f"| {c['setting']} | {c['encoder']} | {c['input']} | {c['lang']} | {c['test']} | {_fmt(c)} | "
+                         f"{'PASS' if c['passed'] else 'FAIL'} |")
+        lines.append("")
     cols = ["setting", "encoder", "trained_on", "tested_on", "n_trials", "tf_accuracy", "tf_bleu4", "free_bleu1",
             "free_bleu4", "rouge1", "wer"] + [c for c in ("sentiment_f1_generated", "sentiment_f1_real_text")
                                               if c in table]
@@ -171,9 +199,9 @@ def write_markdown(path, table, comparisons, interaction, codes):
         lines.append("")
     if interaction:
         lines += ["## Does multilingual training help the EEG specifically?", "",
-                  "| language | encoder | effect | difference [95% CI] |", "|---|---|---|---|"]
+                  "| language | encoder | test | effect | difference [95% CI] |", "|---|---|---|---|---|"]
         for c in interaction:
-            lines.append(f"| {c['lang']} | {c['encoder']} | {c['effect']} | {_fmt(c)} |")
+            lines.append(f"| {c['lang']} | {c['encoder']} | {c['test']} | {c['effect']} | {_fmt(c)} |")
         lines.append("")
     if codes:
         lines += ["## EEG tokenizer (codebook) use", ""]
@@ -181,8 +209,9 @@ def write_markdown(path, table, comparisons, interaction, codes):
             lines.append(f"* {name}: {json.dumps(usage)}")
         lines.append("")
     lines += ["## How to read", "",
+              "* Read the EEG rows only where the positive control passes in the same setting.",
               "* EEG helps only if the EEG model beats the **noise** and **shuffled-EEG** models in free-running "
-              "generation (CI above 0).",
+              "generation (CI above 0), per reader or on the reader average.",
               "* If the EEG model's output barely changes when it is fed noise at test time, it ignores the EEG "
               "(the check of Jo et al.).",
               "* Teacher-forced scores are high for every input because the language model predicts the next "
