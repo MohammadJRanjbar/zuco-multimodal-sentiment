@@ -1501,3 +1501,42 @@ stage's reports to GitHub.
 - **Encoding scan additions.** An optional surprisal control
   (`--surprisal-model`), a first-fixation-duration reading control, and a
   `--tag` option for alternative word-EEG caches.
+
+## 2026-10-02 — EEG-to-text generation in English and Persian
+
+The follow-up word decoding showed that EEG carries word information but
+only word form. Decoded text has no sentiment above chance. To test the
+published EEG-to-text claims directly, and the effect of multilingual
+training, `scripts/run_eeg_to_text.py` (notebook `eeg_to_text_colab.ipynb`)
+trains a generator.
+
+- **Model.** mBART-50 (English and Persian) tuned with LoRA on attention.
+  Each word's EEG enters mBART's encoder through a per-language input layer;
+  words the reader skipped get a learned "missing" vector.
+- **EEG encoders.**
+  - *continuous*: word EEG projected into mBART.
+  - *vq*: an EEG tokenizer. A 512-entry learned codebook with
+    straight-through gradients, shared by both languages; codebook use and
+    shared codes are reported.
+- **Inputs.** All have the same sentence length and fixation pattern:
+  - real EEG;
+  - EEG of random words of the same reader;
+  - Gaussian noise;
+  - word-identity vectors, the positive control.
+- **Training settings.** English only, Persian only, and joint (shared
+  model, per-language input layers, balanced batches).
+- **Evaluation** on unseen sentences:
+  - teacher-forced token accuracy and BLEU;
+  - free-running BLEU-1/4, ROUGE-1/2 and WER, with Persian-aware
+    tokenization;
+  - the EEG model fed noise or shuffled EEG at test time (the check of Jo
+    et al.);
+  - the sentiment of the generated text, from a LaBSE classifier trained on
+    the real training sentences.
+- **Paired comparisons** use a sentence bootstrap. The multilingual effect is
+  tested as an interaction: does joint training widen the EEG–noise gap,
+  rather than only improving the shared language model?
+
+Tested offline with a tiny mBART: an informative input is learned and noise
+is not. The real mBART-50 tokenizer was checked for both languages and for
+the forced language token in generation.
