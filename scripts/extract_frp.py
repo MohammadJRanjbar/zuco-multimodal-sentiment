@@ -42,6 +42,19 @@ def parse_args():
     return parser.parse_args()
 
 
+class MissingFixationEEG(Exception):
+    """The subject file has no per-fixation EEG (word.rawEEG), so fixation onsets cannot be recovered."""
+
+
+def file_format(path):
+    try:
+        import h5py
+
+        return "MATLAB v7.3 (HDF5)" if h5py.is_hdf5(path) else "MATLAB v5"
+    except ImportError:
+        return "unknown"
+
+
 def process_subject(path, lookup, limit=None):
     subject = subject_from_path(path)
     trials, timing, counts, seen = [], [], {}, set()
@@ -59,8 +72,8 @@ def process_subject(path, lookup, limit=None):
             counts["no_data"] = counts.get("no_data", 0) + 1
             continue
         if "missing_field" in parsed:
-            raise SystemExit(f"{subject}: word struct has no '{parsed['missing_field']}' field; "
-                             f"available fields: {parsed['word_fields']}")
+            raise MissingFixationEEG(f"{subject}: word struct has no '{parsed['missing_field']}' field; "
+                                     f"available fields: {parsed['word_fields']}")
         raw = parsed["raw"]
         if raw is None:
             counts["raw_unreadable"] = counts.get("raw_unreadable", 0) + 1
@@ -122,23 +135,40 @@ def main():
     if not paths:
         raise SystemExit(f"no results*_SR.mat files in {args.mat_dir}")
     if args.probe:
-        trials, _, sums, n_epochs, summary = process_subject(paths[0], lookup, limit=args.probe)
+        try:
+            trials, _, sums, n_epochs, summary = process_subject(paths[0], lookup, limit=args.probe)
+        except MissingFixationEEG as error:
+            raise SystemExit(str(error))
         print(json.dumps(summary, indent=1))
         print(f"{n_epochs} epochs from {len(trials)} sentences")
         return
     os.makedirs(os.path.join(args.out_dir, "grand_average"), exist_ok=True)
     report_path = os.path.join(args.out_dir, "frp_extraction.json")
     report = json.load(open(report_path)) if os.path.exists(report_path) else {"subjects": {}}
+    report.setdefault("skipped", {})
     started = time.time()
-    for index, path in enumerate(paths):
+    first = True
+    for path in paths:
         subject = subject_from_path(path)
         if os.path.exists(os.path.join(args.out_dir, f"{subject}.npz")) and not args.overwrite:
             print(f"skip {subject}: already extracted")
+            first = False
             continue
-        trials, timing, sums, n_epochs, summary = process_subject(path, lookup)
+        if subject in report["skipped"] and not args.overwrite:
+            print(f"skip {subject}: {report['skipped'][subject]['reason']}")
+            continue
+        try:
+            trials, timing, sums, n_epochs, summary = process_subject(path, lookup)
+        except MissingFixationEEG as error:
+            print(f"skip {subject}: no per-fixation EEG in this file ({file_format(path)})")
+            report["skipped"][subject] = {"reason": "no per-fixation EEG (word.rawEEG)", "format": file_format(path),
+                                          "detail": str(error)}
+            json.dump(report, open(report_path, "w"), indent=1)
+            continue
+        summary["format"] = file_format(path)
         print(f"{subject}: {summary['sentences']} sentences, match rate {summary['match_rate']:.3f}, "
               f"{summary['words_with_epoch']} words with an epoch, FFD vs segment r = {summary['ffd_vs_segment_r']}")
-        if index == 0 and summary["match_rate"] < args.min_match_rate:
+        if first and summary["match_rate"] < args.min_match_rate:
             json.dump(summary, open(os.path.join(args.out_dir, "frp_probe_failed.json"), "w"), indent=1)
             raise SystemExit(f"only {summary['match_rate']:.1%} of fixations were located in rawData; "
                              f"see frp_probe_failed.json (counts: {summary['fixation_counts']})")
@@ -147,11 +177,13 @@ def main():
         if sums is not None:
             np.savez_compressed(os.path.join(args.out_dir, "grand_average", f"{subject}.npz"),
                                 sums=sums.astype(np.float32), n=n_epochs)
+        first = False
         report["subjects"][subject] = summary
         report.update({"windows_ms": frp.WINDOWS_MS, "window_names": frp.WINDOW_NAMES, "sfreq": frp.SFREQ,
                        "pre_ms": frp.PRE_MS, "post_ms": frp.POST_MS})
         json.dump(report, open(report_path, "w"), indent=1)
-    print(f"done in {(time.time() - started) / 60:.1f} min; report: {report_path}")
+    print(f"done in {(time.time() - started) / 60:.1f} min: {len(report['subjects'])} readers extracted, "
+          f"{len(report['skipped'])} skipped ({', '.join(report['skipped']) or 'none'}); report: {report_path}")
 
 
 if __name__ == "__main__":

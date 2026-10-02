@@ -176,6 +176,10 @@ def write_report(path, ga, coefficients, n_rows, n_sentences, extraction):
         lines += [f"Fixations located in the sentence EEG: {np.mean(rates):.1%} on average "
                   f"(range {min(rates):.1%}-{max(rates):.1%}) over {len(rates)} readers; {words:,} word epochs. "
                   f"Segment length vs ZuCo first-fixation duration: r = {np.mean(corr):.3f} (should be close to 1).", ""]
+        skipped = extraction.get("skipped", {})
+        if skipped:
+            lines += [f"Readers without per-fixation EEG in their files (not usable): {', '.join(sorted(skipped))} "
+                      f"({len(skipped)} of {len(skipped) + len(rates)}).", ""]
     if ga:
         ok = 60 <= ga["lambda_peak_ms"] <= 160 and ga["lambda_peak_uv"] > 3 * ga["occipital_baseline_sd"]
         lines += ["## Timing check", "",

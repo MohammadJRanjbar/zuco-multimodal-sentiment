@@ -218,3 +218,34 @@ def test_sentence_sentiment_script(tmp_path, monkeypatch):
     assert any(p.startswith("FRP with form") for p in table["probe"])
     assert (table["rows"] == "single reader").sum() == 1
     assert "## Reading" in open(os.path.join(results, "sentence_sentiment.md")).read()
+
+
+def test_extraction_skips_files_without_fixation_eeg(tmp_path, monkeypatch):
+    rng = np.random.default_rng(3)
+    mat_dir = os.path.join(tmp_path, "mat")
+    os.makedirs(mat_dir)
+    write_v5(os.path.join(mat_dir, "resultsZAA_SR.mat"), rng)
+    write_v5(os.path.join(mat_dir, "resultsZAC_SR.mat"), rng)
+    from scipy.io import loadmat, savemat
+
+    data = loadmat(os.path.join(mat_dir, "resultsZAA_SR.mat"), squeeze_me=False)["sentenceData"]
+    fields = [f for f in data.dtype.names]
+    words = data[0, 0]["word"]
+    stripped_word_dtype = [(f, "O") for f in words.dtype.names if f != "rawEEG"]
+    out = np.zeros(data.shape[1], dtype=[(f, "O") for f in fields])
+    for s in range(data.shape[1]):
+        w = data[0, s]["word"]
+        new = np.zeros(w.shape[1], dtype=stripped_word_dtype)
+        for k in range(w.shape[1]):
+            new[k] = tuple(w[0, k][f] for f, _ in stripped_word_dtype)
+        out[s] = tuple(data[0, s][f] if f != "word" else new for f in fields)
+    savemat(os.path.join(mat_dir, "resultsZAB_SR.mat"), {"sentenceData": out})
+    labels = labels_csv(str(tmp_path))
+    frp_dir = os.path.join(tmp_path, "frp")
+    extractor = load_script("extract_frp")
+    monkeypatch.setattr(sys, "argv", ["x", "--mat-dir", mat_dir, "--labels-csv", labels, "--out-dir", frp_dir])
+    extractor.main()
+    report = json.load(open(os.path.join(frp_dir, "frp_extraction.json")))
+    assert set(report["subjects"]) == {"ZAA", "ZAC"} and set(report["skipped"]) == {"ZAB"}
+    assert len(load_word_eeg(frp_dir)) == 2 * len(SENTENCES)
+    extractor.main()  # re-run: extracted readers and known skips are not reprocessed
