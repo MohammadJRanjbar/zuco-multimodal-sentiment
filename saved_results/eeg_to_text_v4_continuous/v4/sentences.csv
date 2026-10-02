@@ -1,0 +1,1203 @@
+lang,sentence_id,text,label,part
+en,5,Presents a good case while failing to provide a reason for us to care beyond the very basic dictums of human decency.,1,test
+en,6,"Beautifully crafted, engaging filmmaking that should attract upscale audiences hungry for quality and a nostalgic, twisty yarn that will keep them guessing.",2,train
+en,7,"Bread, My Sweet has so many flaws it would be easy for critics to shred it.",0,test
+en,8,"Slow, silly and unintentionally hilarious.",1,val
+en,9,"Ultimately feels emp11111ty and unsatisfying, like swallowing a Communion wafer without the wine.",0,train
+en,10,Exudes the fizz of a Busby Berkeley musical and the visceral excitement of a sports extravaganza.,2,train
+en,11,The film rehashes several old themes and is capped with pointless extremes -- it's insanely violent and very graphic.,0,train
+en,12,"Ryan Gosling is, in a word, brilliant as the conflicted Daniel.",2,train
+en,14,"If Deuces Wild had been tweaked up a notch it would have become a camp adventure, one of those movies that's so bad it starts to become good.",1,test
+en,15,The film's stagecrafts are intimate and therefore bolder than the otherwise calculated artifice that defines and overwhelms the film's production design.,1,train
+en,16,"Frida is certainly no disaster, but neither is it the Kahlo movie Frida fans have been looking for.",1,train
+en,17,The film often achieves a mesmerizing poetry.,2,train
+en,18,A work of astonishing delicacy and force.,2,train
+en,19,"The movie's plot is almost entirely witless and inane, carrying every gag two or three times beyond its limit to sustain a laugh.",0,train
+en,20,"For the most part, the ingredients are there.",1,train
+en,21,"But if you've paid a matinee price and bought a big tub of popcorn, there's guilty fun to be had here.",1,train
+en,22,"There's not much to Fatale, outside of its stylish surprises... but that's OK.",1,train
+en,23,"The acting is stiff, the story lacks all trace of wit, the sets look like they were borrowed from Gilligan's Island -- and the CGI Scooby might well be the worst special-effects creation of the year.",0,train
+en,24,"This version moves beyond the original's nostalgia for the communal film experiences of yesteryear to a deeper realization of cinema's inability to stand in for true, lived experience.",1,train
+en,25,"There's no palpable chemistry between Lopez and male lead Ralph Fiennes, plus the script by Working Girl scribe Kevin Wade is workmanlike in the extreme.",0,val
+en,26,"A first-class, thoroughly involving B movie that effectively combines two surefire, beloved genres -- the prison flick and the fight film.",2,train
+en,27,The film is so bad it doesn't improve upon the experience of staring at a blank screen.,0,train
+en,28,Weiss and Speck never make a convincing case for the relevance of these two 20th-century footnotes.,1,train
+en,29,Another Best of the Year selection.,2,train
+en,30,It's all a rather shapeless good time...,1,val
+en,31,"Same song, second verse, coulda been better, but it coulda been worse.",1,train
+en,32,I love the robust middle of this picture.,2,test
+en,33,"That's not vintage Spielberg and that, finally, is minimally satisfying.",1,train
+en,34,The soundtrack alone is worth the price of admission.,2,train
+en,35,Mostly Martha could have used a little trimming -- 10 or 15 minutes could be cut and no one would notice -- but it's a pleasurable trifle.,1,train
+en,36,"For the rest of us, sitting through Dahmer's two hours amounts to little more than punishment.",0,train
+en,37,"Featuring a dangerously seductive performance from the great Daniel Auteuil, ``Sade'' covers the same period as Kaufmann's ``Quills'' with more unsettlingly realistic results.",2,train
+en,38,"The movie is for fans who can't stop loving anime, and the fanatical excess built into it.",1,train
+en,39,"The Ring is worth a look, if you don't demand much more than a few cheap thrills from your Halloween entertainment.",1,test
+en,40,"Beautifully observed, miraculously unsentimental comedy-drama.",2,train
+en,41,"What makes How I Killed My Father compelling, besides its terrific performances, is Fontaine's willingness to wander into the dark areas of parent-child relationships without flinching.",2,train
+en,42,"This hastily mounted production exists only to capitalize on Hopkins' inclination to play Hannibal Lecter again, even though Harris has no immediate inclination to provide a fourth book.",0,train
+en,43,Bullock's complete lack of focus and ability quickly derails the film.1,0,train
+en,44,"... a plotline that's as lumpy as two-day old porridge... the filmmakers' paws, sad to say, were all over this ``un-bear-able'' project!",0,train
+en,45,Crush could be the worst film a man has made about women since Valley of the Dolls.,0,train
+en,46,"Reassuring, retro uplifter.",2,train
+en,47,Flaccid drama and exasperatingly slow journey.,0,train
+en,48,The Movie will reach far beyond its core demographic.,2,train
+en,49,How did it ever get made?,0,train
+en,50,I like the new footage and still love the old stuff.,2,test
+en,51,"It briefly flirts with player masochism, but the point of real interest -- audience sadism -- is evaded completely.",1,test
+en,52,Could The Country Bears really be as bad as its trailers?,0,test
+en,53,"At times, the movie looks genuinely pretty.",2,train
+en,54,It depends on how well flatulence gags fit into your holiday concept.,1,train
+en,55,"The stupidest, most insulting movie of 2002's first quarter.",0,train
+en,56,The film seems a dead weight.,0,test
+en,57,"Sparkling, often hilarious romantic jealousy comedy... Attal looks so much like a young Robert DeNiro that it seems the film should instead be called `My Husband Is Travis Bickle'.",2,test
+en,58,"I did go back and check out the last 10 minutes, but these were more repulsive than the first 30 or 40 minutes.",0,train
+en,59,"A lousy movie that's not merely unwatchable, but also unlistenable.",0,test
+en,60,One of the best films of the year with its exploration of the obstacles to happiness faced by five contemporary individuals... a psychological masterpiece.,2,train
+en,61,"A strong script, powerful direction and splendid production design allows us to be transported into the life of Wladyslaw Szpilman, who is not only a pianist, but a good human being.",2,test
+en,62,"But here's the real damn: It isn't funny, either.",0,val
+en,63,"Qutting may be a flawed film, but it is nothing if not sincere.",1,train
+en,64,It's a fanboy `what if?',1,test
+en,65,... something appears to have been lost in the translation this time.,0,train
+en,66,"Like a documentary version of Fight Club, shorn of social insight, intellectual pretension and cinematic interest.",1,train
+en,67,"Stephen Rea, Aidan Quinn, and Alan Bates play Desmond's legal eagles, and when joined by Brosnan, the sight of this grandiloquent quartet lolling in pretty Irish settings is a pleasant enough thing, `tis.",2,test
+en,68,"It's a powerful though flawed movie, guaranteed to put a lump in your throat while reaffirming Washington as possibly the best actor working in movies today.",2,train
+en,69,An intriguing and entertaining introduction to Johnson.,2,train
+en,70,Everything was as superficial as the forced New Jersey lowbrow accent Uma had.,0,test
+en,71,"Despite the holes in the story and the somewhat predictable plot, moments of the movie caused me to jump in my chair...",1,train
+en,72,`How many more voyages can this limping but dearly-loved franchise survive?',1,train
+en,73,If only the story about a multi-million dollar con bothered to include the con.,1,train
+en,74,"It is supremely unfunny and unentertaining to watch middle-age and older men drink to excess, piss on trees, b.s. one another and put on a show in drag.",0,val
+en,75,"Only a few minutes elapse before the daddy of all slashers arrives, still with the boiler suit and white mask, which look remarkably clean for a guy who has been mass-murdering since 1978 but has never been seen doing laundry.",1,train
+en,76,"Showtime is one of the hapless victims of the arrogant ``if we put together a wry white man and a chatty black man and give them guns, the movie will be funny'' syndrome.",0,train
+en,77,"Whatever heartwarming scene the impressively discreet filmmakers may have expected to record with their mini DV, they show a remarkable ability to document both sides of this emotional car-wreck.",2,train
+en,78,"A zombie movie in every sense of the word -- mindless, lifeless, meandering, loud, painful, obnoxious.",0,test
+en,79,"It has fun with the quirks of family life, but it also treats the subject with fondness and respect.",2,val
+en,80,"Novak manages to capture a cruelly hilarious vein of black comedy in the situation with his cast of non-actors and a gritty, no-budget approach.",2,train
+en,81,"Since Lee is a sentimentalist, the film is more worshipful than your random E!",1,train
+en,82,"The movie is almost completely lacking in suspense, surprise and consistent emotional conviction.",0,train
+en,83,"High Crimes knows the mistakes that bad movies make and is determined not to make them, and maybe that is nobility of a sort.",1,test
+en,84,But it's too long and too convoluted and it ends in a muddle.,0,train
+en,85,This thing works on no level whatsoever for me.,0,train
+en,86,... a bland murder-on-campus yawner.,0,test
+en,87,In comparison to his earlier films it seems a disappointingly thin slice of lower-class London life; despite the title... amounts to surprisingly little.,0,train
+en,88,"One of the finest, most humane and important Holocaust movies ever made.",2,val
+en,89,"Suffers from rambling, repetitive dialogue and the visual drabness endemic to digital video.",0,test
+en,90,"The twist that ends the movie is the one with the most emotional resonance, but twists are getting irritating, and this is the kind of material where the filmmakers should be very careful about raising eyebrows.",1,train
+en,91,"Angel presents events partly from the perspective of Aurelie and Christelle, and infuses the film with the sensibility of a particularly nightmarish fairytale.",1,train
+en,92,Features one of the most affecting depictions of a love affair ever committed to film.,2,test
+en,93,It is intensely personal and yet -- unlike Quills -- deftly shows us the temper of the times.,2,train
+en,94,"Even as I valiantly struggled to remain interested, or at least conscious, I could feel my eyelids... getting... very... heavy...",0,train
+en,95,"... a solid, well-formed satire.",2,train
+en,96,Deserves high marks for political courage but barely gets by on its artistic merits.,1,train
+en,97,Read My Lips is to be viewed and treasured for its extraordinary intelligence and originality as well as its lyrical variations on the game of love.,2,train
+en,98,"... creates a visceral sense of its characters' lives and conflicted emotions that carries it far above... what could have been a melodramatic, Lifetime Channel-style anthology.",1,train
+en,99,Reeks of rot and hack work from start to finish.,1,train
+en,100,Just how these families interact may surprise you.,1,train
+en,101,"The Movie is what happens when you blow up small potatoes to 10 times their natural size, and it ain't pretty.",0,train
+en,102,"Even a hardened voyeur would require the patience of Job to get through this interminable, shapeless documentary about the swinging subculture.",0,test
+en,103,"Creepy, authentic and dark.",1,train
+en,104,A lame romantic comedy about an unsympathetic character and someone who would not likely be so stupid as to get involved with her.,0,train
+en,105,"Rob Schneider's infantile cross-dressing routines fill The Hot Chick, the latest gimmick from this unimaginative comedian.",0,train
+en,106,"The film is a contrivance, as artificial as the video games Japanese teens play in a nightclub sequence, but it's an enjoyable one.",1,test
+en,107,"At its worst the screenplay is callow, but at its best it is a young artist's thoughtful consideration of fatherhood.",1,test
+en,108,At 78 minutes it just zings along with vibrance and warmth.,2,train
+en,109,"Only an epic documentary could get it all down, and Spike Lee's Jim Brown: All American at long last gives its subject a movie worthy of his talents.",2,train
+en,110,"As quiet, patient and tenacious as Mr. Lopez himself, who approaches his difficult, endless work with remarkable serenity and discipline.",2,train
+en,111,"Instead of hiding Pinocchio from critics, Miramax should have hidden it from everyone.",0,train
+en,112,What a great shame that such a talented director as Chen Kaige has chosen to make his English-language debut with a film so poorly plotted and scripted.,0,train
+en,113,Jeffs has created a breathtakingly assured and stylish work of spare dialogue and acute expressiveness.,2,test
+en,114,"Just about the best straight-up, old-school horror film of the last 15 years.",2,train
+en,115,"Gosling creates a staggeringly compelling character, a young man whose sharp intellect is at the very root of his contradictory, self-hating, self-destructive ways.",2,train
+en,116,"I thought the relationships were wonderful, the comedy was funny, and the love `real'.",2,train
+en,117,Better at putting you to sleep than a sound machine.,0,train
+en,118,Feels less like a cousin to Blade Runner than like a bottom-feeder sequel in the Escape From New York series.,0,train
+en,119,"Elegantly produced and expressively performed, the six musical numbers crystallize key plot moments into minutely detailed wonders of dreamlike ecstasy.",2,train
+en,120,"Ultimate X is a ride, basically the kind of greatest-hits reel that might come with a subscription to ESPN the Magazine.",1,train
+en,121,"Celebrated at Sundance, this slight comedy of manners has winning performances and a glossy, glib charm that's hard to beat.",2,val
+en,122,"Apparently, romantic comedy with a fresh point of view just doesn't figure in the present Hollywood program.",0,train
+en,123,That Haynes can both maintain and dismantle the facades that his genre and his character construct is a wonderous accomplishment of veracity and narrative grace.,2,train
+en,124,"Some elements of it really blow the big one, but other parts are decent.",1,train
+en,125,"No French people were harmed during the making of this movie, but they were insulted and the audience was put through torture for an hour and a half.",0,train
+en,126,"I was feeling this movie until it veered off too far into the Exxon zone, and left me behind at the station looking for a return ticket to realism.",0,train
+en,127,The simplicity of The Way Home has few equals this side of Aesop.,1,train
+en,128,Exceptionally well acted by Diane Lane and Richard Gere.,2,train
+en,129,"Dong shows how intolerance has the power to deform families, then tear them apart.",1,train
+en,130,"A stupid, derivative horror film that substitutes extreme gore for suspense.",0,val
+en,131,It's a great American adventure and a wonderful film to bring to IMAX.,2,train
+en,132,It's 51 times better than this.,1,train
+en,133,"It's like an old Warner Bros. costumer jived with sex -- this could be the movie Errol Flynn always wanted to make, though Bette Davis, cast as Joan, would have killed him.",1,train
+en,134,"A miraculous movie, I'm Going Home is so slight, yet overflows with wisdom and emotion.",2,train
+en,135,"A fiercely clever and subtle film, capturing the precarious balance between the extravagant confidence of the exiled aristocracy and the cruel earnestness of the victorious revolutionaries.",2,train
+en,136,"It's as if you're watching a movie that was made in 1978 but not released then because it was so weak, and it has been unearthed and released now, when it has become even weaker.",0,train
+en,137,Anemic chronicle of money grubbing New Yorkers and their serial loveless hook ups.,1,test
+en,138,"Thanks to a small star with big heart, this family film sequel is plenty of fun for all.",2,train
+en,139,And I've decided to leave a light on every night from now on.,1,test
+en,140,Festers in just such a dungpile that you'd swear you were watching monkeys flinging their feces at you.,0,train
+en,141,under-rehearsed and lifeless,0,train
+en,142,Exactly what you'd expect from a guy named Kaos.,1,train
+en,143,"If legendary shlockmeister Ed Wood had ever made a movie about a vampire, it probably would look a lot like this alarming production, adapted from Anne Rice's novel The Vampire Chronicles.",1,train
+en,144,"For those for whom the name Woody Allen was once a guarantee of something fresh, sometimes funny, and usually genuinely worthwhile, Hollywood Ending is a depressing experience.",0,val
+en,145,Bella is the picture of health with boundless energy until a few days before she dies.,1,train
+en,146,"The fun of the movie is the chance it affords to watch Jackson, who also served as executive producer, take his smooth, shrewd, powerful act abroad.",2,train
+en,147,What should have been a cutting Hollywood satire is instead about as fresh as last week's issue of Variety.,0,train
+en,148,"Cox offers plenty of glimpses at existing photos, but there are no movies of Nijinsky, so instead the director treats us to an aimless hodgepodge.",0,train
+en,149,Aaliyah rarely dampens her diva persona enough to spark genuine chemistry with Townsend.,1,test
+en,150,Mr. Soderbergh's direction and visual style struck me as unusually and unimpressively fussy and pretentious.,0,val
+en,151,Mazel tov to a film about a family's joyous life acting on the Yiddish stage.,2,train
+en,152,... would be a total loss if not for two supporting performances taking place at the movie's edges.,1,test
+en,153,An inspiring and heart-affecting film about the desperate attempts of Vietnamese refugees living in U.S. relocation camps to keep their hopes alive in 1975.,2,test
+en,154,"Loud, chaotic and largely unfunny.",0,train
+en,155,The immersive powers of the giant screen and its hyper-realistic images are put to perfect use in the breathtakingly beautiful outer-space documentary Space Station 3D.,2,train
+en,156,It's everything you don't go to the movies for.,0,val
+en,157,"Harris is supposed to be the star of the story, but comes across as pretty dull and wooden.",1,train
+en,158,Allen's funniest and most likeable movie in years.,2,test
+en,159,"For those who pride themselves on sophisticated, discerning taste, this might not seem like the proper cup of tea, however it is almost guaranteed that even the stuffiest cinema goers will laugh their 1*** off for an hour-and-a-half.",2,train
+en,160,"There is a refreshing absence of cynicism in Stuart Little 2 -- quite a rarity, even in the family film market.",2,test
+en,161,There are plot holes big enough for Shamu the killer whale to swim through.,0,train
+en,162,... always remains movingly genuine.,2,train
+en,163,"Stitch is a bad mannered, ugly and destructive little ****.",0,train
+en,164,The cast is top-notch and I predict there will be plenty of female audience members drooling over Michael Idemoto as Michael.,2,train
+en,165,Kirshner and Monroe seem to be in a contest to see who can out-bad-act the other.,0,train
+en,166,This is one of those war movies that focuses on human interaction rather than battle and action sequences... and it's all the stronger because of it.,2,train
+en,167,"Like life on the island, the movie grows boring despite the scenery.",0,train
+en,168,It's anchored by splendid performances from an honored screen veteran and a sparkling newcomer who instantly transform themselves into a believable mother/daughter pair.,2,train
+en,169,An atonal estrogen opera that demonizes feminism while gifting the most sympathetic male of the piece with a nice vomit bath at his wedding.,0,train
+en,170,"Even by the intentionally low standards of frat-boy humor, Sorority Boys is a bowser.",0,test
+en,171,"Director of photography Benoit Delhomme shot the movie in delicious colors, and the costumes and sets are grand.",2,train
+en,172,The only entertainment you'll derive from this choppy and sloppy affair will be from unintentional giggles -- several of them.,0,val
+en,173,The film serves as a valuable time capsule to remind us of the devastating horror suffered by an entire people.,1,train
+en,174,"A bittersweet contemporary comedy about benevolent deception, which, while it may not rival the filmmaker's period pieces, is still very much worth seeing.",2,train
+en,175,Attal pushes too hard to make this a comedy or serious drama.,0,train
+en,176,Isabelle Huppert excels as the enigmatic Mika and Anna Mouglalis is a stunning new young talent in one of Chabrol's most intense psychological mysteries.,2,train
+en,177,A small movie with a big impact.,2,val
+en,178,This bold and lyrical first feature from Raja Amari expands the pat notion that middle-aged women just wanna have fun into a rousing treatise of sensual empowerment.,2,train
+en,179,Photographed with melancholy richness and eloquently performed yet also decidedly uncinematic.,1,train
+en,180,"Hey Arnold! is now stretched to barely feature length, with a little more attention paid to the animation.",1,val
+en,181,"After that, it just gets stupid and maudlin.",0,train
+en,182,"The stunning, dreamlike visuals will impress even those viewers who have little patience for Euro-film pretension.",2,test
+en,183,"Plods along, minus the twisted humor and eye-popping visuals that have made Miike... a cult hero.",1,train
+en,184,"Impresses as a skillfully assembled, highly polished and professional adaptation... just about as chilling and unsettling as `Manhunter' was.",2,val
+en,185,"For the most part, it's a work of incendiary genius, steering clear of knee-jerk reactions and quick solutions.",2,val
+en,186,"It's badly acted, blandly directed, and could have been scripted by someone who just graduated from elementary school.",0,train
+en,187,"The sort of picture in which, whenever one of the characters has some serious soul searching to do, they go to a picture-perfect beach during sunset.",1,train
+en,188,"Despite its raucous intent, XXX is as conventional as a Nike ad and as rebellious as spring break.",1,train
+en,189,... a roller-coaster ride of a movie,2,train
+en,190,"A colorful, vibrant introduction to a universal human impulse, lushly photographed and beautifully recorded.",2,train
+en,191,Audiard successfully maintains suspense on different levels throughout a film that is both gripping and compelling.,2,train
+en,192,Even horror fans will most likely not find what they're seeking with Trouble Every Day; the movie lacks both thrills and humor.,0,train
+en,193,After that it becomes long and tedious like a classroom play in a college history course.,0,train
+en,194,"This is cool, slick stuff, ready to quench the thirst of an audience that misses the summer blockbusters.",2,train
+en,195,"Blade II has a brilliant director and charismatic star, but it suffers from rampant vampire devaluation.",1,train
+en,196,"A loud, ugly, irritating movie without any of its satirical salvos hitting a discernible target.",0,train
+en,197,"For VeggieTales fans, this is more appetizing than a side dish of asparagus.",2,test
+en,198,"While it regards 1967 as the key turning point of the 20th century, and returns again and again to images of dissidents in the streets, it's alarmingly current.",1,test
+en,199,A truly wonderful tale combined with stunning animation.,2,train
+en,200,"Nothing sticks, really, except a lingering creepiness one feels from being dragged through a sad, sordid universe of guns, drugs, avarice and damaged dreams.",0,train
+en,201,``Simone'' is a fun and funky look into an artificial creation in a world that thrives on artificiality.,2,train
+en,202,"It's a hoot watching The Rock chomp on jumbo ants, pull an arrow out of his back, and leap unscathed through raging fire!",2,val
+en,203,"While Tattoo borrows heavily from both Seven and The Silence of the Lambs, it manages to maintain both a level of sophisticated intrigue and human-scale characters that suck the audience in.",2,test
+en,204,A portrait of an artist.,1,train
+en,205,"As written by Michael Berg and Michael J. Wilson from a story by Wilson, this relentless, all-wise-guys-all-the-time approach tries way too hard and gets tiring in no time at all.",0,train
+en,206,"It's the best film of the year so far, the benchmark against which all other Best Picture contenders should be measured.",2,test
+en,207,This is one of the biggest disappointments of the year.,0,test
+en,208,It never fails to engage us.,2,train
+en,209,"Denis forges out of the theories of class - based rage and sisterly obsession a razor-sided tuning fork that rings with cultural, sexual and social discord.",1,test
+en,210,The movie slides downhill as soon as macho action conventions assert themselves.,0,train
+en,211,"More romantic, more emotional and ultimately more satisfying than the teary-eyed original.",2,train
+en,212,"Like the best of Godard's movies... it is visually ravishing, penetrating, impenetrable.",2,train
+en,213,The cumulative effect of the movie is repulsive and depressing.,0,train
+en,214,"Feels like nothing quite so much as a middle-aged moviemaker's attempt to surround himself with beautiful, half-naked women.",1,train
+en,215,"A very long movie, dull in stretches, with entirely too much focus on meal preparation and igloo construction.",0,train
+en,216,"In XXX, Diesel is that rare creature -- an action hero with table manners, and one who proves that elegance is more than tattoo deep.",2,train
+en,217,I'm not sure which will take longer to heal: the welt on Johnny Knoxville's stomach from a riot-control projectile or my own tortured psyche.,0,train
+en,218,"While Serving Sara does have a long way to go before it reaches the level of crudity in the latest Austin Powers extravaganza, there's nothing here to match that movie's intermittent moments of inspiration.",1,train
+en,219,"It's difficult to conceive of anyone who has reached puberty actually finding the characters in Slackers or their antics amusing, let alone funny.",0,train
+en,220,"It never is, not fully.",1,train
+en,221,"Not only is Undercover Brother as funny, if not more so, than both Austin Powers films, but it's also one of the smarter, savvier spoofs to come along in some time.",2,train
+en,222,It should be mentioned that the set design and interiors of the haunted vessel are more than effectively creepy and moodily lit.,2,train
+en,223,"With the exception of some fleetingly amusing improvisations by Cedric the Entertainer as Perry's boss, there isn't a redeeming moment here.",0,train
+en,224,It's a funny little movie with clever dialogue and likeable characters.,2,train
+en,225,"``13 Conversations'' holds its goodwill close, but is relatively slow to come to the point.",1,train
+en,226,"Not the kind of film that will appeal to a mainstream American audience, but there is a certain charm about the film that makes it a suitable entry into the fest circuit.",2,train
+en,227,"You come away wishing, though, that the movie spent a lot less time trying to make a credible case for reports from the afterlife and a lot more time on the romantic urgency that's at the center of the story.",1,train
+en,228,The movie is virtually without context -- journalistic or historical.,0,train
+en,229,"After sitting through this sloppy, made-for-movie comedy special, it makes me wonder if Lawrence hates criticism so much that he refuses to evaluate his own work.",0,train
+en,230,Genuinely touching because it's realistic about all kinds of love.,2,train
+en,231,"For all the complications, it's all surprisingly predictable.",1,train
+en,232,"Armed with a game supporting cast, from the pitch-perfect Forster to the always hilarious Meara and Levy, Like Mike shoots and scores, doing its namesake proud.",2,train
+en,233,It will guarantee to have you leaving the theater with a smile on your face.,2,train
+en,234,"The misery of these people becomes just another voyeuristic spectacle, to be consumed and forgotten.",0,train
+en,235,"A thoroughly awful movie -- dumb, narratively chaotic, visually sloppy... a weird amalgam of `The Thing' and a geriatric `Scream.'",0,test
+en,236,"One of those staggeringly well-produced, joylessly extravagant pictures that keep whooshing you from one visual marvel to the next, hastily, emptily.",1,val
+en,237,"Measured against practically any like-themed film other than its Oscar-sweeping franchise predecessor The Silence of the Lambs, Red Dragon rates as an exceptional thriller.",2,train
+en,238,"The movie has no respect for laws, political correctness or common decency, but it displays something more important: respect for its flawed, crazy people.",1,test
+en,239,"In a strange way, Egoyan has done too much.",1,train
+en,240,"After seeing the film, I can tell you that there's no other reason why anyone should bother remembering it.",0,val
+en,241,The film is darkly funny in its observation of just how much more grueling and time-consuming the illusion of work is than actual work.,2,train
+en,242,"In some ways, Lagaan is quintessential Bollywood.",1,train
+en,243,"Pacino and Williams seem to keep upping the ante on each other, just as their characters do in the film.",2,train
+en,244,"It would be disingenuous to call Reno a great film, but you can say that about most of the flicks moving in and out of the multiplex.",1,test
+en,245,"Some movies can get by without being funny simply by structuring the scenes as if they were jokes: a setup, delivery and payoff.",1,train
+en,246,Narc can only remind us of brilliant crime dramas without becoming one itself.,1,train
+en,247,Narc is a no-bull throwback to 1970s action films.,2,train
+en,248,Intriguing and downright intoxicating.,2,test
+en,249,"The wonderful combination of the sweetness and the extraordinary technical accomplishments of the first film are maintained, but its overall impact falls a little flat with a storyline that never quite delivers the original magic.",1,train
+en,250,Perhaps the most annoying thing about Who Is Cletis Tout? is that it's a crime movie made by someone who obviously knows nothing about crime.,0,test
+en,251,"In addition to scoring high for originality of plot -- putting together familiar themes of family, forgiveness and love in a new way -- Lilo & Stitch has a number of other assets to commend it to movie audiences both innocent and jaded.",2,val
+en,252,The quirky drama touches the heart and the funnybone thanks to the energetic and always surprising performance by Rachel Griffiths.,2,test
+en,253,"At its worst, it implodes in a series of very bad special effects.",0,val
+en,254,Bad and baffling from the get-go.,0,test
+en,255,"The movie is a blast of educational energy, as bouncy animation and catchy songs escort you through the entire 85 minutes.",2,test
+en,256,The original wasn't a good movie but this remake makes it look like a masterpiece!,0,train
+en,257,"To my taste, the film's comic characters come perilously close to being Amoses and Andys for a new generation.",1,train
+en,258,"Although the sequel has all the outward elements of the original, the first film's lovely flakiness is gone, replaced by the forced funniness found in the dullest kiddie flicks.",0,train
+en,259,"The real charm of this trifle is the deadpan comic face of its star, Jean Reno, who resembles Sly Stallone in a hot sake half-sleep.",1,test
+en,260,"... a cute and sometimes side-splittingly funny blend of Legally Blonde and Drop Dead Gorgeous, starring Piper Perabo in what could be her breakthrough role.",2,train
+en,261,"This method almost never fails him, and it works superbly here.",2,train
+en,262,Few films capture so perfectly the hopes and dreams of little boys on baseball fields as well as the grown men who sit in the stands.,2,train
+en,263,Steers has an unexpectedly adamant streak of warm-blooded empathy for all his disparate Manhattan denizens -- especially the a**holes.,1,train
+en,264,"The Emperor's Club is one of those films that possesses all the good intentions in the world, but...",1,val
+en,265,The most compelling performance of the year adds substantial depth to this shocking testament to anti-Semitism and neo-fascism.,2,train
+en,266,"LaBute can't avoid a fatal mistake in the modern era: He's changed the male academic from a lower-class Brit to an American, a choice that upsets the novel's exquisite balance and shreds the fabric of the film.",1,test
+en,267,A biopic about Crane's life in the classic tradition but evolves into what has become of us all in the era of video.,1,train
+en,268,"A work of extraordinary journalism, but it is also a work of deft and subtle poetry.",2,train
+en,269,... think of it as American Pie On Valium.,1,train
+en,270,Gere gives a good performance in a film that doesn't merit it.,1,test
+en,271,"The movie is as far as you can get from racy, to the point where it almost stops the blood flow to your brain; it has a dull, costumey feel.",0,val
+en,272,The Pianist is Polanski's best film.,2,train
+en,273,Maybe Thomas Wolfe was right: You can't go home again.,1,train
+en,274,"The director, with his fake backdrops and stately pacing, never settles on a consistent tone.",0,test
+en,275,"Why he was given free reign over this project -- he wrote, directed, starred and produced -- is beyond me.",0,test
+en,276,"If you enjoy being rewarded by a script that assumes you aren't very bright, then Blood Work is for you.",0,test
+en,277,"Like Rudy Yellow Lodge, Eyre needs to take a good sweat to clarify his cinematic vision before his next creation and remember the lessons of the trickster spider.",0,test
+en,278,But his showboating wise-cracker stock persona sure is getting old.,1,train
+en,279,"Circuit queens won't learn a thing, they'll be too busy cursing the film's strategically placed white sheets.",1,train
+en,280,"A lot of talent is wasted in this crass, low-wattage endeavor.",0,train
+en,281,"Alain Choquart's camera barely stops moving, portraying both the turmoil of the time and giving Conduct a perpetual sense of urgency, which, for a film that takes nearly three hours to unspool, is both funny and irritating.",1,train
+en,282,The second coming of Harry Potter is a film far superior to its predecessor.,2,train
+en,283,This stuck pig of a movie flails limply between bizarre comedy and pallid horror.,0,train
+en,284,"The film just might turn on many people to opera, in general, an art form at once visceral and spiritual, wonderfully vulgar and sublimely lofty -- and as emotionally grand as life.",2,train
+en,285,"The delicious trimmings... arrive early and stay late, filling nearly every minute... with a lighthearted glow, some impudent snickers, and a glorious dose of humankind's liberating ability to triumph over a Scrooge or two.",2,train
+en,286,"The inhospitability of the land emphasizes the spare precision of the narratives and helps to give them an atavistic power, as if they were tales that had been handed down since the beginning of time.",1,train
+en,287,Even more baffling is that it's funny.,1,val
+en,288,"Parker should be commended for taking a fresh approach to familiar material, but his determination to remain true to the original text leads him to adopt a somewhat mannered tone... that ultimately dulls the human tragedy at the story's core.",1,train
+en,289,"Hard, endearing, caring, warm.",2,test
+en,290,"I have no problem with ``difficult'' movies, or movies that ask the audience to meet them halfway and connect the dots instead of having things all spelled out.",1,train
+en,291,The way Coppola professes his love for movies -- both colorful pop junk and the classics that unequivocally qualify as art -- is giddily entertaining.,2,test
+en,292,Both the crime story and the love story are unusual.,1,train
+en,293,It's never a good sign when a film's star spends the entirety of the film in a coma.,0,train
+en,294,A creaky staircase gothic.,1,train
+en,295,"If there's a way to effectively teach kids about the dangers of drugs, I think it's in projects like the (unfortunately R-rated) Paid.",1,train
+en,296,"If you're a WWF fan, or you related to the people who watched the robots getting butchered in A.I., you'll probably like Rollerball.",1,train
+en,297,Norton holds the film together.,1,train
+en,298,"A breathtaking adventure for all ages, Spirit tells its poignant and uplifting story in a stunning fusion of music and images.",2,train
+en,299,It won't bust your gut -- and it's not intended to -- it's merely a blandly cinematic surgical examination of what makes a joke a joke.,1,test
+en,300,Largely a for-fans artifact.,1,train
+en,301,A movie so bad that it quickly enters the pantheon of wreckage that includes Battlefield Earth and Showgirls.,0,val
+en,302,"If you're over 25, have an IQ over 90, and have a driver's license, you should be able to find better entertainment.",0,train
+en,303,A solid piece of journalistic work that draws a picture of a man for whom political expedience became a deadly foreign policy.,1,train
+en,304,"The doofus-on-the-loose banter of Welcome to Collinwood has a cocky, after-hours loopiness to it.",1,test
+en,305,It's the funniest American comedy since Graffiti Bridge.,2,test
+en,306,Samuel Beckett applied to the Iranian voting process.,1,train
+en,307,A strangely compelling and brilliantly acted psychological drama.,2,train
+en,308,"Often gruelling and heartbreaking to witness, but Seldahl and Wollter's sterling performances raise this far above the level of the usual maudlin disease movie.",2,test
+en,309,"This enthralling documentary... is at once playful and haunting, an in-depth portrait of an iconoclastic artist who was fundamentally unknowable even to his closest friends.",2,train
+en,310,"I didn't laugh at the ongoing efforts of Cube, and his skinny buddy Mike Epps, to make like Laurel and Hardy'n the hood.",0,train
+en,311,"At its best when the guarded, resentful Betty and the manipulative yet needy Margot are front and center.",1,train
+en,312,Ford deserves to be remembered at Oscar time for crafting this wonderful portrait of a conflicted soldier.,2,train
+en,313,"That is essentially what's missing from Blackboards -- the sense of something bigger, some ultimate point.",1,test
+en,314,"It's a bizarre curiosity memorable mainly for the way it fritters away its potentially interesting subject matter via a banal script, unimpressive acting and indifferent direction.",1,train
+en,315,"While obviously an extremely personal work, it remains inextricably stuck in an emotionally unavailable rut.",1,train
+en,316,"A dim-witted and lazy spin-off of the Animal Planet documentary series, Crocodile Hunter is entertainment opportunism at its most glaring.",0,test
+en,317,"The good is very, very good... The rest runs from mildly unimpressive to despairingly awful.",1,val
+en,318,"Methodical, measured, and gently tedious in its comedy, Secret Ballot is a purposefully reductive movie -- which may be why it's so successful at lodging itself in the brain.",2,train
+en,319,One of the most exciting action films to come out of China in recent years.,2,train
+en,320,Adam Sandler's Eight Crazy Nights grows on you -- like a rash.,0,train
+en,321,"The film feels formulaic, its plot and pacing typical Hollywood war-movie stuff, while the performances elicit more of a sense of deja vu than awe.",0,train
+en,322,"... pitiful, slapdash disaster.",0,train
+en,323,"As it stands, there's some fine sex onscreen, and some tense arguing, but not a whole lot more.",1,train
+en,324,It's neither as romantic nor as thrilling as it should be.,0,train
+en,325,Returning director Rob Minkoff... and screenwriter Bruce Joel Rubin... have done a fine job of updating White's dry wit to a new age.,2,val
+en,326,"The Venezuelans say things like ``si, pretty much'' and ``por favor, go home'' when talking to Americans.",1,train
+en,327,"If you already like this sort of thing, this is that sort of thing all over again.",1,val
+en,328,An awful movie that will only satisfy the most emotionally malleable of filmgoers.,0,test
+en,329,"This is an extraordinary film, not least because it is Japanese and yet feels universal.",2,train
+en,330,"Aptly named, this shimmering, beautifully costumed and filmed production doesn't work for me.",1,train
+en,331,"If Borstal Boy isn't especially realistic, it is an engaging nostalgia piece.",1,train
+en,332,Griffiths proves she's that rare luminary who continually raises the standard of her profession.,2,train
+en,333,"The asylum material is gripping, as are the scenes of Jia with his family.",2,val
+en,334,"... by the time it's done with us, Mira Nair's new movie has its audience giddy with the delight of discovery, of having been immersed in a foreign culture only to find that human nature is pretty much the same all over.",2,train
+en,335,... about as exciting to watch as two last-place basketball teams playing one another on the final day of the season.,0,train
+en,336,Girls gone wild and gone civil again,1,val
+en,337,To say Analyze That is De Niro's best film since Meet the Parents sums up the sad state of his recent career.,1,val
+en,338,"Like being trapped inside a huge video game, where exciting, inane images keep popping past your head and the same illogical things keep happening over and over again.",1,train
+en,339,`Enigma' is the kind of engaging historical drama that Hollywood appears to have given up on in favor of sentimental war movies in the vein of `We Were Soldiers.',1,train
+en,340,The Rock has a great presence but one battle after another is not the same as one battle followed by killer CGI effects.,1,train
+en,341,Visually sumptuous but intellectually stultifying.,1,train
+en,342,"So young, so smart, such talent, such a wise ***.",2,val
+en,343,"The problem is that for the most part, the film is deadly dull.",0,train
+en,344,A thinly veiled look at different aspects of Chinese life clashing with each other.,1,val
+en,345,An exhilarating experience.,2,train
+en,346,Its vision of that awkward age when sex threatens to overwhelm everything else is acute enough to make everyone who has been there squirm with recognition.,1,train
+en,347,Remarkably accessible and affecting.,2,train
+en,348,"The climactic events are so well realized that you may forget all about the original conflict, just like the movie does.",1,train
+en,349,Distinctly sub-par... more likely to drown a viewer in boredom than to send any shivers down his spine.,0,train
+en,350,Godard's ode to tackling life's wonderment is a rambling and incoherent manifesto about the vagueness of topical excess... In Praise of Love remains a ponderous and pretentious endeavor that's unfocused and tediously exasperating.,0,test
+en,351,"Shamelessly resorting to pee-related sight gags that might even cause Tom Green a grimace; still, Myer's energy and the silliness of it all eventually prevail.",1,val
+en,352,"We never truly come to care about the main characters and whether or not they'll wind up together, and Michele's spiritual quest is neither amusing nor dramatic enough to sustain interest.",0,test
+en,353,"Most haunting about ``Fence'' is its conclusion, when we hear the ultimate fate of these girls and realize, much to our dismay, that this really did happen.",2,train
+en,354,"Bogdanovich taps deep into the Hearst mystique, entertainingly reenacting a historic scandal.",2,train
+en,355,"Peralta's mythmaking could have used some informed, adult hindsight.",1,test
+en,356,"``My god, I'm behaving like an idiot!''",1,train
+en,357,"Devos and Cassel have tremendous chemistry -- their sexual and romantic tension, while never really vocalized, is palpable.",2,train
+en,358,"As a girl-meets-girl romantic comedy, Kissing Jessica Steinis quirky, charming and often hilarious.",2,train
+en,359,Gollum's `performance' is incredible!,2,train
+en,360,"... a haunting vision, with images that seem more like disturbing hallucinations.",0,train
+en,361,"As a remake, it's a pale imitation.",0,val
+en,362,Adults will certainly want to spend their time in the theater thinking up grocery lists and ways to tell their kids how not to act like Pinocchio.,1,test
+en,363,"Not as distinctive or even as humorous as its needs to be to stand out, but it has clearly been made with affection and care.",1,test
+en,364,A generic family comedy unlikely to be appreciated by anyone outside the under-10 set.,0,test
+en,365,"An amalgam of The Fugitive, Blade Runner, and Total Recall, only without much energy or tension.",1,train
+en,366,"Everything its title implies, a standard-issue crime drama spat out from the Tinseltown assembly line.",1,train
+en,367,"This odd, poetic road movie, spiked by jolts of pop music, pretty much takes place in Morton's ever-watchful gaze -- and it's a tribute to the actress, and to her inventive director, that the journey is such a mesmerizing one.",2,train
+en,368,"Co-writer/director Jonathan Parker's attempts to fashion a Brazil-like, hyper-real satire fall dreadfully short.",0,test
+en,369,"An amateurish, quasi-improvised acting exercise shot on ugly digital video.",0,val
+en,370,"``The Kid Stays in the Picture'' is a great story, terrifically told by the man who wrote it but this Cliff Notes edition is a cheat.",1,train
+en,371,"A gratingly unfunny groaner littered with zero-dimensional, unlikable characters and hackneyed, threadbare comic setups.",0,train
+en,372,"While this gentle and affecting melodrama will have luvvies in raptures, it's far too slight and introspective to appeal to anything wider than a niche audience.",1,train
+en,373,Griffin & Co. manage to be spectacularly outrageous.,2,train
+en,374,"A profoundly stupid affair, populating its hackneyed and meanspirited storyline with cardboard characters and performers who value cash above credibility.",0,val
+en,375,"Warm Water Under a Red Bridge is a quirky and poignant Japanese film that explores the fascinating connections between women, water, nature, and sexuality.",2,train
+en,376,It isn't that Stealing Harvard is a horrible movie -- if only it were that grand a failure!,0,val
+en,377,It just doesn't have much else... especially in a moral sense.,1,test
+en,378,Those unfamiliar with Mormon traditions may find The Singles Ward occasionally bewildering.,1,test
+en,379,"Viewed as a comedy, a romance, a fairy tale, or a drama, there's nothing remotely triumphant about this motion picture.",1,train
+en,380,"But the talented cast alone will keep you watching, as will the fight scenes.",2,test
+en,381,It's solid and affecting and exactly as thought-provoking as it should be.,2,train
+en,382,"Thanks largely to Williams, all the interesting developments are processed in 60 minutes -- the rest is just an overexposed waste of film.",0,train
+en,383,"Cantet perfectly captures the hotel lobbies, two-lane highways, and roadside cafes that permeate Vincent's days",2,train
+en,384,"An important movie, a reminder of the power of film to move us and to make us examine our values.",2,test
+en,385,"Too much of this well-acted but dangerously slow thriller feels like a preamble to a bigger, more complicated story, one that never materializes.",0,train
+en,386,A richly imagined and admirably mature work from a gifted director who definitely has something on his mind.,2,test
+en,387,"The art direction is often exquisite, and the anthropomorphic animal characters are beautifully realized through clever makeup design, leaving one to hope that the eventual DVD release will offer subtitles and the original Italian-language soundtrack.",2,train
+en,388,"... Jones, despite a definitely distinctive screen presence, just isn't able to muster for a movie that, its title notwithstanding, should have been a lot nastier if it wanted to fully capitalize on its lead's specific gifts.",1,train
+en,389,But what's nice is that there's a casual intelligence that permeates the script.,2,test
+en,390,Wedding feels a bit anachronistic.,0,train
+en,391,"An action/thriller of the finest kind, evoking memories of Day of the Jackal, The French Connection, and Heat.",2,train
+en,392,"This picture is murder by numbers, and as easy to be bored by as your ABC's, despite a few whopping shootouts.",0,train
+en,393,"Every individual will see the movie through the prism of his or her own beliefs and prejudices, but the one thing most will take away is the sense that peace is possible.",2,train
+en,394,"Feels slight, as if it were an extended short, albeit one made by the smartest kids in class.",1,test
+en,395,The picture doesn't know it's a comedy.,1,test
+en,396,A classy item by a legend who may have nothing left to prove but still has the chops and drive to show how its done.,2,train
+en,397,"Starts out mediocre, spirals downward, and thuds to the bottom of the pool with an utterly incompetent conclusion.",0,val
+en,398,The sort of movie that gives tastelessness a bad rap.,0,train
+en,399,Its engaging simplicity is driven by appealing leads.,2,train
+en,400,"Fans of the TV series will be disappointed, and everyone else will be slightly bored.",1,train
+en,401,"It's a head-turner -- thoughtfully written, beautifully read and, finally, deeply humanizing.",2,test
+en,402,"Bray is completely at sea; with nothing but a Savage Garden music video on his resume, he has no clue about making a movie.",0,train
+en,403,"It's not a particularly good film, but neither is it a monsterous one.",1,train
+en,404,Men in Black II achieves ultimate insignificance -- it's the sci-fi comedy spectacle as Whiffle-Ball epic.,0,test
+en,405,Martyr gets royally screwed and comes back for more.,1,train
+en,279707784,"With his interest in race cars, he formed a second company, the Henry Ford Company.",-1,train
+en,146505530,"During this period, he personally drove his Quadricycle to victory in a race against Alexander Winton, a well-known driver and the heavy favorite on October 10, 1901.",-1,train
+en,334318421,"Ford was forced out of the company by the investors, including Henry M. Leland in 1902, and the company was reorganized as Cadillac.",-1,train
+en,305011511,"In 1891, Ford became an engineer with the Edison Illuminating Company, and after his promotion to Chief Engineer in 1893, he had enough time and money to devote attention to his personal experiments on internal combustion engines.",-1,train
+en,200693004,"These experiments culminated in 1896 with the completion of his own self-propelled vehicle named the Quadricycle, which he test-drove on June 4 of that year.",-1,train
+en,225725667,"Ford was born on a prosperous farm in Springwells Township (now in the city of Dearborn, Michigan) owned by his parents, William Ford (1826-1905) and Mary Litogot (c1839-1876), immigrants from County Cork, Ireland.",-1,train
+en,167363274,"In the years between the wars, Henry Ford supported Adolf Hitler's Nazi regime.",-1,train
+en,354829241,There is also some evidence that Henry Ford gave Adolf Hitler direct financial backing when Hitler was first starting out in politics.,-1,train
+en,305396190,"This can in part be traced to statements from Kurt Ludecke, Germany's representative to the U.S. in the 1920s, and Winifred Wagner, daughter-in-law of Richard Wagner, who said they requested funds from Ford to aid the National Socialist movement in Germany.",-1,train
+en,313659910,"Although Ford is often credited with the idea, contemporary sources indicate that the concept and its development came from employees Clarence Avery, Peter E. Martin, Charles E. Sorensen, and C.H.",-1,train
+en,213491761,Henry Ford advocated long-time associate Harry Bennett to take the spot.,-1,train
+en,106101709,"Edsel's widow Eleanor, who had inherited Edsel's voting stock, wanted her son Henry Ford II to take over the position.",-1,train
+en,134142398,"In 1879, he left home for the nearby city of Detroit to work as an apprentice machinist, first with James F. Flower & Bros., and later with the Detroit Dry Dock Co.",-1,train
+en,134568484,"Alexander Rae Baldwin III (born April 3, 1958, in Massapequa, Long Island, New York, USA) is an American actor who is the oldest and best known of the ""Baldwin brothers"", with brothers Daniel, Stephen and William.",-1,train
+en,366589549,He is of three quarters Irish and one quarter French descent.,-1,train
+en,166471687,"Baldwin has appeared in movies such as The Cooler, The Hunt for Red October, Beetlejuice, Ghosts of Mississippi, Talk Radio, Final Fantasy: The Spirits Within (voice), The Cat in the Hat, Pearl Harbor, Thomas and the Magic Railroad, Along Came Polly, The SpongeBob SquarePants Movie, and The Aviator.",-1,train
+en,139668447,"When Baldwin was young, he had a job as a busboy at famous New York City disco Studio 54.",-1,train
+en,185107609,He was married to actress Kim Basinger from 1993 to 2002.,-1,train
+en,226965036,"Baldwin, a liberal Democrat, has always had an active interest in politics and is frequently rumored to be a candidate for public office.",-1,train
+en,257090472,"In particular, Baldwin is one of the most frequent hosts of Saturday Night Live, leading the show eleven times and also making cameo appearances regularly.",-1,train
+en,146517250,He played William Barrett Travis in a movie about the Alamo called Thirteen Days of Glory.,-1,train
+en,115857733,"In 1998, he began narrating the American version of the children's series Thomas the Tank Engine and Friends.",-1,train
+en,127679514,"He is infamous for his 1994 appearance on Saturday Night Live as he potrays Mr. Armstrong, a scoutmaster who is a pedophile, he rips his shirt and puts his mouth around Adam Sandler's neck.",-1,train
+en,198051760,"Rosemary Clooney (May 23, 1928 - June 29, 2002) was an American popular singer and actress.",-1,train
+en,261680681,"In 1954 she, along with Bing Crosby, Danny Kaye, and nVera-Ellen, starred in the movie White Christmas.",-1,train
+en,163041501,"Clooney's first recordings, in May of 1946 were for Columbia Records as a singer with the big band of Tony Pastor.",-1,train
+en,355072798,"Rosemary Clooney was married three times, twice to Jose Ferrer (from 1953 until 1961 and then again from 1964 to 1967) by whom she had five children, including actor Miguel Ferrer, born in 1955, and Gabriel Ferrer, born 1956, who married Debby Boone, and once to Dante DePaolo (whom she married in 1997).",-1,train
+en,252128813,"Rosemary, Betty, and brother, Nick, as well as her nephew, George Clooney (Nick's son), all became entertainers.",-1,train
+en,180437377,In 1945 the Clooney sisters won a spot on Cincinnati's radio station WLW as singers.,-1,train
+en,112285964,"She was born in Maysville, Kentucky, about 60 miles up the Ohio River from Cincinnati, Ohio to Andrew Joseph Clooney and Frances Marie Guilfoyle, both of whom were of Irish descent (Rosemary's paternal great-grandparents, Nicholas Clooney and Bridget Byron, were born in Ireland), although Clooney's paternal grandmother, Crescentia Koch, was German.",-1,train
+en,127848141,"In 1958, Clooney left Columbia, doing a number of recordings for MGM Records and then some for Coral Records.",-1,train
+en,182052458,"Finally, toward the end of 1958, she signed with RCA Victor Records, where she stayed until 1963 except for doing some recordings in 1960 for Reprise Records.",-1,train
+en,219202710,"In 1964 she went to Reprise again, shifting the next year to Dot Records.",-1,train
+en,131373986,In 1966 she went to United Artists Records.,-1,train
+en,313653619,"In 1986 she sang a duet with Wild Man Fischer on ""It's a Hard Business"".",-1,train
+en,348060491,"Michael McManus (born February 5, 1959) is a syndicated columnist who wrote Ethics & Religion.",-1,train
+en,282012667,"On January 28, 2005 it was revealed that he accepted money from the George W. Bush administration to promote their marriage initiative program, which he did not disclose to his readers.",-1,train
+en,218266217,"Timothy Bush, Sr. (c. 1728 - c. 1815) - soldier.",-1,train
+en,318601095,"He is assumed to be the son of Richard Bush and Mary Fairbanks both of Dedham, Massachusetts.",-1,train
+en,260365020,By training he was a blacksmith but when the American Revolution broke out militia Captain Bush led a company of soldiers for the Continental Army.,-1,train
+en,148948645,"The family moved around 1810 to Springport, in Cayuga County in the Rochester, New York area.",-1,train
+en,147391658,"He died in Springport, New York in 1815.",-1,train
+en,101254805,"Through his son Timothy Bush, Jr., who was also a blacksmith, descended two American Presidents -George H. W. Bush and George W. Bush.",-1,train
+en,104764218,Bush was a soldier in the French and Indian Wars and a Captain in the American Revolution and is the great-great-great-great-great grandfather of president George W. Bush.,-1,train
+en,241868500,"They had five children after which they relocated to Norwich, Vermont where Bush was a Captain of a militia company.",-1,train
+en,207224702,"Anne Hutchinson (July 17, 1591 - August 20, 1643) was the unauthorized Puritan preacher of a dissident church discussion group, and pioneer in Rhode Island and the Bronx.",-1,train
+en,284105924,"Eventually, John Winthrop decided to take Hutchinson out of power before her influence became too strong among the community's men.",-1,train
+en,290024066,After a two-day trial she was banished as a heretic in 1638 and led 60 followers to settle Aquidneck Island in what later became Rhode Island.,-1,train
+en,101916609,"They founded the town of Portsmouth, Rhode Island.",-1,train
+en,207437649,"At the age of 21, she married William Hutchinson.",-1,train
+en,358165864,"They were part of the Puritan movement, especially following the teachings of John Cotton.",-1,train
+en,250771484,Three U.S. Presidents (Franklin D. Roosevelt and both Bushes - George H. W. Bush and George W. Bush) are her descendants.,-1,train
+en,250811955,"Another descendant, Eve LaPlante, is the author of the most recent biography of Anne Hutchinson, American Jezebel: The Uncommon Life of Anne Hutchinson, the Woman Who Defied the Puritans.",-1,train
+en,214831944,"Hutchinson was born Anne Marbury on July 17, 1591 in Alford, Lincolnshire, England.",-1,train
+en,258518695,"Hutchinson emigrated from England to Massachusetts in 1634, in response to the preacher John Cotton's doing so.",-1,train
+en,277087520,"She later moved yet further from her Boston-based persecutors, to what is now The Bronx in northern New York City.",-1,train
+en,312321486,"Erin Fleming (August 13, 1941- April 15, 2003) was a minor actress who was best known as the companion and care-giver to Groucho Marx in his final years.",-1,train
+en,346370346,Fleming was born Marilyn Fleming in Canada.,-1,train
+en,174463859,"Sir Andrew Fielding Huxley, OM, FRS (born 22 November 1917, Hampstead, London, England, UK) is a British physiologist and biophysicist, who won the 1963 Nobel Prize in Physiology or Medicine for his work with Alan Lloyd Hodgkin on the basis of nerve ""action potentials,"" the electrical impulses that enable the activity of an organism to be coordinated by a central nervous system.",-1,train
+en,188198665,"Hodgkin and Huxley shared the prize that year with John Carew Eccles, who was cited for research on synapses.",-1,train
+en,311255422,"Huxley was a son of the writer and editor Leonard Huxley by his second wife Rosalind Bruce, and hence half-brother of Aldous Huxley and fellow biologist Julian Huxley and grandson of the biologist T. H. Huxley.",-1,train
+en,246666959,"Albert Einstein (March 14, 1879 - April 18, 1955) was a German-born Jewish theoretical physicist of German, Swiss and American citizenship, who is widely regarded as the greatest scientist of the 20th century or even of all time, ranking alongside the luminaries Newton and Gauss.",-1,train
+en,343989159,"He was awarded the 1921 Nobel Prize for Physics for his explanation of the photoelectric effect in 1905 (his ""miracle year"") and ""for his services to Theoretical Physics"".",-1,train
+en,128183379,Einstein attended the Luitpold Gymnasium where he received a relatively progressive education.,-1,train
+en,312060610,"In the spring of 1896, the Serbian Mileva Maria (an acquaintance of Nikola Tesla) started initially as a medical student at the University of Zurich, but after a term switched to the same section as Einstein as the only woman that year to study for the same diploma.",-1,train
+en,141263027,"Einstein married Mileva Maria on January 6, 1903.",-1,train
+en,222740284,"Abram Joffe, a Soviet physicist who knew Einstein, in an obituary of Einstein, wrote, ""The author of [the papers of 1905] was ... a bureaucrat at the Patent Office in Bern, Einstein-Maria"" and this has recently been taken as evidence of a collaborative relationship.",-1,train
+en,248246566,"He and Mileva had an illegitimate daughter Lieserl, born in January 1902.",-1,train
+en,204813759,"In 1894, following the failure of Hermann's electrochemical business, the Einsteins moved from Munich to Pavia, Italy (near Milan).",-1,train
+en,112915026,"Despite excelling in the mathematics and science portion, his failure of the liberal arts portion of the Eidgenoessische Technische Hochschule (ETH, Swiss Federal Institute of Technology, in Zurich) entrance exam the following year was a setback; his family sent him to Aarau, Switzerland, to finish secondary school, where he received his diploma in September 1896.",-1,train
+en,132961165,"Albert's sister Maja was to later marry their son Paul, and his friend Michele Besso married their other daughter Anna.",-1,train
+en,281275635,"The same year, he renounced his Wuerttemberg citizenship and became stateless.",-1,train
+en,147052043,"On May 14, 1904, the couple's first son, Hans Albert Einstein, was born.",-1,train
+en,271578451,"Einstein was born at Ulm in Baden-Wuerttemberg, Germany, about 100 km east of Stuttgart.",-1,train
+en,310741857,"The family was Jewish (non-observant); Albert attended a Catholic elementary school and, at the insistence of his mother, was given violin lessons.",-1,train
+en,218117329,"Miguel Ferrer (born February 7, 1955 in Santa Monica, California) is a Puerto Rican-American actor who is often cast in movies as a villain.",-1,train
+en,294738187,"In 1983, Miguel was given a small part as a waiter in the movie The Man Who Wasn't There.",-1,train
+en,154545224,He was also given a small part in Star Trek III: The Search for Spock as the Excelsior helm officer.,-1,train
+en,265821055,Miguel was the oldest of five children born to Oscar winner Jose Ferrer and singer Rosemary Clooney-Ferrer.,-1,train
+en,121937779,Miguel was raised amongst all the splendor and glamour of Hollywood.,-1,train
+en,320621115,"As a child, his hero was Batman, and as a teenager his interests shifted towards music.",-1,train
+en,252377110,Miguel played the drums on Keith Moon's Two Sides of the Moon.,-1,train
+en,285975702,"Band mate Billy Mumy (""Will Robinson"" on the T.V. classic Lost In Space) cast Miguel as a drummer in his first television role, in the series Sunshine.",-1,train
+en,354096133,"Among the many television shows in which Miguel has made guest appearances are: Miami Vice, CHiPs, Will & Grace, Superman, Tales from the Crypt and Twin Peaks.",-1,train
+en,120863161,He also starred in the mini series The Stand.,-1,train
+en,286510064,Miguel played the role of Dr. Garret Macy in NBC's drama Crossing Jordan.,-1,train
+en,225321618,"In 1999, at the 41st Grammy Awards, Miguel was nominated for ""Best Spoken Word Album for Children"" in Disney's The Lion King II, ""Simba's Pride Read-Along"".",-1,train
+en,158324064,"In 2003, Miguel made his New York stage debut in the Off-Broadway production of The Exonerated.",-1,train
+en,196926896,His cousin is actor George Clooney.,-1,train
+en,275780066,His brother Gabriel Ferrer is married to singer Debby Boone.,-1,train
+en,163223369,Miguel was close friends with actress Dominique Dunne and in 1982 served as a pallbearer in her funeral.,-1,train
+en,132056749,"William Hindman (April 1, 1743 - January 19, 1822) was an American lawyer and statesman from Talbot County, Maryland.",-1,train
+en,117972774,"He represented Maryland in the Continental Congress, and in the federal Congress as both the Representative and a U.S.",-1,train
+en,202380755,"Senator James Lloyd resigned, and Hindman was named to finish his term.",-1,train
+en,312422416,He served in the United States Senate from December of 1800 until November of 1801.,-1,train
+en,201990552,"In the Senate, he was aligned with the Federalists.",-1,train
+en,135988852,"William was born in Dorchester County, Maryland, the second son of Jacob Hindman (1713-1766) and Mary Trippe Hindman (died 1782).",-1,train
+en,316822617,"William studied law at the Inns of Court in London, returning to Maryland in 1765.",-1,train
+en,306090245,"Hindman died in Baltimore, Maryland and is buried in St. Paul�s Burial Ground there.",-1,train
+en,247620636,"In 1792 voters returned him the state Senate, but later that year he was appointed to the United States House of Representatives after the resignation of Joshua Seney.",-1,train
+en,281181596,"From 1775 and 1777, Hindman served in Maryland�s revolutionary government, as the state�s Treasurer for the Eastern Shore.",-1,train
+en,285034104,"Clive Jay Davis (born April 4, 1934) is the founder of Arista Records, and member of the Rock and Roll Hall of Fame as a nonperformer.",-1,train
+en,222995921,"He was a working class Jewish boy who grew up in Brooklyn, New York.",-1,train
+en,340251351,He graduated from New York University`s College of Arts and Sciences in 1953 and received a scholarship to Harvard Law School.,-1,train
+en,264572008,He was then hired by the legal department of CBS subsidiary Columbia Records.,-1,train
+en,119618654,"In 1974, he founded Arista Records, naming it after his secondary school honor society.",-1,train
+en,331007273,"Erasmus Darwin (December 12, 1731 - April 18, 1802) trained as a physician and wrote extensively on medicine and botany, as well as poetry.",-1,train
+en,267905934,"He lived in Lichfield and Derby, England.",-1,train
+en,229401641,He was one of the founder members of the Lunar Society.,-1,train
+en,234689079,"He was a member of the Darwin-Wedgwood family, most famously including his grandson, Charles Darwin.",-1,train
+en,211475474,"He was born near at Elston Hall near Nottingham, and educated at Chesterfield School then later at St. John's College, Cambridge.",-1,train
+en,280545834,He obtained his degree at Edinburgh Medical School.,-1,train
+en,170340546,He practised medicine in Lichfield in Staffordshire for twenty years; George III invited him to be royal physician but he declined.,-1,train
+en,113397483,"In 1781 he moved to Derby, where he died suddenly on the 18th of April 1802.",-1,train
+en,134592220,"His most important scientific work is his Zoonomia (1794-1796), which contains a system of pathology, and a treatise on ""generation,"" in which he, in the words of his famous grandson, Charles Robert Darwin, anticipated the views of Jean-Baptiste Lamarck, who in turn is regarded to have foreshadowed the theory of evolution.",-1,train
+en,171255635,"Eunice Mary Kennedy Shriver (born July 10, 1921 in Brookline, Massachusetts) is a member of the Kennedy family.",-1,train
+en,316066569,"Her father was Joseph P. Kennedy, Sr., and her mother was Rose Kennedy.",-1,train
+en,242079300,"On May 23, 1953, she married Robert Sargent Shriver, Jr., who was U.S. ambassador to France from 1968 to 1970, and was Democratic vice-presidential candidate in 1972.",-1,train
+en,259994709,"She actively campaigned for her brother John F. Kennedy, and supported Arnold Schwarzenegger's successful bid for governor of California in 2003.",-1,train
+en,207832558,"King married Coretta Scott on June 18, 1953.",-1,train
+en,170306857,"The wedding ceremony took place in Scott's parents' house in Marion, Alabama, and was performed by King's father.",-1,train
+en,218580357,"In 1953, King became the pastor of the Dexter Avenue Baptist Church in Montgomery, Alabama.",-1,train
+en,126409805,"The Reverend Martin Luther King, Jr. Ph.D., Boston University (January 15, 1929 - April 4, 1968) was an American Nobel Laureate, Baptist minister, and African American civil rights activist.",-1,train
+en,220989229,He also was awarded the Presidential Medal of Freedom.,-1,train
+en,345416233,"Following the campaign, King was instrumental in the founding of the Southern Christian Leadership Conference (SCLC) in 1957, a group created to harness the moral authority and organizing power of black churches to conduct nonviolent protests in the service of civil rights reform.",-1,train
+en,327850677,"The organization's nonviolent principles were criticized by the younger, more radical blacks and challenged by the Student Nonviolent Coordinating Committee (SNCC) then headed by James Foreman.",-1,train
+en,339225433,"King was born in Atlanta, Georgia to the Rev. Martin Luther King, Sr. and Alberta Williams King.",-1,train
+en,192232762,He graduated from Morehouse College with a Bachelor of Arts degree in Sociology in 1948.,-1,train
+en,241530736,"His application to Yale Divinity School was rejected, and he graduated from Crozer Theological Seminary in Chester, Pennsylvania [1] with a Bachelor of Divinity in 1951.",-1,train
+en,306229873,He received his Ph.D. in Systematic theology from Boston University in 1955.,-1,train
+en,335010728,"Gail Davis (born October 5, 1925; died March 15, 1997) was an American actress.",-1,train
+en,247442278,"She and her husband moved to Hollywood, California to pursue a career in motion pictures and in 1947, as ""Gail Davis,"" she made her motion picture debut in a comedy film short.",-1,train
+en,210554952,She then appeared in minor roles in another four films until landing a supporting role under star Roy Rogers in a 1948 Western film called The Far Frontier.,-1,train
+en,166962631,"Between then and 1953, Davis appeared in more than three dozen films, of which all but three were in the Western genre and that included fourteen films with the singing cowboy star, Gene Autry.",-1,train
+en,346141462,"In 1950, she began to guest star in television Westerns, notably in the ""Lone Ranger"" and ""Cisco Kid"" series plus more than a dozen appearances on the ""Gene Autry Show"".",-1,train
+en,151771651,"Gail Davis passed away from cancer in 1997 in Los Angeles, California and was interred there in the Forest Lawn - Hollywood Hills Cemetery.",-1,train
+en,292240982,"The daughter of a small town medical doctor, she was born Betty Jeanne Grayson in a hospital at Little Rock, Arkansas.",-1,train
+en,195156048,"Her family lived in McGehee, Arkansas where she was raised until they moved to Little Rock.",-1,train
+en,172083427,"She had been singing and dancing since childhood and after graduating from high scool in Little Rock, she went to study drama at girl's college in Bryn Mawr, Pennsylvania before completing her education at the University of Texas in Austin.",-1,train
+en,350019051,"Between 1954 and 1956, Gail Davis starred as the Western sharpshooter, Annie Oakley in the Annie Oakley television series on the ABC network.",-1,train
+en,128543627,"Elvis Aron Presley (January 8, 1935 - August 16, 1977), also known as The King of Rock and Roll (sometimes shortened to The King) was an American singer and actor.",-1,train
+en,210925514,"The movies Jailhouse Rock (1957), King Creole (1958), and Flaming Star (1960) are widely regarded as his best among film critics.",-1,train
+en,180860121,"Among fans, Blue Hawaii (1961) and Viva Las Vegas (1964) are also highly praised.",-1,train
+en,256795726,"Elvis Aron Presley was born in a two-room house in East Tupelo, Mississippi to Vernon Elvis Presley and Gladys Love Smith.",-1,train
+en,253369263,"Elvis Presley was raised both in East Tupelo (which merged with Tupelo in 1948) and later in Memphis, Tennessee, where his family moved when he was 13.",-1,train
+en,353641977,Elvis had a twin brother (Jesse Garon Presley) who died at birth.,-1,train
+en,148144472,"Beginning with Love Me Tender (opened on November 15, 1956), Presley starred in 31 motion pictures, having signed to multiple long-term contracts on the advice of his manager.",-1,train
+en,339180914,"Elvis was praised by all his directors, including the highly respected Michael Curtiz, as unfailingly polite and extremely hardworking.",-1,train
+en,266594735,"Niels Fabian Helge von Koch (January 25, 1870 - March 11, 1924) was a Swedish mathematician, who gave his name to the famous fractal known as the Koch curve, which was one of the earliest fractal curves to have been described.",-1,train
+en,364677211,"His grandfather, Nils Samuel von Koch (1801-1881), was the Attorney-General (""Justitiekansler"") of Sweden.",-1,train
+en,303859426,"John Quincy Adams (July 11, 1767 - February 23, 1848) was the sixth (1825-1829) President of the United States.",-1,train
+en,210973137,"The son of President John Adams and First Lady Abigail Smith, he was the only son of a former President to become President himself until George W. Bush took office in 2001.",-1,train
+en,177679941,"He was Secretary of State in the Cabinet of President James Monroe from 1817 to 1825, a tenure during which he was instrumental in the acquisition of Florida and in keeping the United States from becoming dependent on England.",-1,train
+en,226196123,Adams's son Charles Francis also pursued a career in politics.,-1,train
+en,130245116,"While serving as Secretary of State under President James Monroe, Adams negotiated the Adams-Onis Treaty with Spain and devised the Monroe Doctrine, both of which were of long lasting importance.",-1,train
+en,213692669,"Adams was born in Braintree, Massachusetts in a part of town which eventually became the separate town of Quincy.",-1,train
+en,273652794,He acquired his early education in Europe at venerable institutions such as the University of Leiden while accompanying his father while the elder Adams was serving as an American envoy to France and later the Netherlands during the Revolutionary War.,-1,train
+en,110119256,He graduated from Harvard University in 1787 and was elected to Phi Beta Kappa.,-1,train
+en,242665840,He studied law after which he was admitted to the bar and commenced practice in Boston.,-1,train
+en,204853402,"Adams was elected to the U.S. House of Representatives in 1830, one of only two U.S. Presidents to serve in Congress after having been President.",-1,train
+en,290274194,"Although Adams lost in both the popular and electoral votes in the Presidential election of 1824, none of the candidates were able to secure a majority of the electoral vote, thereby putting the outcome in the hands of the House of Representatives, which to the surprise of many elected Adams over rival Andrew Jackson.",-1,train
+en,134989084,"Some say this was because of a bargain he struck with Henry Clay, which put Clay into office as his Secretary of State once Adams won.",-1,train
+en,274976751,"During this time he worked on developing a federal system of roads, canals, bridges, lighthouses, and universities until Jackson, who defeated Adams in the latter's quest for re-election, was sworn in to replace him.",-1,train
+en,240870169,"President George Washington appointed him Minister to the Netherlands in 1794, Minister to Portugal in 1796 and Minister to Prussia in 1797.",-1,train
+en,274023537,"While serving abroad, he met Louisa Catherine Johnson, the daughter of an American merchant living abroad.",-1,train
+en,177832872,Adams received one electoral vote in the presidential election of 1820.,-1,train
+en,344688552,"Rather than retire, Adams would go on to win election as a Democratic-Republican to the House of Representatives beginning with the 22nd Congress, serving from March 4, 1831, until his death.",-1,train
+en,161103532,"Aldous Leonard Huxley (July 26, 1894 - November 22, 1963) was a British writer who emigrated to the United States.",-1,train
+en,323590458,He was a member of the famous Huxley family who produced a number of brilliant scientific minds.,-1,train
+en,179980823,"He wrote great novels on dehumanising aspects of scientific progress, most famously Brave New World, and on pacifist themes (e.g. Eyeless in Gaza).",-1,train
+en,231997853,Huxley was strongly influenced by F. Matthias Alexander and included him as a character in Eyeless in Gaza.,-1,train
+en,230875396,"Huxley was born in Godalming, Surrey, England.",-1,train
+en,309936245,"He was the son of the writer Leonard Huxley by his first wife, Julia Arnold; and grandson of Thomas Henry Huxley, one of the most important naturalists of the 19th Century, a man known as ""Darwin's Bulldog.""",-1,train
+en,330467782,His brother Julian Huxley was a biologist also noted for his evolutionary theories.,-1,train
+en,120362453,"John Wells (November 17, 1936 - January 11, 1998) was a British actor, writer and satirist.",-1,train
+en,130001965,"Wells began his television career as a writer on That Was The Week That Was, the 1960s weekly satire show that launched the careers of David Frost and Millicent Martin, among others.",-1,train
+en,247720655,"Besides making cameo appearances in films such as Casino Royale (1967), television dramas like Casanova (1987), and comedy shows like Yes, Minister, he also wrote television scripts and screenplays, notably Princess Caraboo (1994).",-1,train
+en,114169995,In 1997 he appeared in the BBC situation comedy Chalk.,-1,train
+en,364574452,Bartholomew J. Simpson (voiced by Nancy Cartwright) is a fictional character featured in the animated television series The Simpsons.,-1,train
+en,171822380,He is the 10-year-old son of Homer and Marge Simpson and older brother of Lisa and Maggie.,-1,train
+en,295868601,"Roy Stanley Geiger (January 25, 1885 - January 23, 1947) was a United States Marine Corps general who, during World War II, became the first Marine to lead an army.",-1,train
+en,102776823,"Geiger was born in Middleburg, Florida.",-1,train
+en,236797063,"He attended Florida State Normal and Industrial College and received an LLB from Stetson University, after which he enlisted in the Marine Corps.",-1,train
+en,355757166,He was commissioned a Second Lieutenant on 5 February 1909.,-1,train
+en,220431296,"Following attendance at the Marine Officers' School at Port Royal, South Carolina, he served as a member of the Marine detachments aboard Wisconsin (BB-9) and Delaware (BB-28).",-1,train
+en,250335211,For his part in this action he was awarded the Distinguished Service Medal.,-1,train
+en,203800819,"Geiger commanded the III Amphibious Corps in the battle of Okinawa, where he assumed command of the U.S. Tenth Army upon the combat death of Lt. General Simon Bolivar Buckner, Commanding General of the Tenth Army.",-1,train
+en,306551850,Geiger led the Tenth Army until relieved by General Joseph Stilwell.,-1,train
+en,277543682,"Culbert Levy Olson (November 7, 1876 - April 13, 1962) was a U.S. politician.",-1,train
+en,266892936,"He was born in Fillmore, Utah to Daniel Olson and his wife Delilah King.",-1,train
+en,183290467,"He served as the Governor of California from January 2, 1939 until January 4, 1943, and was the only Democrat elected to that office between 1898 and 1954.",-1,train
+en,181207593,In his 1942 bid for re-election he was defeated by state Attorney General Earl Warren.,-1,train
+en,218453711,He later became president of the United Secularists of America.,-1,train
+en,100938556,"He died in Los Angeles at age 85, and was buried in Forest Lawn Memorial Park Cemetery in suburban Glendale.",-1,train
+en,251497798,"Prescott Sheldon Bush (May 15, 1895, Columbus, Ohio - October 8, 1972, New York City) was a U.S.",-1,train
+en,353461341,Senator from Connecticut and a Wall Street executive banker with Brown Brothers Harriman.,-1,train
+en,186877738,"His son, George H. W. Bush, and grandson George W. Bush would both later become U.S. presidents.",-1,train
+en,110691416,His father was Samuel Prescott Bush and his mother was Flora Sheldon.,-1,train
+en,293209750,"He married Dorothy Walker, George Herbert Walker's daughter, on August 6, 1921, and together they had five children, including George H. W. Bush (named after George Herbert Walker), Prescott Bush, Jr., Jonathan Bush, William Bush, and Nancy Bush.",-1,train
+en,300692956,"Among those attending the Kennebunkport, Maine wedding ceremony were Isabel Stillman Rockefeller (daughter of Percy Rockefeller), Hope Lincoln, Mary Keck, Elizabeth Trotter, Martha Pittman, Ruth Lionberger, Nancy Walker, George Herbert Walker, Knight Wooley, Frank Shephard, John Shepley, Richard Bentley, Henry Isham, William Potter Wear, and Henry Fenimore Cooper.",-1,train
+en,195069356,"His father-in-law, George Herbert Walker, and Walker's partner, Averell Harriman, brought him on as an officer in their investment banking firm, W. A. Harriman and Company in 1926.",-1,train
+en,316136176,"When it merged with Brown Brothers in 1931, he became a partner in the new firm of Brown Brothers Harriman.",-1,train
+en,288403613,"Bush called it ""my good fortune"" to work with close friends, including Yale classmates (and members of the Skull and Bones) E. Roland Harriman, Knight Woolley, and Ellery James, as well as Robert A. Lovett and Thomas McCance.",-1,train
+en,269763078,"He maintained homes in Long Island, New York and Greenwich, Connecticut; the family compound at Kennebunkport, Maine; a 10,000 acre (40 km?) plantation in South Carolina; and an island retreat in Florida.",-1,train
+en,320110110,"After graduation, he served as a field artillery captain with the American Expeditionary Forces (1917-1919) during World War I.",-1,train
+en,165911662,He received training in intelligence at Verdun and was briefly assigned to a staff of French officers.,-1,train
+en,343496431,"Alternating between intelligence and artillery, Bush came under fire in the Meuse-Argonne offensive.",-1,train
+en,286680507,"The Bushes moved to Columbus, Ohio, in 1923, where Bush worked for the Hupp Products Company, where his business efforts generally failed.",-1,train
+en,327775865,"He left in November 1923 to become president of sales for Stedman Products of South Braintree, Massachusetts.",-1,train
+en,122090552,"In 1925, he joined the United States Rubber Company (based in New York City) as manager of the foreign division, and moved to Greenwich, Connecticut.",-1,train
+en,330030118,"In 1952 he was elected to the U.S. Senate (Republican, Connecticut), defeating Abraham Ribicoff for the vacancy caused by the death of James O'Brien McMahon.",-1,train
+en,357181042,"He served until January 1963, and was a staunch supporter of President Dwight D. Eisenhower.",-1,train
+en,127563815,"As a managing partner of Brown Brothers Harriman, he sat on several corporate boards, including the following:",-1,train
+en,319628574,"Bush was born in Columbus, Ohio to Flora Sheldon and Samuel Prescott Bush, a steel company president and later a U.S. government official in charge of coordination and assistance to major weapons contractors during World War I.",-1,train
+en,107350843,"After attending the Douglas School in Columbus and St. George's School in Newport, Rhode Island as well as the famous Stonyhurst College in England (where he designed the boys' golf course still in use today) from 1908 to 1913, Bush entered Yale University.",-1,train
+en,349611040,"There, he played varsity golf, football, and baseball, and was president of the Yale Glee Club.",-1,train
+en,249796140,"On May 18, 1916 he was ""tapped"" to join the Skull and Bones society at Yale.",-1,train
+en,129876024,"Other new ""Bonesmen"" that year were E. Roland Harriman, H. S. Fenimore Cooper (grandson of James Fenimore Cooper), Knight Wooley (son of Ulysses Grant Wooley), Ellery James, and Henry Neil Mallon.",-1,train
+en,184712807,"He was a member of the Executive Committee of the United States Golf Association (USGA) from 1928-1935, serving successively as Secretary, Vice President and President.",-1,train
+en,353653102,"After his discharge in 1919, Bush went to work for the Simmons Hardware Company in St. Louis, Missouri.",-1,train
+en,295015064,"From 1947 to 1950 he served as Connecticut Republican finance chairman, and was the Republican candidate for the United States Senate in 1950, losing to Senator William Benton by only 1,000 votes.",-1,train
+en,303994443,"The following year, Bush was Connecticut chairman of the United Negro College Fund, and was one of the UNCF's earliest supporters.",-1,train
+en,239317239,"Talia Shire (born April 25, 1946) is an American actress of Italian descent.",-1,train
+en,258773396,She is the mother of actors Jason and Robert Schwartzman and aunt to actor Nicolas Cage.,-1,train
+en,304187080,"Born Talia Rose Coppola in Lake Success, Long Island, New York, she is the sister of director and producer Francis Ford Coppola.",-1,train
+en,356020532,"Shire became famous for her roles as the wife of boxer Rocky Balboa in the Rocky movies, and for her role in The Godfather and its sequels.",-1,train
+en,277695201,"She was nominated for the Academy Award for Best Supporting Actress for The Godfather, Part II and for the Best Actress in a Leading Role for Rocky.",-1,train
+en,309419848,"Margaret Tyndal Winthrop (February 23, 1880 - July 7, 1970) was the maternal grandmother of U.S. 111Senator John Kerry, the Presidential candidate.",-1,train
+en,359421976,"(Winthrop's daughter, Rosemary Isabel Forbes, was Kerry's mother.)",-1,train
+en,182526761,"Winthrop died at St. Briac Sur Mer, Ille-et-Vilaine, France.",-1,train
+en,328830281,"Other notable figures in this branch of the family tree are Franklin D. Roosevelt (Kerry's 4th cousin twice removed), Jane Addams, Calvin Coolidge (Kerry's 8th cousin once removed), and ironically, George H.W. Bush (Kerry's 9th cousin once removed), and George W. Bush (Kerry's 9th cousin, twice removed).",-1,train
+en,356819775,"[1] She also has some relation to all the royal houses of Europe, including such figures as Henry III, Henry II, Henry I, Richard the Lionheart, and Russian czar Ivan the Terrible.",-1,train
+en,220640648,She was born in Massachusetts and raised in Boston.,-1,train
+en,204860905,"Her grandfather was Robert Charles Winthrop, the conservative Whig Speaker of the House and a U.S. Senator",-1,train
+en,291206305,"Her ancestors include James Bowdoin, former governor of Maine, and John Winthrop, the first governor of the Massachusetts Bay Colony.",-1,train
+en,285749366,"David Manners (April 30, 1901 - December 23, 1998) was a Canadian film actor.",-1,train
+en,143315600,"Born Rauff de Rither Duan Acklom in Halifax, Nova Scotia, Manners came to Hollywood at the beginning of the talking films revolution after studying acting with Eva Le Gallienne, and acting on stage with Helen Hayes.",-1,train
+en,208106910,"In 1940, he officially changed his name to David Joseph Manners and became a naturalized citizen of the United States.",-1,train
+en,204126780,"He was ""discovered"" by the film director James Whale, and within a few years, he was a popular leading man, playing opposite such up and coming actresses as Katharine Hepburn, Gloria Stuart, Myrna Loy, Loretta Young, and Ann Dvorak, and he was paired several times with Helen Chandler.",-1,train
+en,312216487,"His most widely seen role was as Jonathan Harker in Tod Browning's Dracula (1931), though he commented throughout his life that he had never watched the film and did not intend to.",-1,train
+en,171030887,"He died in Santa Barbara, California.",-1,train
+en,236367597,"Elliott Roosevelt (September 23, 1910 - October 27, 1990), World War II hero and an author, was the son of President Franklin Delano Roosevelt and his wife Eleanor Roosevelt.",-1,train
+en,201618466,"During World War II, he accompanied FDR as a military aide to the Casablanca meeting of 1943 and the subsequent Cairo and Tehran Conferences.",-1,train
+en,156970593,"As an Army photo reconnaissance pilot, he and the men in his unit also played a key role in the D-Day landings.",-1,train
+en,301637247,Colonel Elliot Roosevelt was a pilot in the United States Army Air Force (USAAF) during World War II.,-1,train
+en,295251153,He flew a P-38 Lightning in the North African campaign of November 1942.,-1,train
+en,219873846,On 28 February 1934 he and Anthony Fokker each received an excessive half a million dollars for selling fifty military planes to the Soviet government.,-1,train
+en,232558242,"Elliot and Fokker were able to receive such a large commission because Elliot had close connections to the U.S. Export-Import Bank through his father, Franklin Delano Roosevelt.",-1,train
+en,113637237,Stella Dorothea Gibbons (5 January 1902�19 December 1989) was an English novelist and poet.,-1,train
+en,168177550,Her works include Cold Comfort Farm.,-1,train
+en,332684701,Keynes was educated at Oundle School.,-1,train
+en,211666614,"Keynes (pronounced ""Canes"") was born in London, the eldest son of Geoffrey Keynes, and thus the nephew of the economist John Maynard Keynes; and Geoffrey Keynes' wife Elizabeth (nee Darwin), the grand-daughter of Charles Darwin, and thus the great-grandson of Charles Darwin (see Darwin -- Wedgwood family).",-1,train
+en,154410411,"Charles Francis Adams, Jr. (May 27, 1835 - May 20, 1915), a member of the prominent Adams political family and son of Charles Francis Adams, Sr., graduated at Harvard in 1856, and served on the Union side in the American Civil War, receiving in 1865 the brevet of brigadier-general in the regular army.",-1,train
+en,364166692,"He was president of the Union Pacific Railroad from 1884 to 1890, having previously become widely known as an authority on the management of railways.",-1,train
+en,216882333,His son Charles Francis Adams was Secretary of the Navy and a renowned yachtsman.,-1,train
+en,147540634,"Jean Tardieu (born in St Germain de Joux, France November 1, 1903, died in Creteil, France January 27, 1995) was an artist, musician, poet and dramatic author.",-1,train
+en,233363649,He is often associated with the Theatre of the Absurd.,-1,train
+en,126039521,"John Eric Austin (born August 21, 1944, in Blaby, Leicestershire) is a British Member of Parliament for Erith and Thamesmead.",-1,train
+en,357005706,He is a member of the Labour Party.,-1,train
+en,239335817,He worked as a social worker and was leader of Greenwich council before entering Parliament.,-1,train
+en,182316700,Austin is a member of the left-wing Socialist Campaign Group.,-1,train
+en,107306535,He stated his intention to act as a stalking horse against Tony Blair.,-1,train
+en,111873105,"He indicated his hope that, in the event of an election, Gordon Brown would enter.",-1,train
+en,336913348,"Robert Strange McNamara (born June 9, 1916) is an American business executive and a former United States Secretary of Defense.",-1,train
+en,344573290,He resigned that position to become President of the World Bank (1968-1981).,-1,train
+en,300877620,McNamara was born in San Francisco where his father was sales manager of a wholesale shoe firm.,-1,train
+en,143013746,"He graduated in 1937 from the University of California, Berkeley with a degree in economics and philosophy, and earned a master's degree from the Harvard Graduate School of Business Administration in 1939.",-1,train
+en,167647013,"He worked a year for the accounting firm of Price Waterhouse in San Francisco, and then in August 1940 returned to Harvard to teach in the Business School.",-1,train
+en,195625085,"Following his involvement there in a program to teach the analytical approaches used in business to officers of the Army Air Forces, he entered the Army as a captain in early 1943, serving under Col. Curtis LeMay with analysis of U.S. bombers' efficiency and effectiveness as a major responsibility.",-1,train
+en,197058433,He left active duty three years later with the rank of lieutenant colonel.,-1,train
+en,165414441,"During this period, McNamara helped to plan the 1945 bombing of Tokyo.",-1,train
+en,138391151,"In 1946 McNamara joined Ford Motor Company, which he later said had been the result of a Life magazine article which reported how few college-educated managers there were at the then unprofitable company.",-1,train
+en,305004686,President-elect John F. Kennedy first offered the post of secretary of defense to former secretary Robert A. Lovett.,-1,train
+en,273189148,"Lovett declined but recommended McNamara; Kennedy had him approached by Sargent Shriver (regarding either the Treasury or the Defense cabinet post), and less than five weeks after becoming president at Ford, McNamara accepted Kennedy's invitation to serve as Secretary of Defense.",-1,train
+en,356919317,He also created the Defense Intelligence Agency and the Defense Supply Agency.,-1,train
+en,124936683,"Mary Lilian Baels (November 28, 1916 - June 7, 2002) was best known as Princess de Ruthy, the controversial morganatic second wife of King Leopold III of the Belgians.",-1,train
+en,263150552,"Mary Lilian Lucy Josepha Monique Baels was born in Highbury, London, England, one of eight children of Henri Baels, an attorney and fish trader from Ostend, Belgium, and his wife Anne Marie de Visscher, who were living in England during World War I.",-1,train
+en,356602488,He is also notable in that he is the great great great grandfather of President George W. Bush through his son Reverend James Smith Bush.,-1,train
+en,219812327,"He was the son of a blacksmith Timothy Bush, Jr. and Lydia Newcomb and was born in Penfield, Monroe Co., New York on January 28, 1797.",-1,train
+en,131593210,"He was a participant in the Underground Railroad, and even petitioned the New York state Legislature to secede from the Union in a protest against slavery.",-1,train
+en,208475635,"Eventually Obadiah, Henry and possibly another brother or two went off to find their fortunes in the California Gold Rush of 1849.",-1,train
+en,280285772,"Robert Henry Dee (born May 18, 1933 in Quincy, Massachusetts) is a former three-sport letterman at Holy Cross College who was one of the first players signed by the Boston Patriots in 1960.",-1,train
+en,136023957,"Another example of a player misjudged by the NFL, he became an ironman of the American Football League who never missed a game during his career, starting 112 consecutive games.",-1,train
+en,267496147,"He was voted to five American Football League All-Star teams (1961, 1963-65).",-1,train
+en,109991151,"Joseph H. Ball (November 3, 1905 - December 18, 1993) was an American politician.",-1,train
+en,364528268,He served in the United States Senate as a Republican from Minnesota.,-1,train
+en,311150795,He was first appointed to fill the Senate seat of Ernest Lundeen who had died in office.,-1,train
+en,226075737,He lost his reelection bid in 1948 to Hubert H. Humphrey.,-1,train
+en,113298825,"Ball died in Chevy Chase, Maryland.",-1,train
+en,104070230,"Raymond Arrieta (born March 26, 1965 in San Juan, Puerto Rico) is considered by many to be one of Puerto Rico's greatest comedians.",-1,train
+en,287709974,"After Raymond graduated from high school, he enrolled in the ""Universidad del Sagrado Corazon"" (University of the Sacred Heart) of San Juan, where he earned a Bachelors Degree in ""Radio and Television Production"".",-1,train
+en,131930457,"Matthew Parker (August 6, 1504 - May 17, 1575) was Archbishop of Canterbury from 1559.",-1,train
+en,339837978,"The eldest son of William Parker, he was born in Norwich, in St. Saviour's parish.",-1,train
+en,156736640,"Matthew was sent in 1522 to Corpus Christi College, Cambridge, where he is said to have been contemporary with William Cecil, but Cecil was only two years old at the time.",-1,train
+en,366988124,"He commenced MA in 1528, and was one of the Cambridge scholars whom Thomas Wolsey wished to transplant to his newly founded ""Cardinal College"" at Oxford.",-1,train
+en,337727593,"Adolf Otto Reinhold Windaus (December 25, 1876 - June 9, 1959) was a significant German chemist.",-1,train
+en,224680582,He won a Nobel Prize in Chemistry in 1928.,-1,train
+en,312381676,"Jack Kerouac (March 12, 1922 - October 21, 1969) was an American novelist, writer, poet, artist, and part of the Beat Generation.",-1,train
+en,247325348,"During Kerouac's time at Columbia University, Burroughs and Kerouac got into trouble with the law for failing to report a murder; this incident formed the basis of a mystery novel the two collaborated on in 1945 entitled And the Hippos Were Boiled in Their Tanks (the novel was never published, although an excerpt from the manuscript would be included in the Burroughs compilation Word Virus).",-1,train
+en,149746218,"In between his sea voyages, Kerouac stayed in New York with friends from Fordham.",-1,train
+en,121686777,"He won the Gold Medal of the Royal Astronomical Society in 1892, and also later served as president of that organization.",-1,train
+en,171632522,"Dole was twice decorated for heroic achievement, receiving two Purple Hearts for his injuries, and the Bronze Star Medal for his attempt to assist a downed radio man.",-1,train
+en,130226429,President Clinton awarded him the Presidential Medal of Freedom in early 1997 for his service in the military and his political career.,-1,train
+en,164625177,The book was awarded the 1957 Pulitzer Prize for Biography.,-1,train
+en,233685348,"The Foundation has grown immensely and, by 1950, had become national and international in scope.",-1,train
+en,317599603,"Kennedy's other decorations of the Second World War include the Purple Heart, Asiatic-Pacific Campaign Medal, and the World War II Victory Medal.",-1,train
+en,316006620,"He was twice nominated for an Academy Award for Best Supporting Actor, the first for his role in the 1943 film, Sahara then for his performance in the 1945 film, A Medal for Benny for which he won the Golden Globe Award for Best Supporting Actor - Motion Picture.",-1,train
+en,282450195,"In recognition of his work with electricity, Franklin was elected a Fellow of the Royal Society and received its Copley Medal in 1753.",-1,train
+en,258774872,"In 1991 he was awarded the Presidential Medal of Freedom for ""preserving America's defenses at a time of great change around the world.""",-1,train
+en,279931307,His support abated as the United States entered WWII.,-1,train
+en,324109220,"PFC Fernando Luis Garcia (October 14, 1929 - September 5, 1952), born in Utuado, Puerto Rico, was a member of the United States Marines and the first Puerto Rican who was awarded the Medal of Honor.",-1,train
+en,228446866,Received the Presidential Medal of Freedom in 1977.,-1,train
+en,320611102,Confidential (1997) for which she received an Academy Award for Best Supporting Actress.,-1,train
+en,312326972,"In 1968, 6 years after her death, she was honored, as the former president of United Nations Commission on Human Rights, by a posthume Nobel Peace Prize, along with Rene Cassin, president of the European Court of Human Rights, for their work in drafting and promoting the adoption and proclamation the 1948 Universal Declaration of Human Rights.",-1,train
+en,153668603,"The same year, they were each awarded by one of the UN's own Human Rights Prizes.",-1,train
+en,259532435,"On May 26, 1943, Edsel Ford died, leaving a vacancy in the company presidency.",-1,train
+en,216359353,"In 1971, Coppola won an Academy Award for his screenplay for Patton.",-1,train
+en,323520313,"However, his name as a filmmaker was made as the co-writer and director of The Godfather (1972) and The Godfather Part II (1974), which both won the Academy Award for Best Picture - the latter being the first sequel to do so.",-1,train
+en,361657025,"While The Godfather Part II won the Oscar, The Conversation won the 1974 Palme d'Or at the Cannes Film Festival.",-1,train
+en,302796375,This led to his being hired by Westinghouse company to service their steam engines.,-1,train
+en,126317560,"Clinton received a B.S.F.S. degree from the Edmund A. Walsh School of Foreign Service at Georgetown University in Washington DC, where he became a brother of Alpha Phi Omega, worked for Senator J. William Fulbright, was elected to Phi Beta Kappa and won a Rhodes Scholarship to the University of Oxford (at the University College, Oxford) in England.",-1,train
+en,168507008,He won the Gold Medal of the Royal Astronomical Society in 1841.,-1,train
+en,275113809,"There he published tables of atmospheric refraction based on Bradley's observations, which won him the Lalande Prize from the Institut de France.",-1,train
+en,285559377,In 1923 he was awarded the inaugural Bucher Memorial Prize by the American Mathematical Society.,-1,train
+en,293113361,"Lift, the mother of Danny DeVito's character in her Academy Award nominated performance in Throw Momma from the Train.",-1,train
+en,116116379,He has also made notable appearances on television.,-1,train
+en,218466575,"Edric Frederick Gifford, 3rd Baron Gifford, VC (5 July 1849 - 5 June 1911) was an English recipient of the Victoria Cross, the highest and most prestigious award for gallantry in the face of the enemy that can be awarded to British and Commonwealth forces.",-1,train
+en,164774694,"As a soldier, he led a famous cavalry charge in the Battle of San Juan Hill in 1898 for which he was posthumously awarded the Congressional Medal of Honor in 2001 by President Bill Clinton, making Roosevelt the only President to have received the award as of 2005.",-1,train
+en,361882843,"Roosevelt was also influential in spearheading the construction of the Panama Canal, and for his mediation in the Russo-Japanese War of 1905, he was awarded the Nobel Peace Prize in 1906.",-1,train
+en,152138474,He was the first American to win a Nobel Prize in any category.,-1,train
+en,158944032,"Reynolds was nominated for an Academy Award for Best Actress following her performance in The Unsinkable Molly Brown (1964), a Golden Globe for The Debbie Reynolds Show on television (1970), a Golden Globe for the motion picture Mother (1997), and a Blockbuster Entertainment Award for In & Out (1997).",-1,train
+en,338987786,In 1997 she received the Lifetime Achievement Award in Comedy.,-1,train
+en,357233678,Her sister Betty sang in a duo with Rosemary for much of her early career.,-1,train
+en,100077945,"A special military decoration, the Dewey Medal, was also named in his honor.",-1,train
+en,143502782,"A screen legend, Hepburn holds the records for the most Oscars (4) and also Best Actress nominations (12).",-1,train
+en,210843032,"Hepburn won an Emmy Award in 1975 for her lead role in Love Among the Ruins, and was nominated for four other Emmys and two Tony Awards during the course of her more than 70-year acting career.",-1,train
+en,169420125,He was also a fan of hockey and was inducted into the United States Hockey Hall of Fame in 1993.,-1,train
+en,231606055,Bush served in the French and Indian Wars as a soldier between 1755 and 1757.,-1,train
+en,209002327,"He won directing Emmys for his work on the original 1854 CBS teleplay, Twelve Angry Men.",-1,train
+en,318210695,"Because of his father's legacy at Ole Miss, as well as his own status as the most highly recruited high school quarterback of his class, Peyton Manning stunned many when he chose to attend and play for the University of Tennessee.",-1,train
+en,102639649,"In 1989, he earned a Juris Doctor (J.D.) degree from New York University Law School.",-1,train
+en,120627621,"During his stay in prison, he rediscovered the Bible, learned Greek, and became a student of Christian theology at Oxford University.",-1,train
+en,192335546,"Born in Dublin to William Aitken (himself a Conservative MP) and Penelope Aitken, daughter of John Maffey, 1st Baron Rugby, he attended Eton College and read law at Christ Church, Oxford.",-1,train
+en,278671674,"He was educated at the Bury St Edmunds grammar school and at Trinity College, Dublin, studied law for a short time after 1624 at the Inner Temple, London, accompanied the ill-fated expedition of the duke of Buckingham for the relief of the Protestants of La Rochelle, and then travelled in Italy and the Levant, returning to England in 1629.",-1,train
+en,133659282,"Dole graduated from High School in the spring of 1941, and enrolled at the University of Kansas the following Autumn.",-1,train
+en,250521098,Three other children had been born to them but had died young.,-1,train
+en,107943097,"After the war, Dole continued to study law, and eventually earned his Law Degree from Washburn University in 1952.",-1,train
+en,341923041,from Dartmouth College in 1809 and an A.M. from Dartmouth in 1812.,-1,train
+en,233693595,He began to learn mathematics around age twelve.,-1,train
+en,284137974,"Marvin graduated from Woodberry Forest School in 1975, and spent most summers and holidays at the sprawling family estate, the Bush Compound.",-1,train
+en,363717700,"He was a first round draft pick in 1992, out of Georgia Tech.",-1,train
+en,341875777,"Jon Barry played his high school basketball at an athletic powerhouse, De La Salle High School in Concord, California before receiving a basketball scholarship to attend Georgia Tech.",-1,train
+en,192917006,"At the age of 17, and having barely passed West Point's height requirement for entrance, Grant received a cadetship to the United States Military Academy at West Point, New York, through his U.S.",-1,train
+en,181546008,Einstein's relationship with Mileva developed into romance over the next few years.,-1,train
+en,324734317,"After Raymond graduated from high school, he enrolled in the ""1Universidad del Sagrado Corazon"" (University of the Sacred Heart) of San Juan, where he earned a Bachelors Degree in ""Radio and Television Production"".",-1,train
+en,116304948,"In 1928, Reagan entered Eureka College in Eureka, Illinois, majoring in economics and sociology, and graduating in 1932.",-1,train
+en,199654279,"He received an A.B. degree in 1938 and a Juris Doctor (J.D.) degree in 1941, both from Harvard University.",-1,train
+en,316868586,He kept his Swiss passport for his whole life.,-1,train
+en,342653179,He was educated at a religious Imam Hatip school and at Marmara University's faculty of economics and business.,-1,train
+en,350602462,"He was educated at Marlborough College and, in 1910, he graduated from Trinity College, Cambridge in mathematics.",-1,train
+en,110040698,"He was elected the Natrona County High School senior class president, represented the school at Boys State, and played halfback on the football team.",-1,train
+en,304323961,"Following high school, Cheney earned an academic scholarship and attended Yale University in 1959.",-1,train
+en,338073433,"Since then, Miguel has been cast in many major movies, usually in the role of villain.",-1,train
+en,126640262,"Mrs. Cheney has a BA with highest honors from Colorado College, an MA from The University of Colorado, and a Ph.D from The University of Wisconsin specializing in British literature.",-1,train
+en,279526019,"He attended the University of Wisconsin-Madison as a doctoral candidate in political science and completed all required coursework as an ABD, but left and entered politics before completing his thesis.",-1,train
+en,124479325,"Refocusing on academics, Cheney first matriculated to Casper Community College in 1963 and thereafter to the University of Wyoming where he began earning straight A's.",-1,train
+en,297816338,"He was re-elected several times, and served until 1784.",-1,train
+en,202389029,"He graduated from Princeton University in 1952, and attended Harvard University in 1954-55.",-1,train
+en,321432399,"Haeck was educated at Trent University in Peterborough and State University of New York at Buffalo in Buffalo, New York.",-1,train
+en,268709731,"The son of Sir Mortimer Margesson, he grew up in Worcestershire and was educated at Harrow School.",-1,train
+en,351017482,The boycott lasted for 381 days.,-1,train
+en,292716095,"He graduated from Dartmouth College in 1930, where he was a member of the Psi Upsilon fraternity, the Dartmouth Glee Club, and the Casque & Gauntlet Society.",-1,train
+en,239994194,"Burroughs attended John Burroughs School in St. Louis, and The Los Alamos Ranch School in New Mexico.",-1,train
+en,138114474,Burroughs graduated from Harvard University in 1936.,-1,train
+en,137539784,"Walter William Rouse Ball (August 14, 1850 - April 4, 1925) was a British mathematician, lawyer and a fellow at Trinity College, Cambridge from 1878 to 1905.",-1,train
+en,243955249,In 1902 Geiger began to study physics and mathematics in Erlangen and later attained a doctorate in 1906.,-1,train
+en,187077068,She was the fifth of nine children.,-1,train
+en,246253425,In 1907 he began work with Ernest Rutherford at the University of Manchester.,-1,train
+en,209244326,"Dole is currently special counsel at the Washington, D.C., lobbying firm of Aaron Woo.",-1,train
+en,367145420,"This has included becoming a television commercial spokesman for such products as Viagra and Pepsi-Cola, and as an occasional political commentator on the popular American interview program Larry King Live.",-1,train
+en,136393096,"Homer works in the Springfield Nuclear Power Plant, in Sector 7G, although ""working"" in this case refers largely to dozing and eating doughnuts.",-1,train
+en,174691105,His ancestor Johann Valentin Pressler emigrated to North America in 1710.,-1,train
+en,344390837,"His employment by the General Electric company further enhanced his political image; he travelled widely as a GE spokesman, and was noted for his anti-Communist speeches.",-1,train
+en,157442945,"No doubt, his family connections helped him to secure an immediate post-graduate position at the Victoria University of Manchester, working under Ernest Rutherford and Niels Bohr on Rutherford's atomic theory.",-1,train
+en,167170989,"He joined the Foreign Service, working for the State Department from 1956 until 1969.",-1,train
+en,320980121,He was born into a family of Swedish nobility.,-1,train
+en,146039941,"Prior to the war, Lawford had a gained a contract position with the MGM studios.",-1,train
+en,232981069,"She worked as a librarian at the Fort Erie Public Library from 1974 to 1977, and was head of Special Collections at the St. Catharines Public Library from 1977 to 1990.",-1,train
+en,244005222,"Despite his father's opposition to him having a foreign-born wife, Adams wed Louisa Johnson in 1797.",-1,train
+en,180585960,He moved to San Juan where he started to work for the Texas Company as a file clerk.,-1,train
+en,220595203,He later earned a Ph.D. in economics from the University of Virginia.,-1,train
+en,168298896,The couple named one of their sons after George Washington.,-1,train
+en,161112956,"Snow graduated with a law degree from the George Washington University in 1967 and then taught economics at the University of Maryland, University of Virginia, as well as law at George Washington.",-1,train
+en,328498548,He also served as a Visiting Fellow at the American Enterprise Institute in 1977 and a Distinguished Fellow at the Yale School of Management from 1978 until 1980.,-1,train
+en,290191294,"In 1974, his first year as a University of Arkansas law professor, Clinton ran for the House of Representatives.",-1,train
+en,251093135,"Bessel was the son of a civil servant, and at the age of 14 he was apprenticed to the import-export concern Kulenkamp.",-1,train
+en,137799660,"Within two years he had left Kulenkamp and become an assistant at Lilienthal Observatory near Bremen, Germany.",-1,train
+en,201302492,He had an elder brother named Emmet Olson.,-1,train
+en,345156531,"Nicholas Clooney (born January 13, 1934) is an American television anchorman, game show and American Movie Classics host, as well as a politician from the state of Kentucky.",-1,train
+en,261788457,"After his loss, he went back to writing a column for The Cincinnati Post three times a week that has a wide range of topics.",-1,train
+en,109682649,"In 1974, he gained his first national fame by hosting the short-lived ABC daytime game show Money Maze.",-1,train
+en,345043140,"He then returned to local and syndicated radio and television in Cincinnati, including a stint as news anchor for WKRC-TV.",-1,train
+en,262843626,"By 1936 he had grown bored with Hollywood, and abandoned his film career.",-1,train
+en,338670324,"Ruth Jayne Lawrence (born August 2, 1971) is an Associate Professor of mathematics at the Einstein Institute of Mathematics, Hebrew University of Jerusalem, and a researcher in knot theory and algebraic topology.",-1,train
+en,296720703,"Ricky Byrdsong (June 24, 1956 - July 2, 1999) was a former Northwestern University basketball coach.",-1,train
+en,130712330,"He spent the remainder of his life in private pursuits, such as writing and painting.",-1,train
+en,253570556,"He had also been head coach at the University of Arizona and assistant coach at Eastern Illinois University, Western Michigan University and Iowa State University, his alma mater.",-1,train
+en,193371711,"He went to school at Marlborough College, and went to Balliol College, Oxford University, and was president of the Oxford Union and editor of Isis.",-1,train
+en,201839706,Reynolds then signed with Metro-Goldwyn-Mayer and was cast in Three Little Words which starred Fred Astaire and Red Skelton.,-1,train
+en,169031690,In 1948 she won the Miss Burbank Beauty Contest which resulted in a motion picture contract with Warner Bros.,-1,train
+en,142485642,He published several poetry collections in the 1930s before starting to write for the stage.,-1,train
+en,235395323,"Eventually, the band settled on Chad Channing, with whom the band recorded the album Bleach, released on Sub Pop Records in 1989.",-1,train
+en,190612656,"In 1876, Meyer became the first Professor of Chemistry at the University of Tuebingen, where he served until his death there.",-1,train
+en,282975822,"Returning home after the war, he found work in the television industry with March of Time and then joined the CBS network.",-1,train
+en,160568295,He and his wife had seven children.,-1,train
+en,132583192,She was a TV news reporter for NBC's Dateline NBC from 1989 until 2004.,-1,train
+en,323018509,"Her broadcast journalism career started with KYW-TV in Philadelphia, Pennsylvania.",-1,train
+en,355977768,"Henry Ford (July 30, 1863 - April 7, 1947) was the founder of the Henry Ford Motor Company which later became Cadillac and Ford Motor Company.",-1,train
+en,161324910,"Henry Ford, with eleven other investors and $28,000 in capital, incorporated the Ford Motor Company in 1903.",-1,train
+en,207044098,"Henry Ford, with his son Edsel, founded the Ford Foundation in 1936 as a local philanthropic organization with a broad charter to promote human welfare.",-1,train
+en,210950629,Ball however was elected to the Senate for the same seat in 1942.,-1,train
+en,251945751,"After this initial success, Ford left Edison Illuminating and, with other investors, formed the Detroit Automobile Company.",-1,train
+en,251312823,"John Davison Rockefeller (July 8, 1839 - May 23, 1937) was an American capitalist most known for his role in the early petroleum industry and the founding of Standard Oil (ExxonMobil is the largest of its descendants).",-1,train
+en,222102187,"He founded the University of Chicago in 1890, the Rockefeller Institute for Medical Research (now Rockefeller University) in New York City in 1901, the General Education Board in 1902, the Rockefeller Foundation in 1913, and the Laura Spelman Rockefeller Memorial in 1918, as well as giving large gifts to other institutions.",-1,train
+en,220637380,His gift of $5 million dollars helped found the Great Smoky Mountains National Park.,-1,train
+en,182962762,It was published in 1950 and earned him some respect as a writer.,-1,train
+en,115483939,"In 1870 the two Rockefellers, Andrews, Flagler, and a silent partner, Stephen V. Harkness, formed the Standard Oil Company, with John D. Rockefeller as president.",-1,train
+en,213961818,"His grandfather, also named William Seward Burroughs, founded the Burroughs Adding Machine company, which evolved into the Burroughs Corporation.",-1,train
+en,205741831,Jack didn't start to learn English until the age of six.,-1,train
+en,245138802,"Mrs. Roosevelt was active in the formations of numerous institutions, most notably the United Nations, United Nations Association and Freedom House.",-1,train
+en,145232222,She chaired the committee that drafted and approved the Universal Declaration of Human Rights.,-1,train
+en,266820426,"Despite leaving the band for an acting career, he still composes music for some films.",-1,train
+en,296876158,"In 1997, Coppola founded Zoetrope All-Story, a flashy literary magazine that publishes short stories.",-1,train
+en,296740885,"In 1988 he was named Minister of the Environment, and in 1990 founded the Green Party Generation Ecologie.",-1,train
+en,172957888,"Saint Clare of Assisi, born Chiara Offreduccio, (July 16, 1194 - August 11, 1253) was one of the first followers of Francis of Assisi and founded the Order of Poor Ladies to organize the women who chose to take the Franciscan vow of poverty and celibacy.",-1,train
+en,279619772,He was a founding member of Arbusto Energy company and served as managing general partner of the Texas Rangers baseball team.,-1,train
+en,114435697,"Bush began his oil industry career in 1979 when he established Arbusto Energy with Salem bin Laden, an oil and gas exploration company he financed with his education trust fund surplus and money from other investors.",-1,train
+en,190143515,"He attended secondary school (Volksschule), and learned the trade of a joiner.",-1,train
+en,163695472,He was a founder of the American Arithmometer Company.,-1,train
+en,185452711,"In addition to featuring in these epochal moments in jazz, he was instrumental in founding Afro-Cuban jazz.",-1,train
+en,160221092,"In the 40s, Gillespie led the movement called Afro-Cuban music, bringing Latin and African elements to greater prominence in jazz and even pop music, particularly salsa.",-1,train
+en,231850743,"In 1867, his brother's company, Rockefeller & Andrews, absorbed this refinery, and in 1870, the company became Standard Oil.",-1,train
+en,129271614,"Married to Almira Geraldine Goodsell, he built up the National City Bank of New York, and his son William Goodsell Rockefeller and Elsie Stillman, daughter of National City Bank president James Stillman, were the parents of James Stillman Rockefeller.",-1,train
+en,231521313,Libby was a founding member of the Project for the New American Century.,-1,train
+en,327640328,He was elected to the Bulgarian national assembly in 1913 and 1920.,-1,train
+en,204574121,"Bush co-founded the first charter school in the State of Florida: Liberty City Charter School, a grades K-6 elementary school.",-1,train
+en,257296766,He was the founder and first president of the Naval War College between 1884 and 1886.,-1,train
+en,253021792,"Her mother was a Lyman, another very old American family.",-1,train
+en,257593995,"In 1999 Bush cofounded a educational-software company, Ignite!, which uses multiple intelligence methods to provide varying types of content to appeal to multiple learning styles.",-1,train
+en,186440259,"Peyton Williams Manning (born March 24, 1976 in New Orleans, Louisiana) is an American football quarterback for the Indianapolis Colts NFL franchise.",-1,train
+en,266230379,"Jose Vicente Ferrer de Otero y Cintron (January 8, 1909 - January 26, 1992), was an actor and film director, born in Santurce, Puerto Rico.",-1,train
+en,142827700,"He became Chief Secretary to the Treasury in 1994, a Cabinet position, but resigned in 1995, to defend himself against accusations that whilst Minister of Defence Procurement he violated ministerial rules by allowing an Arab businessman to pay for his stay in the Ritz Hotel Paris.",-1,train
+en,301727830,"Sir Henry Edward Bolte (20 May 1908 - 4 January 1990), Australian politician, was the longest serving Premier of the state of Victoria.",-1,train
+en,274815270,"John Winthrop (February 12, 1606-April 5, 1676), generally known as John Winthrop the Younger, was governor of Connecticut.",-1,train
+en,297028988,"They were lovers, and he addressed both poems and surviving letters to her.",-1,train
+en,179992008,"(July 9, 1845 - December 7, 1912) was a British astronomer and mathematician, the second son and fifth child of Charles and Emma Darwin.",-1,train
+en,321092427,"Robert Joseph Dole (born July 22, 1923) is best known as a former Republican United States Senate Majority Leader and Senator from Kansas.",-1,train
+en,205096267,He became a second lieutenant in the Army's 10th Mountain Division.,-1,train
+en,354337837,"As a child, Hillary was interested in sports, her church, and her school, a public school in Park Ridge.",-1,train
+en,323578325,"John Alston Maxton, Baron Maxton (born May 5, 1936) was a Labour backbench Member of Parliament in the British House of Commons.",-1,train
+en,362312356,"Brooks Adams (1848 - 1927), was an American historian and a critic of capitalism.",-1,train
+en,254702635,"Elizabeth Rogers (May 18, 1934 - November 6, 2004) was an American actress.",-1,train
+en,368180761,"John Sidney Blythe (February 15, 1882 - May 29, 1942), better known as John Barrymore, became famous as a Shakespearean actor, lauded for his Hamlet.",-1,train
+en,102720641,"John Drew Barrymore, also known as John Barrymore, Jr., (June 4, 1929 - November 29, 2004) was an actor, one of The Barrymores, a family of actors that included his father, John Barrymore, and his father's siblings, his uncle Lionel and his aunt Ethel.",-1,train
+en,154279940,Kennedy was given the news that his mother's car had been involved in a fatal accident.,-1,train
+en,320343834,"Julius Henry Marx, known as Groucho Marx (October 2, 1890 - August 19, 1977), was an American comedian, working both with his siblings, the Marx Brothers, and on his own.",-1,train
+en,143376215,"Jorge Amado de Faria (August 10, 1912 - August 6, 2001) was a Brazilian writer of the Modernist school.",-1,train
+en,295900483,"John William Coltrane (September 23, 1926 - July 17, 1967) was an American jazz saxophonist and composer.",-1,train
+en,195461951,"Catherine of Braganza (25 November 1638 - 30 November 1705), or Catarina de Bragana was the queen consort of King Charles II of England.",-1,train
+en,117061057,"Ulysses S. Grant (April 27, 1822 - July 23, 1885) was the 18th President of the United States (1869 - 1877).",-1,train
+en,174997715,"He was a prodigy, learning Latin at three, Greek at four, and writing sermons at seven.",-1,train
+en,189035095,"He achieved national fame as a hero of the American Civil War, in which he commanded Union forces as a general, and as general-in-chief (1864 - 1869).",-1,train
+en,285525826,"John Fitzgerald Kennedy (May 29, 1917 - November 22, 1963), often referred to as Jack Kennedy or JFK, was the 35th President of the United States.",-1,train
+en,284304437,"John Fitzgerald Kennedy (May 29, 1917 - November 22, 1963), also known as JFK, was the 35th president of the United States of America.",-1,train
+en,285239481,"He participated in various commands in the Pacific Theater and earned the rank of lieutenant, commanding a patrol torpedo boat or PT boat.",-1,train
+en,305158341,"In this he was assisted by his son, William.",-1,train
+en,173441716,"Ronald Wilson Reagan (February 6, 1911 - June 5, 2004) was the 40th President of the United States (1981 - 1989) and the 33rd Governor of California (1967 - 1975).",-1,train
+en,167542677,"Before entering politics, Reagan was also a broadcaster, film actor, and head of the Screen Actors Guild.",-1,train
+en,237784542,"He remained in Hollywood for the duration of the war, attaining the rank of captain.",-1,train
+en,337273764,Bush was elected to a second term in the 2004 election.,-1,train
+en,274761764,"In 1966, he was elected the 33rd Governor of California, defeating two-term incumbent Pat Brown; he was reelected in 1970, defeating Jesse Unruh, but chose not to seek a third term.",-1,train
+en,232842615,"Klaas (born August 23, 1983 in Rockford, Illinois) is an American soccer defensive midfielder, who currently plays for the Seattle Sounders of the USL First Division.",-1,train
+en,176014674,"Bill ""Billy"" Boucher (b. November 10, 1899 in Ottawa, Ontario, Canada, died November 10, 1958) was a Canadian professional ice hockey rightwinger who played in the National Hockey League for the Montreal Canadiens, Boston Bruins and New York Americans.",-1,train
+en,186584452,"Dr. Benjamin Franklin (January 17, 1706 - April 17, 1790) was an American publisher, journalist, author, philanthropist, abolitionist, public servant, statesman, scientist, librarian, diplomat, poet, musician, philosopher, economist, and inventor.",-1,train
+en,136640862,"In 1775, Franklin became the first United States Postmaster General.",-1,train
+en,324496498,Then he went on to a public grammar school for three years.,-1,train
+en,245686165,"Caspar Willard Weinberger (born August 18, 1917) is best known as United States Secretary of Defense under President Ronald Reagan from 1981 through 1987, and for his related roles in the Strategic Defense Initiative program (popularly known as Star Wars), and in the Iran-Contra Affair.",-1,train
+en,358438389,"Weinberger moved to Washington in January 1970 to become chairman of the Federal Trade Commission, subsequently serving as deputy director (1970-72) and director (1972-73) of the Office of Management and Budget, and as Secretary of Health, Education, and Welfare (1973-75).",-1,train
+en,308932697,"Mildred Bailey (February 27, 1907 - December 12, 1951) was a popular American singer during the 1930s.",-1,train
+en,344590384,"Recep Tayyip Erdogan (born February 26, 1954) became prime minister of Turkey on March 14, 2003.",-1,train
+en,128506370,His fan mail jumped to thousands of letters a week.,-1,train
+en,132466980,"John W. Duarte(October 2, 1919 - December 23, 2004) was a British composer and classical guitarist.",-1,train
+en,140998379,"The following year, he was elected House Minority Whip.",-1,train
+en,215037792,"John Fitzgerald Kennedy Jr., often referred to as John F. Kennedy, Jr., JFK Jr. or John-John (November 25, 1960 - July 16, 1999) was an American lawyer, journalist, and publisher.",-1,train
+en,260106250,"Stephen Harriman Long (December 30, 1784 - September 4, 1864) was a U.S. engineer, explorer, and military officer.",-1,train
+en,115128770,"Josiah Wedgwood (July 12, 1730 - January 3, 1795) was an English potter, credited with the industrialisation of the manufacture of pottery.",-1,train
+en,169508960,She succumbed to diabetes in September 2002.,-1,train
+en,151841098,"Reagan was born in Tampico, Illinois, the second of two sons to Catholic, Irish-American democrat John ""Jack"" Reagan and Nelle Wilson, who was of Scottish and English descent.",-1,train
+en,124482590,He served from 1961 until his assassination in 1963.,-1,train
+en,168623227,"J. Carrol Naish or Joseph Patrick Carrol Naish (January 21, 1897 - January 24, 1973) was an American actor born in New York City, New York.",-1,train
+en,341080840,"Sir Charles Galton Darwin, FRS (December 18, 1887 - December 13, 1962) was the English physicist grandson of Charles Darwin who served as director of the National Physical Laboratory (NPL) during World War II.",-1,train
+en,314942939,"Friends recall him as disciplined and focused, neither drinking nor gambling during a trip to Las Vegas.",-1,train
+en,264892497,"Graham Stuart, (born October 24, 1970) is a former English football (soccer) player who plays as a central-midfielder.",-1,train
+en,366904199,"George Timothy Clooney (born May 6, 1961 in Lexington, Kentucky) is an American film and television actor, known for his former role in the long-running television drama ER (1994-99).",-1,train
+en,260894453,"He is a strong supporter of the Democratic Party and is of mostly Irish American heritage, although he also has some distant German ancestry.",-1,train
+en,215990976,"Lawford became an American citizen in 1960, in time to vote for his brother-in-law John F. Kennedy.",-1,train
+en,211441702,He and his wife belonged to the Epiphany Catholic Church in Miami for many years.,-1,train
+en,146659701,"Didier Julia (born February 18, 1934) is a French politician.",-1,train
+en,103977739,"William Seward Burroughs (February 5, 1914 - August 2, 1997) was an American novelist, essayist, social critic and spoken word performer.",-1,train
+en,178800824,"Johann Joachim Quantz (January 30, 1697 - July 12, 1773) was a German flutist, flute maker and composer.",-1,train
+en,289847012,"In so doing, he earned his way into the executive program at the bank.",-1,train
+en,163376591,"Kim Basinger (born December 8, 1953 in Athens, Georgia) is an American film actress of Irish, Swedish and 1/8th Cherokee descent.",-1,train
+en,307470245,"Drew Blythe Barrymore (born February 22, 1975 in Culver City, California) is an American film and television actress and producer.",-1,train
+en,113909301,"Johannes (Hans) Wilhelm Geiger (September 30, 1882 - September 24, 1945) was a German physicist.",-1,train
+en,200136558,He spent his time there teaching English.,-1,train
+en,351327718,"Irwin Allen Ginsberg (IPA: /?g?nz?b?g/) (June 3, 1926 - April 5, 1997) was an American Beat poet born in Paterson, New Jersey.",-1,train
+en,272661410,"When she became pregnant, Barrymore proposed marriage.",-1,train
+en,108138393,"Francis Ford Coppola (born April 7, 1939 in Detroit, Michigan) is an Italian American film director, screenwriter, vintner, magazine publisher, and hotelier, most renowned for directing the highly regarded Godfather trilogy.",-1,train
+en,201871610,"Stephen Baldwin (born May 12, 1966) is an American actor.",-1,train
+en,197377243,He was wearing shoes without socks and died from a toe infection.,-1,train
+en,182940872,"Helen Traubel (June 16, 1899 - July 28, 1972), was an American operatic soprano, best known for her Wagnerian roles, especially that of Brunnhilde.",-1,train
+en,211292448,"Jonathan Aitken (born August 30, 1942) is a former Conservative minister, and convicted perjurer.",-1,train
+en,255911525,"In 1960, Dole was elected as a Republican to the United States House of Representatives for the 87th Congress and to three succeeding Congresses, spanning from January 3, 1961 to January 3, 1969.",-1,train
+en,237901257,Reagan's presidency is regarded as a turning point for the United States Republican Party and the American conservative movement.,-1,train
+en,351273315,"Richard Bruce Cheney (born January 30, 1941), widely known as Dick Cheney, is an American politician and businessman affiliated with the U.S. Republican Party.",-1,train
+en,153022719,"As he once joked, he was the youngest ex-governor in the nation's history.",-1,train
+en,340407467,"Frank Charles Carlucci III (born October 18, 1930) was a government official in the United States, associated with the Republican Party.",-1,train
+en,329681178,"Henry David Reginald Margesson, 1st Viscount Margesson, of Rugby (July 26, 1890-December 24, 1965) was a British Conservative politician most popularly remembered for his tenure as Government Chief Whip in the 1930s.",-1,train
+en,133894730,"In retrospect, many now view Gore as a helpful factor in the 1992 campaign.",-1,train
+en,257613903,Benjamin Everett Jordan (8 September 1896 - 15 March 1974) was a Democratic U.S. senator from the state of North Carolina between 1958 and 1973.,-1,train
+en,230029152,"He is in the Gaullist political family, currently a member of the UMP.",-1,train
+en,347996252,"The election of fellow-Republican Dwight Eisenhower to the presidency saw Rockefeller appointed first as chair of the President's Advisory Committee on Government Organization and later as an undersecretary in the Department of Health, Education, and Welfare.",-1,train
+en,157389698,Samuel Adams (5 June 1805 - 27 February 1850) was a Democratic Governor of the State of Arkansas.,-1,train
+en,292562065,"He graduated from West Point in 1843, ranking 21st in a class of 39.",-1,train
+en,341169432,"Brice Lalonde (born February 10, 1946) is a former socialist and Green Party leader in France, who ran for President of France in 1981.",-1,train
+en,213910298,"Generally regarded as a member of the moderate New Democrat wing of the Democratic Party, he headed the centrist Democratic Leadership Council in 1990 and 1991.",-1,train
+en,332839651,Clooney left AMC to run as a Democrat in the 2004 election for a seat in the House of Representatives representing Kentucky's 4th Congressional district.,-1,train
+en,235054169,Rupert John Cornford (27 December 1915 - 28 December 1936) was an English poet and communist.,-1,train
+en,274971597,"At the academy, he established a reputation as a fearless and expert horseman.",-1,train
+en,324402961,"Frank Durward White (June 4, 1933 - May 21, 2003) was the Republican governor of the U.S. state of Arkansas from 1981 to 1983.",-1,train
+en,160926611,Bush is a lifelong member of the Republican Party and was a businessman in both the oil and professional sports industries.,-1,train
+en,364956016,"Bush is a Republican, and has Dick Cheney as his Vice President.",-1,train
+en,124837999,"His father, a tanner, and his mother were born in Pennsylvania.",-1,train
+en,177498950,Lincoln was the first Republican president.,-1,train
+en,306147731,"Vasil Petrov Kolarov (July 16, 1877 - January 23, 1950) was a Bulgarian communist political leader.",-1,train
+en,121539925,Erich Honecker (25 August 1912 - 29 May 1994) was a German Communist politician who led East Germany from 1971 until 1989.,-1,train
+en,321204994,"Walter Ulbricht (June 30, 1893 - August 1, 1973) was a German communist politician.",-1,train
+en,150803452,"The contest between the two was bitter, although they differed little on issues.",-1,train
+en,182246569,"Joseph Forney Johnston (March 23, 1843 - August 8, 1913) was an American Democratic politician who was the Governor of Alabama from 1896 to 1900.",-1,train
+en,344696604,"Hanks is a Democrat and has supported many candidates, including Hilary Clinton, Diane Feinstein, Al Gore, and John Kerry.",-1,train
+en,122022917,"Arnold Alois Schwarzenegger (born July 30, 1947 in Thal, Styria, Austria) is an Austrian-American actor, Republican politician, and bodybuilder, currently serving as the 38th Governor of California.",-1,train
+en,340713075,"James Douglas McKay (June 24, 1893 - July 22, 1959) born in Portland, Oregon, was a Republican from Oregon.",-1,train
+en,313436438,"He was, for a short time, a commentator opposite Bill Clinton on CBS's 60 Minutes.",-1,train
+en,317322183,"Diane Julie Abbott (born September 27, 1953 in Paddington, London) is a British Labour Member of Parliament for Hackney North and Stoke Newington constituency.",-1,train
+en,139507109,She is a member of the Democratic Party.,-1,train
+en,345263263,Koldewey was a self-trained classical era archaeological historian.,-1,train
+en,312899150,"John Ellis ""Jeb"" Bush (born February 11, 1953), a Republican, is the forty-third and current Governor of Florida.",-1,train
+en,201551255,"Lyman Enos Knapp (November 5, 1837 - October 9, 1904) was an American Republican politician who was the Governor of the District of Alaska from 1889 to 1893.",-1,train
+en,311890410,"Henry Bolte was born in Ballarat, the son of a publican of German descent (the family name was pronounced Bol-tee).He was to spend the first 24 years of his life (apart from three years at boarding school) in the small western district town of Skipton.",-1,train
+en,255771277,"After working in various manual jobs he married Edith Elder in 1934 and bought a small farm at Bamganie near Meredith, where he lived for the rest of his life, running sheep and cattle.",-1,train
+en,207856386,He was noted for his involvement in conservation and the protection of wildlife.,-1,train
+en,129192047,"He was born in Groton, England, as the son of John Winthrop, the founding governor of the Massachusetts Bay Colony.",-1,train
+en,265499322,"During the Great Depression, which hit all of Kansas very hard, the Doles moved into the basement of their home, and rented out the rest of their house.",-1,train
+en,254064641,"Dole has worked part-time for a Washington, DC, law firm, and engaged in a career of writing, consulting, public speaking, and television appearances.",-1,train
+en,153143901,"As an Army officer, he led a pioneering scientific expedition throughout a large area of the Great Plains, which he famously described as the ""Great American Desert.""",-1,train
+en,205561977,His work dealt largely with the poor urban black and mulatto communities of Bahia.,-1,train
+en,169648456,Laurance and Mary had three daughters and a son.,-1,train
+en,249682963,Jorge Amado went to Rio de Janeiro in 1931 and in the next year started to study law in the University of Rio de Janeiro.,-1,train
+en,359989831,"He was a director of the Sterling, Virginia company Securacom, also known as Stratesec, from 1993 until fiscal year 2000.",-1,train
+en,219632986,"Coltrane moved to Philadelphia, Pennsylvania in June 1943.",-1,train
+en,259212032,"Bush and his former wife, Sharon Smith, were married for 23 years.",-1,train
+en,272052171,"At the age of 17, and having barely passed West Point's height requirement for entrance, Grant received a cadetship to the United States Military Academy at West Point, New York, through his U.S. Congressman, Thomas L. Hamer.",-1,train
+en,203602712,"In the fall of 1823 they moved to the village of Georgetown in Brown County, Ohio, where Grant spent most of his time until he was 17.",-1,train
+en,287612579,"In 1920, after years of moving from town to town, the family settled in Dixon, Illinois.",-1,train
+en,126060169,"She is the youngest daughter of their household, eternally a baby.",-1,train
+en,229083110,"His nationally televised speech ""A Time for Choosing"" electrified conservatives; soon after, several top Republican contributors visited Reagan at his home in Pacific Palisades, California, urging him to seek the governorship in 1966.",-1,train
+en,225433071,He is the heir to several Forbes family offshore trusts.,-1,train
+en,165138584,"Rodgers shortly fled debt and prosecution by going to Barbados, leaving Deborah behind.",-1,train
+en,312860880,"At the age of 17, Franklin ran away to Philadelphia, seeking a new start in a new city.",-1,train
+en,132843276,"After a few months, while working in a printing house, Franklin was induced by Pennsylvania Governor Sir William Keith to go to London, ostensibly to acquire the equipment necessary for establishing another newspaper in Philadelphia.",-1,train
+en,298444015,"Cannon County, Tennessee is named in his honor.",-1,train
+en,122556585,"Nicholas Gilman, Jr. (August 3, 1755 - May 2, 1814) was a soldier in the Continental Army during the American Revolutionary War, a delegate to the Continental Congress, and a signer of the U.S. Constitution, representing New Hampshire.",-1,train
+en,353587200,"Details of Cheney's second Wyoming arrest, in July 1963, have fallen victim to time and record destruction practices.",-1,train
+en,207599069,"Cheney grew up in Casper, Wyoming, and met his high-school sweetheart and future wife, Lynne Vincent, at age fourteen.",-1,train
+en,286883956,"Carlucci became Ambassador to Portugal, and served in this position from 1974 until 1977.",-1,train
+en,179215847,His father changed the family name from Levy when he was a child.,-1,train
+en,317340147,"In 1961 he participated in a CIA mission to Congo, in which he used his athletic ability to rescue US citizens from mobs, but was also reportedly involved in the assassination of Prime Minister Patrice Lumumba.",-1,train
+en,181261645,"Clooney got his start in Los Angeles, a young college dropout from Kentucky who spent a good chunk of his struggling actor years riding to auditions on a bicycle.",-1,train
+en,310212225,"Peter Sydney Lawford (September 7, 1923 - December 24, 1984) was a Hollywood actor and member of Frank Sinatra's ""Rat Pack,"" more noted for his off-screen activities as a celebrity than for his acting.",-1,train
+en,324954233,He is considered the founder of modern Biblical criticism.,-1,train
+en,256394340,Clooney was Ferrer's third wife.,-1,train
+en,157563534,"He did not complete his degree, choosing instead to seek his fortune in the United States of America; but the First World War intervened.",-1,train
+en,189965042,"He received his ""boot"" training at Paris Island, South Carolina.",-1,train
+en,111603938,His parents were both members of the Nazi party.,-1,train
+en,103562587,"After he graduated basic training, he was sent to Camp Lejuene in North Carolina where he underwent advanced training before being sent to Korea.",-1,train
+en,320182763,He married Carolyn Bessette in 1996.,-1,train
+en,174776287,"Ferrer had previously been married to Uta Hagen (1938-1948), by whom he had a daughter, and actress Phyllis Hill (1948-1953).",-1,train
+en,354829337,"At the time of his death, Ferrer was married to Stella Magee, whom he married in 1992.",-1,train
+en,287964766,"He married his second wife, Elizabeth Harris in June 2003.",-1,train
+en,275816756,"Dole has been married to Senator Elizabeth Dole, nee Hanford of North Carolina since 1975.",-1,train
+en,203724836,"The couple have four children: daughters Katherine and Christina, and sons Patrick and Christopher.",-1,train
+en,214335787,"Barrymore married Katherine Corri Harris (1891-1927), an actress who starred in the 1918 film The House of Mirth, on September 1, 1910 and divorced in 1916.",-1,train
+en,105959523,"He married Blanche Marie Louise Oelrichs (1890-1950), a New York mining heiress who wrote under the pseudonym ""Michael Strange,"" on August 5, 1920 and divorced her in 1925.",-1,train
+en,222828310,"His fourth wife was Elaine Barrie (nee Elaine Jacobs, 1916-2003), an actress; they married on November 9, 1936 and divorced in 1940.",-1,train
+en,301768953,"Grant married Julia Boggs Dent (1826 - 1902) on August 22, 1848.",-1,train
+en,168009002,He was given just his grandfather's first and last name and was not given any middle name.,-1,train
+en,360453201,"Kennedy married his second wife Jacqueline Bouvier on September 12, 1953.",-1,train
+en,236450309,Reagan later married actress Jane Wyman in 1940.,-1,train
+en,175557790,Reagan remarried in 1952 to actress Nancy Davis.,-1,train
+en,344583387,"In 1964, he married Lynne Vincent.",-1,train
+en,175356973,"Therefore, from a very young age, Lincoln was exposed to anti-slavery sentiment.",-1,train
+en,188969186,"His wife, former first lady Hillary Rodham Clinton, is currently the junior U.S. Senator from New York.",-1,train
+en,246406803,"After Oxford, Clinton received a Juris Doctor (J.D.) degree from Yale Law School, where he met classmate Hillary Rodham whom he married in 1975.",-1,train
+en,189852154,"In a valley of the Rolling Fork River, this was some of the best farmland in the area.",-1,train
+en,154634000,"The most important item on Clinton's legislative agenda, however, was a complex health care reform plan, the result of a taskforce headed by Hillary Clinton, aimed at achieving universal coverage.",-1,train
+en,345410256,"On 29 January 1839, Darwin married his cousin Emma Wedgwood at Maer in an Anglican ceremony arranged to also suit the Unitarians.",-1,train
+en,297718544,Shire is currently married to actress Didi Conn.,-1,train
+en,121834511,These events soon led to the American Civil War.,-1,train
+en,314065787,"He was married to actress Talia Shire, whose brother Francis Ford Coppola offered him his big break, scoring The Conversation in 1974.",-1,train
+en,354597445,"Together, Professor J. Laurence Laughlin and Roosevelt's girlfriend and future wife, Alice Hathaway Lee, convinced Roosevelt to drop natural history in favor of politics.",-1,train
+en,277718784,"During this time, he was prescribed Ritalin for hyperactivity; years later, his wife Courtney Love blamed Ritalin for his addiction to heroin.",-1,train
+en,301842995,"Two years later, he married Laura Welch, a librarian originally from Midland.",-1,train
+en,238685908,"Though earning mediocre grades, he made many lasting friendships.",-1,train
+en,307717148,"Bush is very close to his wife Laura, his father George H. W. Bush and mother Barbara Bush.",-1,train
+en,317569391,"He married his first wife, Joyce Halverson, in 1951.",-1,train
+en,227962292,"He later married Jean Forsyth Clyde in 1973, with whom he was married for the rest of his life.",-1,train
+en,271432471,He is married to singer Chynna Phillips.,-1,train
+en,245230070,"After the media caught wind of the comment, he apologized.",-1,train
+en,168432878,"He purchased a commission in the army, but sold it again without serving, and in August 1827 married, in opposition to his mother's wishes, Rosina Doyle Wheeler (1802-1882).",-1,train
+en,249389021,"On November 4, 1842, Lincoln married Mary Todd.",-1,train
+en,263351979,Honecker married Margot Feist in 1953 and remained married until his death.,-1,train
+en,112871689,He was married to Harriet Fay.,-1,train
+en,345066186,"He was married to Grace Coolidge and had 2 children: John (born 6 September, 1906 - died 2000) and Calvin Jr. (born 13 April - died 1924).",-1,train
+en,149508431,He was married with HRH Princess Olga of Greece and Denmark in 1923.,-1,train
+en,137373919,"He has a son, Weston Coppola Cage (born 1990), by model Kristina Fulton.",-1,train
+en,287759160,"On April 8, 1995 he married actress Patricia Arquette.",-1,train
+en,116615380,"On August 10, 2002 he married Lisa Marie Presley and filed for divorce less than four months later.",-1,train
+fa,1,واقعاً فیلمی تاثیرگذار است چرا که به طرز واقع‌بینانه‌ایی در مورد انواع عشق است‌,2,train
+fa,2,فیلمی که به اندازه‌ی رَپ بد، بی‌ارزش است‌,0,train
+fa,3,فقط چند دقیقه از زمانی می‌گذرد که پدر اسلشرها همچنان با لباس دیگ بخار و ماسک سفید وارد می‌شود، که برای مردی که از سال 1978 به قتل دسته جمعی مبادرت می‌کرده اما هرگز در حال شستن لباس دیده نشده، به طرز قابل توجهی لباسش تمیز به نظر می‌رسد‌,1,val
+fa,4,"""شکارچی کروکودیل""، اسپین‌آفِ احمقانه و تنبل از سری مستند ""سیاره‌ی حیوانات"" است که در بهترین حالت، فرصت‌طلبی در حوزه‌ی سرگرمی ‌محسوب می‌شود‌",0,test
+fa,5,پس از دیدن فیلم می‌توانم بگویم هیچ دلیل دیگری وجود ندارد که فردی با یادآوری این فیلم، خود را اذیت کند,0,val
+fa,6,به نظر می‌رسد کیشنر و مونرو در رقابت هستند تا ببینند چه کسی نسبت به دیگری بدتر بازی می‌کند‌,0,train
+fa,7,"بازی بازیگران خشک و بی روح است، داستان فاقد هرگونه شوخ‌طبعی است، به نظر می‌رسد صحنه‌ها از جزیره‌ی گیلیگان قرض گرفته شده‌اند و احتمال دارد ""سی‌جی‌آی‌ اسکوبی"" بدترین جلوه ویژه‌ی سال باشد‌",0,train
+fa,8,بازیگران با استعداد به تنهایی شما را مجذوب فیلم می‌کنند، در حالی که صحنه‌های مبارزه هم این قابلیت را دارند‌,2,test
+fa,9,مطمئناً بزرگسالان مایلند وقت خود را در تئاتر به فکر کردن در مورد لیست مواد غذاییشان برای خرید و روش‌هایی بگذرانند، تا به فرزندان خود بگویند که چگونه مانند پینوکیو رفتار نکنند‌,1,test
+fa,10,یکی از بهترین فیلم‌های سال، با اکتشاف خود از موانع شادی با پنج دلیل جداگانه، ‌‌‌یک شاهکار روانشناختی‌,2,test
+fa,11,دیدن مردان میانسال و مسن‌تر که در حد افراط می‌نوشند، روی درختان ادرار می‌کنند، به یکدیگر فحش می‌دهند و هم‌چون زنان لباس می‌پوشند و آرایش می‌کنند، اصلاً جذاب و سرگرم‌کننده نیست‌,0,train
+fa,12,ماجرای بسیار احمقانه، با داستانی پیش‌و‌پا افتاده و شخصیت‌های مقوایی و بازیگرانی که ارزش پول را بالاتر از اعتبار می‌دانند‌,0,train
+fa,13,پرتره‌ای از یک هنرمند‌,1,train
+fa,14,با این حال آرزو می‌کردی که ای‌کاش این فیلم، زمان بسیار کمتری را صرف ارائه‌ی گزارش‌های معتبر در مورد روایت‌های زندگی پس از مرگ می‌کرد و زمان بسیار بیشتری را صرف نیاز عاشقانه‌ای می‌کرد که در مرکز فیلمنامه بود‌,1,train
+fa,15,سکانس‌های تیمارستان بسیار جذاب است، مانند صحنه‌های جیا و خانواده‌اش‌,2,train
+fa,16,به لطف یک ستاره کوچک با قلب بزرگ، این دنباله فیلم خانوادگی برای همه بسیار سرگرم‌کننده است‌,2,train
+fa,17,کند، احمقانه و ناخواسته خنده‌دار است‌,1,train
+fa,18,برای شجاعت سیاسی، سزاوار نمره‌ی بالایی است اما به سختی دارای شایستگی هنری است‌,1,train
+fa,19,ظاهراً کمدیِ رومانتیک با دیدگاهی نو در برنامه‌ی کنونی هالیوود قرار ندارد‌,0,train
+fa,20,بی‌سروصدا، صبور و سرسخت همچون آقای لوپز، کسی که با آرامش و انضباط چشمگیر به کار سخت و بی‌پایان خود می‌پردازد‌,2,train
+fa,21,به لحاظ بصری فاخر اما از لحاظ عقلی، احمقانه است‌,1,test
+fa,22,کانتِت به خوبی لابی‌های هتل، بزرگراه‌های دوطرفه و کافه‌های کنار جاده را در روز تعطیل وینسنت به تصویر می‌کشد‌,2,train
+fa,23,"به جای اینکه ""پینوکیو"" را از منتقدان مخفی کند، شرکت میراماکس، باید آن را از همه مخفی کند‌",0,train
+fa,24,درام روانشناختی که به طرز عجیبی جذاب است و بازی‌های آن درخشان است‌,2,train
+fa,25,موضوع خوبی فراهم می‌کند، در حالی که فیلم نمی‌تواند دلیلی برای اهمییت دادن ما، فراتر از اصول اولیه‌ی نجابت انسانی ارائه دهد‌,1,test
+fa,26,همه‌ی پیچیدگی‌های فیلم، به طور شگفت‌آوری قابل پیش‌بینی است‌,1,test
+fa,27,عدم اعتماد‌به‌نفس و ناتوانی کامل بولاک، سریعاً فیلم را از مسیر خود خارج می‌کند‌,0,train
+fa,28,فیلم چیز بیشتر دیگری ندارد، بخصوص در سکانس‌های اخلاقی,1,train
+fa,29,احمقانه‌ترین و توهین‌آمیزترین فیلمِ سه ماهه اول سال 2002 است‌,0,val
+fa,30,اینکه هاینس می‌تواند نماهایی که ژانر و شخصیت او را می‌سازند، هم حفظ کند و هم از بین ببرد، دستاوردی شگفت‌انگیز از صداقت و ظرافت روایی است‌,2,train
+fa,31,در بعضی از مواقع، فیلم واقعاً زیبا به‌نظر می‌رسد‌,2,train
+fa,32,به استثنای بعضی از بداهه‌پردازی‌های خنده‌دار و گذرا توسط سدریک، در نقش رییس پری، در فیلم، لحظه رستگاری وجود ندارد‌,0,train
+fa,33,دومین فیلم هری‌پاتر، به مراتب فیلمی بهتر از فیلم قبلی آن است‌,2,val
+fa,34,بعد از آن، فیلم احمقانه ضعیف و احساساتی می‌شود,0,test
+fa,35,هرگز در جذب مخاطب ناموفق نمی‌ماند‌,2,train
+fa,36,"فیلم ""اودیارد""، عدم قطعیت ذهنی را با موفقیت، در سطوح مختلف و در کل فیلم حفظ می‌کند که هم جذاب و هم قانع‌کننده است‌",2,train
+fa,37,این فیلم چیزی جز تلاش فیلمسازی میانسال که قصد دارد خود را با زنان زیبا و نیمه‌عریان احاطه کند، نیست‌,1,train
+fa,38,"غیر از شگفتی‌های ظاهری، موضوع دیگری در مورد فیلم ""فِیتِل"" وجود ندارد ‌‌‌اما اشکالی ندارد‌",1,test
+fa,39,"اگر ادوودِ افسانه‌ای فیلمی در مورد یک خون‌آشام می‌ساخت، احتمالاً شبیه این محصول، هشداردهنده می‌شد که از رمان ""اَن رایس"" به نام ""تاریخچه‌ی خون‌آشام"" اقتباس شده‌است‌",1,test
+fa,40,"اگر از طرفداران دبلیو‌دبلیو‌اف‌ هستید یا با افرادی ارتباط دارید که کشتار روبات‌ها را در هوش‌مصنوعی تماشا می‌کنند، احتمالاً فیلم ""رولربال"" را دوست دارید‌",1,train
+fa,41,خنده‌دارترین و دوست‌داشتنی ترین فیلم آلن در سال‌های متمادی‌,2,train
+fa,42,"اگر این فیلم شکست بزرگی باشد، پس ""دزدی هاروارد"" فیلم وحشتناکی نیست‌",0,train
+fa,43,"حتی اگر عمدا، با استاندارد‌های پایین شوخ‌طبعی در فیلم ""فرت بوی"" فیلم را مقایسه کنیم، باز هم فیلم ""سوراریتی بویز"" اثری ضعیف است‌",0,train
+fa,44,فیلمی کوچک و خنده‌دار با دیالوگ‌های هوشمندانه و شخصیت‌های دوست‌داشتنی است‌,2,train
+fa,45,این اولین اثر جسورانه و غنایی از راجا آماری، این مفهوم را که زنان میانسال فقط می‌خواهند خوش بگذرانند، را به یک رساله‌ای مهیج از توانمندسازی نفسانی گسترش می‌دهد‌,2,train
+fa,46,"این موضوع بسیار سلیقه‌ایی است اما در عین حال برخلاف فیلم ""خارها"" این فیلم، به طرز ماهرانه‌ای خلق و خوی زمانه را نشان می‌دهد‌",2,train
+fa,47,به عقب برگشتم و 10 دقیقه آخر را بررسی کردم اما از 30 یا 40 دقیقه‌ی اول هم نفرت‌انگیزتر بود‌,0,test
+fa,48,"چیزی که باعث تحسین فیلم ""چگونه پدرم را کشتم"" می‌شود، علاوه بر اجرای فوق‌العاده‌ی بازیگران، تمایل فونتین برای پرسه‌زدن در حوزه‌ی تاریکِ روابط والدین و فرزندان است، بدون اینکه از این کار بخواهد سرباز زند‌",2,train
+fa,49,این فیلم در هیچ سطحی بدرد من نمی‌خورد‌,0,train
+fa,50,به طور قابل توجهی قابلیت برقراری ارتباط را دارد و تاثیرگذار است,2,train
+fa,51,مشکل این است که بیشتر قسمت‌های این فیلم کسل‌کننده است‌,0,test
+fa,52,احساس می‌شود فیلم کمی‌ کوتاه است، البته که توسط باهوش‌ترین شاگرد کلاس ساخته شده است‌,1,test
+fa,53,فیلم نمی‌داند که کمدی است,1,test
+fa,54,"برای بقیه ما، نشستن در مقابل فیلم دو ساعتی ""داهمر""، کمی‌ بیشتر از مجازات است‌",0,train
+fa,55,"بازیگری ""گولوم"" باورنکردنی است!",2,val
+fa,56,"فیلم ""نان قندی من"" آنقدر ایراد دارد که برای منتقدان آسان است تا فیلم را خورد کنند‌",0,train
+fa,57,یک فیلم زامبی به‌تمام معنا، احمقانه، بی‌روح، پرپیچ‌و‌خم، پر‌سر‌و‌صدا، دردناک، نفرت‌انگیز,0,val
+fa,58,این فیلم، بد بازی و کارگردانی شده است و احتمال دارد فیلنامه آن توسط فردی نوشته شده باشد که اخیرا از مدرسه ابتدایی فارغ‌التحصیل شده است‌,0,train
+fa,59,"""پیانست"" بهترین فیلم پولانسکی است‌",2,train
+fa,60,"این اساساً چیزی است که در فیلم ""تخته سیاه‌ها"" غایب است - حس چیزی بزرگتر، یک نقطه نهایی‌ در فیلم",1,train
+fa,61,قرار است هریس ستاره‌ی داستان باشد، اما ظاهری بسیار کسل‌کننده و خشک دارد‌,1,train
+fa,62,به طرز عجیبی اگویان کار زیادی را انجام داده است‌,1,train
+fa,63,"کسانی که با سنت‌های مسیحیان مورمون‌ آشنایی ندارند، احتمال دارد فیلم ""محله‌ی مجردها"" برایشان، گیج‌کننده به نظر برسد‌",1,test
+fa,64,فیلمی پر‌سر‌و‌صدا، زشت و آزاردهنده، بدون اینکه هیچ‌یک از طنزهایش به هدف برسد‌,0,train
+fa,65,"اگر از فیلنامه‌ای لذت می‌برید که در آن فرض شده است که شما خیلی باهوش نیستید، فیلم ""کار خون"" برای شما مناسب است‌",0,train
+fa,66,"فیلمی کاملاً افتضاح و گنگ، از نظر روایی آشفته، از نظر بصری شلخته، ‌‌‌ترکیبی عجیب از فیلم ""آن چیز"" و فیلم ""فریاد"" که مربوط به سالمندان است‌",0,train
+fa,67,"ای کاش راهی وجود داشت که به طور موثر خطرات مواد مخدر را به بچه‌ها آموزش داد، من فکر می‌کنم این موضوع در فیلم‌هایی مانند ""پرداخت"" وجود دارد، (که متاسفانه فیلم مخصوص بزرگسالان است)",1,test
+fa,68,لَبوت نمی‌تواند از اشتباهی مهلک در دوران مدرن اجتناب کند: او مردی دانشگاهی را از بریتانیاییِ طبقه‌ی پایین به آمریکایی تبدیل کرده است، انتخابی که تعادل بدیع رمان را به‌هم می‌زند و تار‌و‌پود فیلم را نابود می‌کند‌,1,train
+fa,69,"اگر فیلم ""پسر بورستال"" به طور خاص واقع‌گرایانه نباشد، نوستالژی جذابی است‌",1,train
+fa,70,مانند بهترین فیلم‌های گدارد ‌‌‌از نظر بصری جذاب، نافذ و غیر قابل نقد است‌,2,train
+fa,71,اگر از قبل به چنین موضوع‌هایی علاقه داشتید، این فیلم دوباره در مورد همان چیز‌ها است‌,1,test
+fa,72,این فیلمِ عجیب و شاعرانه که در جاده اتفاق می‌افتد، با موسیقی پاپ همراه شده است، تقریباً در نگاهِ همیشه مراقبِ مورتون اتفاق می‌افتد و ادای احترامی‌ به بازیگر زن و کارگردان مبتکر او است که این سفر، چنین مسحورکننده شده است‌,2,train
+fa,73,فیلمی قدرتمند اما دارای اشکالاتی است، اما تضمین می‌کند که احساسات شما را برانگیزد و در عین حال واشنگتن را احتمالاً به عنوان بهترین بازیگر این روزها تایید می‌کند‌,2,train
+fa,74,جذاب و کاملا سرگرم کننده,2,train
+fa,75,آتال تلاش زیادی می‌کند تا این فیلم را به کمدی یا درام جدی تبدیل کند‌,0,train
+fa,76,‌‌‌به نظر می‌رسد این بار چیزی در ترجمه گم شده است‌,0,val
+fa,77,فیلمی شوم که نه تنها غیر قابل دیدن است، بلکه قابل شنیدن نیز نیست‌,0,train
+fa,78,اثری منحصر‌به‌فرد توسط اسطوره‌ای که شاید چیزی برای اثبات نداشته باشد اما هنوز هم می‌تواند نشان دهد که چگونه می‌توان فیلم ساخت‌,2,train
+fa,79,"به عنوان اقتباسی که به طرز ماهرانه و حرفه‌ای مونتاژ شده است، مخاطب را تحت‌تاثیر قرار می‌دهد ‌‌‌دقیقاً همانطور که فیلم ""شکارچی انسان"" هیجان‌انگیز و ترسناک بود‌",2,train
+fa,80,این فیلم به قوانین، صحت سیاسی یا نجابت عمومی ‌احترام نمی‌گذارد، اما چیز مهمتری را نشان می‌دهد: احترام به عوامل ناقص و دیوانه‌اش‌,1,train
+fa,81,فیلمی کوچک با تاثیری زیاد‌,2,train
+fa,82,قسمت هایی زیادی از این فیلم، شاهد بازی خوب بازیگران هستیم، اما فیلم به طرز خطرناکی کند دنبال می‌شود، انگار داستان مقدمه‌ای از داستانی پیچیده‌تر است که هرگز محقق نمی‌شود‌,0,train
+fa,83,تنها سرگرمی ‌که از این ماجرای شلخته و متلاطم به دست می‌آورید، قهقه‌های ناخواسته‌ی چند نفر از آن‌ها است‌,0,train
+fa,84,طنزی قوی و خوش‌فرم‌,2,train
+fa,85,تاکنون این بهترین فیلم سال بوده است، معیاری که سایر رقبای بهترین فیلم را باید با آن سنجید‌,2,train
+fa,86,این فیلم به عنوان کمدی، عاشقانه، افسانه یا درام دیده می‌شود، اما هیچ چیز، تاحدی پیروزمندانه‌ هم در این فیلم وجود ندارد‌,1,train
+fa,87,بوی پوسیدگی و بی‌اصالتی از ابتدا تا انتهای کار‌,1,train
+fa,88,بعضی از بخش‌های فیلم بسیار بد است، اما سایر بخش‌ها مناسب هستند‌,1,train
+fa,89,"این تولید عجولانه، فقط به علت تمایل هاپکینز به بازیِ دوباره در ""هانیبال لکتر"" است، حتی اگر هریس تمایلی فوری به ارائه‌ی کتاب چهارم نداشته باشد‌",0,test
+fa,90,در جریان ساخت این فیلم، هیچ فرد فرانسوی آسیب ندید، اما به آن‌ها توهین شد و تماشاگران هم به مدت یک ساعت و نیم شکنجه شدند‌,0,train
+fa,91,ارتباطات میان این خانواده‌ها می‌تواند شما را شگفت‌زده کند‌,1,train
+fa,92,استعدادهای زیادی در این تلاش ابلهانه و کم‌توان هدر می‌رود‌,0,train
+fa,93,صحنه‌آرایی‌های فیلم، خاص و صمیمی است، در نتیجه جسورتر از ساخته‌های از قبل تولید شده‌ایی هستند که طراحی و روند تولید فیلم را تعریف کرده و تحت تاثیر قرار می‌دهند‌,1,val
+fa,94,این فیلم با مهارت ساخته شده است، به اندازه بازی‌های ویدئویی که نوجوانان ژاپنی در کلوپ‌‌های شبانه بازی می‌کنند، مصنوعی اما لذت‌بخش است‌,1,train
+fa,95,احتمال دارد این فیلم بسیاری از مردم را به سمت اپرا سوق دهد، به طور کلی اثری هنری و در عین حال معنوی، به طرز شگفت‌انگیزی هم عوام‌پسند و از نظر احساسی هم به والایی زندگی است‌,2,train
+fa,96,تضمین می‌کند که شما تئاتر را با لبخندی روی لب ترک کنید‌,2,train
+fa,97,در فیلم حفره‌های داستانی متعددی وجود دارد که به اندازه کافی بزرگ هستند که یک نهنگ قاتل بتواند در آن شنا کند‌,0,train
+fa,98,"کمتر به پسرعموی فیلم ""بلید رانر"" شباهت دارد تا سری فیلم‌های ""فرار از نیویورک""‌",0,train
+fa,99,روال معمول و بچه‌گانه دگرپوشی در فیلم‌های راب اشنایدر که فضای فیلم زن لوند را پر کرده است، آخرین ترفند این طنزپرداز خالی از خلاقیت است,0,train
+fa,100,ظاهرسازی زیبا ‌‌‌زود بدست می‌آیند و دیر از بین می‌روند و تقریباً هر دقیقه شما را پر می‌کند ‌‌‌با درخششی دلچسب، برخی پوزخندهای گستاخانه و میزان باشکوهی از توانایی رهایی‌بخش بشر، برای پیروزی بر یک یا دو اسکروج را فراهم می‌کنند‌,2,train
+fa,101,مایه شرمساری است که کارگردان با استعدادی همچون چن کیج، ساختن فیلم به زبان انگلیسی را با فیلمی با طرح و فیلنامه‌ی ضعیف آغاز کرده است‌,0,val
+fa,102,کمدی – درامی ‌که به زیبایی دیده شده و به طرز معجزه‌آسایی موعظه‌گر نیست‌,2,test
+fa,103,این فیلم شما را از خنده روده‌بر نمی‌کند، چنین قصدی نیز ندارد، بلکه صرفاً بررسیِ سینماییِ ملایم است که نشان می‌دهد چه چیزی شوخی را به شوخی تبدیل می‌کند‌,1,train
+fa,104,پارکر را باید به‌خاطر اتخاذ رویکردی نو نسبت به اصولی که با آن آشنا است، ستود اما تصمیم او برای وفادار ماندن به متن اصلی او را در فیلم به‌سمت اتخاذ لحنی تا حدودی مصنوعی سوق می‌دهد ‌‌‌که در نهایت تراژدی انسانی را در هسته‌ی فیلمنامه کمرنگ می‌کند‌,1,train
+fa,105,"""انیگما"" از آن دسته درام‌های تاریخی است که به نظر می‌رسد هالیوود به نفع فیلم‌های جنگی احساساتی به سبک ""ما سرباز بودیم"" از آن دست کشیده است‌",1,val
+fa,106,فیلم اصلی، فیلم خوبی نبود اما این بازسازی، آن را به یک شاهکار تبدیل می‌کند!,0,train
+fa,107,فیلمی بسیار هوشمندانه و ظریف که تعادل متزلزل میان اعتماد‌به‌نفس زیاد اَشراف تبعیدی و جدیت بی‌رحمانه انقلابیون پیروز را به تصویر می‌کشد‌,2,train
+fa,108,به‌طور مشخص، ‌‌‌بیشتر احتمال دارد بیننده را در بی‌حوصلگی غرق کند تا اینکه لرزه‌ای در ستون فقرات او ایجاد کند‌,0,val
+fa,109,درامی ‌ضعیف و بشدت کند,0,train
+fa,110,"فیلم ""13گفتگو"" حسن نیت خود را حفظ می‌کند اما در رسیدن به اصل مطلب نسبتا کند است",1,train
+fa,111,"""سیمون""، فیلمی سرگرم‌کننده با دیدی جالب به مخلوقی مصنوعی در جهانی است که وجود همزیست‌های مصنوعی افزایش پیدا کرده است‌",2,train
+fa,112,همه چیز، هم اندازه لهجه‌ی اجباری اوما از نیوجرسی، در فیلم سطحی بود‌,0,test
+fa,113,بدبختی مردم به یک نمایش شهوت‌انگیز دیگر تبدیل شده است، که اتفاق می‌افتد و فراموش می‌شود‌,0,test
+fa,114,اگر بیش از 25 سال سن دارید، هوش بالای 90 دارید، گواهینامه‌ی رانندگی دارید، باید بتوانید برای خود سرگرمی ‌بهتری پیدا کنید‌,0,train
+fa,115,قسمت‌هایی از فیلم که خوب است، خیلی خیلی خوب است، سایر قسمت‌ها از غیر قابل توجه تا به طرز مایوس کننده‌ای افتضاح بودند‌,1,train
+fa,116,بنو دلوم، مدیر فیلمبرداری، فیلم را با رنگ‌های دلپذیری فیلمبرداری کرده است، لباس‌ها و دکورها نیز عالی هستند‌,2,train
+fa,117,این فیلم چنان است که می‌تواند شما را از هیجان دور کند، تا مرحله‌ای که تقریباً خون به مغز شما نرسد؛ این فیلم احساس احمقانه و کسل‌کننده‌ای در شما ایجاد می‌کند‌,0,train
+fa,118,تلاش‌های جاناتان پارکر، نویسنده و کارگردان، برای خلق یک طنز ابرواقعی و برزیلی به‌طرز وحشتناکی زود از بین می‌رود‌,0,test
+fa,119,اگر به‌خاطر عملکرد دو بازیگر مکمل در قسمت‌های حساس فیلم نبود، فیلم با شکست زیادی همراه می‌شد‌,1,train
+fa,120,کاکس (کرگردان) نگاه‌های اجمالی زیادی بر روی تصاویرش خلق می‌کند اما در آنها هیچ نشانه‌ایی از فیلم‌های نیجینسکی وجود ندارد، در عوض او مخاطب را بی‌هدف و سردرگم می‌کند‌,0,test
+fa,121,اثری سرشار از تخیل و به طرز قابل تحسینی بالغ، از کارگردانی با استعداد که قطعاً چیزی در ذهن خود داشته است‌,2,train
+fa,122,ترکیب فوق‌العاده‌ایی از شیرینی و دستاورد‌های فنی خارق‌العاده‌ی فیلم اول، حفظ می‌شود اما تاثیر کلی آن با خط داستانی که هرگز به طور کامل جادوی اصلی را ارائه نمی‌کند، کمی‌ افت می‌کند‌,1,train
+fa,123,مقدمه‌ای جذاب و سرگرم‌کننده برای جانسون است‌,2,val
+fa,124,بهتر است در جلوی آن بخوابید تا صدای آن را گوش کنید‌,0,val
+fa,125,با غنای مالیخولیایی فیلمبرداری شده است و با شیوایی اجرا شده است، اما در عین حال غیرسینمایی است‌,1,train
+fa,126,هر فردی فیلم را از منشور باورها و تعصبات خود می‌بیند، اما نکته‌ای که بیش از همه مشخص است این است که صلح امکان‌پذیر است‌,2,test
+fa,127,اما شخصیتِ فخرفروش و لطیفه‌گوی او قطعاً در حال پیر شدن است‌,1,val
+fa,128,این فیلمی فوق‌العاده است، به ویژه اینکه ژاپنی است و در عین حال نگاهی جهانی دارد‌,2,test
+fa,129,یکی دیگر از بهترین انتخاب‌های سال‌,2,train
+fa,130,"فیلم ""آب گرم زیر پل قرمز""، فیلم ژاپنی عجیب و غریب و تکان‌دهنده‌ای است که به بررسی روابط میان زنان، آب، طبیعت و تمایلات جنسیت می‌پردازد‌",2,train
+fa,131,بازی گاسلینگ شخصیتی به‌شدت قانع‌کننده را خلق می‌کند، جوانی بسیار باهوش که به شکلی متناقض، از خود متنفر و خود‌ ویرانگر است‌,2,train
+fa,132,عاشق قسمت میانیِ زیبای این فیلم هستم‌,2,train
+fa,133,سادگی جذاب فیلم با سرنخ‌های جذاب هدایت می‌شود‌,2,train
+fa,134,یکی از بهترین، انسانی‌ترین و مهم‌ترین فیلم‌هایی که تاکنون در مورد هولوکاست ساخته شده است‌,2,test
+fa,135,دقیقا همان چیزی که از مردی به نام کائوس انتظار می‌رود‌,1,test
+fa,136,"فیلم ""هشت شب دیوانه‌وار"" از آدام سندلر مثل یک خارش، شما را از پا در می‌آورد‌",0,train
+fa,137,این فیلم با اسمی ‌مناسب و با لباس‌ها و فیلمبرداری درخشان و زیبا به‌درد من نمی‌خورد,1,train
+fa,138,این فیلم، انفجاری از انرژی آموزشی است چرا که انیمیشن پر جنب و جوش و آهنگ‌های جذاب، شما را در کل 85 دقیقه همراهی می‌کند‌,2,train
+fa,139,چرا تسلط کامل فیلم را به او داده‌اند، او نویسندگی، کارگردانی، بازیگری و تهیه‌کنندگی فیلم را به عهده گرفته است، که دلیل آن فراتر از درک من است‌,0,train
+fa,140,"حتی طرفداران فیلم‌های ترسناک نیز آنچه را که می‌خواهند در فیلم ""هر روز، دردسر"" پیدا نخواهند کرد؛ این فیلم فاقد هیجان و شوخ‌طبعی است‌",0,train
+fa,141,شاید حق با توماس ولف بود: دیگر نمی‌توانید به خانه برگردید‌,1,train
+fa,142,تاثیر نهایی این فیلم، زننده و افسرده‌ کننده است‌,0,train
+fa,143,این فیلم برای طرفدارانی است که نمی‌توانند انیمه را دوست نداشته باشند و بشدت به ساخته شدن آن متعصب هستند‌,1,train
+fa,144,فیلمی افتضاح که تنها بینندگان احساساتی را راضی خواهد کرد‌,0,test
+fa,145,از آن دسته فیلم‌هایی است که در آن، شخصیت‌های فیلم هرگاه به دنبال روح واقعی خود می‌گردند، آنها را در کنار ساحلی زیبا در هنگام غروب خورشید می‌بینیم‌,1,train
+fa,146,من تصمیم گرفته‌ام که یک لامپ را هر شب از این به بعد روشن نگه دارم‌,1,val
+fa,147,سخت، دوست‌داشتنی، دلسوز، دلچسب‌,2,test
+fa,148,همان آهنگ، بخش دوم، می‌توانست بهتر باشد، اما می‌توانست بدتر نیز باشد‌,1,train
+fa,149,"فیلمی اکشن/هیجانی از بهترین نوع خود است، که یادآور خاطراتی از فیلم‌های ""روز شغال""، ""ارتباط فرانسوی"" و ""گرما"" است‌",2,test
+fa,150,به طور خاص فیلم خوبی نیست و در مورد هیولاها هم نیست‌,1,train
+fa,151,وحشتناک، معتبر و تاریک‌,1,train
+fa,152,چگونه این فیلم ساخته شد؟,0,train
+fa,153,نگاهی سطحی به جنبه‌های مختلف زندگی چینی‌ها که با یکدیگر درگیر هستند‌,1,train
+fa,154,تقریباً بهترین فیلم ترسناک با مضمون قدیمی‌ در 15 سال اخیر است‌,2,train
+fa,155,این فیلم به عنوان کپسول زمانی ارزشمندی عمل می‌کند تا به ما وحشتِ ویرانگری را یادآوری کند که کل مردم متحمل شده‌اند‌,1,train
+fa,156,نورتون فیلم را سر پا نگه داشته است‌,1,train
+fa,157,فیلمی درجه یک که کاملا جزء فیلم‌هایی کم هزینه تلقی می‌شود، که ترکیب دو ژانر مطمئن و محبوب، زندان و فیلم مبارزه‌ایی است‌,2,test
+fa,158,استفان رای، آیدان کویین و الن بیتز نقش وکیل را بازی می‌کنند و وقتی برازنن به ‌آن‌ها می‌پیوندد، تماشای این چهار نفر بذله‌گو در اماکن زیبای ایرلند بسیار خوشایند است‌,2,val
+fa,159,در مقایسه با فیلم‌های قبلی‌اش، بصورت ناامید کننده‌ای، بخش کوچکی از زندگی طبقه پایین لندن را نشان می‌دهد؛ فیلمی‌ که برخلاف عنوانش، محتوای کمی ‌برای ارائه دارد‌,0,test
+fa,160,فیلمی مهم، یادآور قدرت فیلم برای تحت تاثیر قراردادن و وادار کردن ما به بررسی ارزش‌های خود است‌,2,train
+fa,161,به عنوان یک بازسازی، تقلیدی کم‌رنگ است‌,0,train
+fa,162,درامی ‌عجیب و غریب به لطف اجرای پرانرژی و همیشه غافلگیرکننده‌ی ریچل گریفیث که احساس و شوخ‌طبعی را تحت تاثیر قرار می‌دهد‌,2,train
+fa,163,"فیلم ""حلقه"" ارزش دیدن دارد، اگر از سرگرمی ‌هالووین خود چیزی بیش از چند هیجان ارزان قیمت نمی‌خواهید",1,test
+fa,164,در حالی که این ملودرام ملایم و تأثیرگذار، جذابیت‌هایی را با خود به همراه خواهد داشت، اما برای هر چیزی فراتر از یک مخاطب پروپاقرص، بسیار کوچک و سطحی است‌,1,train
+fa,165,"راک، حضور خوبی دارد اما نبردها، یکی پس از دیگری همانند نبردهایی که همراه با افکت قاتل در ""سی‌جی‌آی"" ‌تولید می‌شود، نیست‌",1,train
