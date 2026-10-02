@@ -1,0 +1,36 @@
+{
+  "n_trials": 776,
+  "n_word_observations": 8283,
+  "n_items": 5574,
+  "feature_info": {
+    "log_transformed": false,
+    "n_channels": 104,
+    "n_bands": 8
+  },
+  "lexicon_size": 7506,
+  "surprisal_model": "gpt2",
+  "variance_components_median": {
+    "reader": 0.0011700479498583652,
+    "word_item": 0.6486815142202298,
+    "residual": 0.349153189366715
+  },
+  "reliability": {
+    "items": 0,
+    "readers_per_half": NaN,
+    "readers_per_item": NaN,
+    "median_all_readers": NaN,
+    "q90_all_readers": NaN,
+    "median_single_reader": NaN,
+    "median_all_readers_by_band": {
+      "0-100ms": NaN,
+      "100-200ms": NaN,
+      "200-300ms": NaN,
+      "300-400ms": NaN,
+      "400-500ms": NaN,
+      "500-600ms": NaN,
+      "600-700ms": NaN,
+      "N400_300-500ms": NaN
+    }
+  },
+  "runtime_s": 107.4175980091095
+}

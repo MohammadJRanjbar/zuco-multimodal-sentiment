@@ -1,0 +1,83 @@
+{
+ "n_rows": 8259,
+ "n_sentences": 400,
+ "coefficients": [
+  {
+   "predictor": "surprisal",
+   "beta_uv_per_sd": -0.004077367547053073,
+   "ci_low": -0.03666076187154646,
+   "ci_high": 0.029822193759375747,
+   "excludes_zero": false
+  },
+  {
+   "predictor": "zipf",
+   "beta_uv_per_sd": 0.0062349583712191054,
+   "ci_low": -0.0387380596730552,
+   "ci_high": 0.05018372206328893,
+   "excludes_zero": false
+  },
+  {
+   "predictor": "length",
+   "beta_uv_per_sd": 0.0038705679329595925,
+   "ci_low": -0.03018237633976614,
+   "ci_high": 0.035709036479735445,
+   "excludes_zero": false
+  },
+  {
+   "predictor": "relative_position",
+   "beta_uv_per_sd": 0.02326896712670633,
+   "ci_low": 0.003083166718618779,
+   "ci_high": 0.04225002942594429,
+   "excludes_zero": true
+  },
+  {
+   "predictor": "is_content",
+   "beta_uv_per_sd": 0.00029885583869858156,
+   "ci_low": -0.032604263944440326,
+   "ci_high": 0.033253952419517493,
+   "excludes_zero": false
+  },
+  {
+   "predictor": "log_first_fix",
+   "beta_uv_per_sd": -0.026913987746505552,
+   "ci_low": -0.06588879096201729,
+   "ci_high": 0.012299764423278398,
+   "excludes_zero": false
+  },
+  {
+   "predictor": "log_next_fix",
+   "beta_uv_per_sd": 0.05064992876377043,
+   "ci_low": 0.010249141140939841,
+   "ci_high": 0.09117498096892483,
+   "excludes_zero": true
+  },
+  {
+   "predictor": "in_lexicon",
+   "beta_uv_per_sd": 0.006003332113876273,
+   "ci_low": -0.05128468707935958,
+   "ci_high": 0.06967865119579217,
+   "excludes_zero": false
+  },
+  {
+   "predictor": "valence",
+   "beta_uv_per_sd": -0.0069657396108339315,
+   "ci_low": -0.030380941574072774,
+   "ci_high": 0.01669954321362751,
+   "excludes_zero": false
+  },
+  {
+   "predictor": "abs_valence",
+   "beta_uv_per_sd": -0.006458550392945205,
+   "ci_low": -0.06672077180871525,
+   "ci_high": 0.05295918770380807,
+   "excludes_zero": false
+  }
+ ],
+ "grand_average": {
+  "n_subjects": 2,
+  "lambda_peak_ms": 98.0,
+  "lambda_peak_uv": 1.2820281982421875,
+  "occipital_baseline_sd": 0.11379320919513702,
+  "n400_cp_mean_uv": -0.02226414903998375
+ }
+}
