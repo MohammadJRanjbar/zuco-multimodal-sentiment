@@ -108,6 +108,9 @@ def main():
     summary = {"model": args.model, "layer": args.layer, "k": args.k, "dim": dim,
                "explained": {l: langs[l]["explained"] for l in langs},
                "overlap": {"real": real, "null_mean": float(np.mean(null)), "null_q95": float(np.quantile(null, 0.95)),
+                           "p_value": float((1 + np.sum(np.array(null) >= real)) / (1 + len(null))),
+                           "p_value_without_word_features": float((1 + np.sum(np.array(null_res) >= real_res))
+                                                                  / (1 + len(null_res))),
                            "random_expectation": args.k / dim,
                            "real_without_word_features": real_res, "null_without_word_features_mean": float(np.mean(null_res)),
                            "null_without_word_features_q95": float(np.quantile(null_res, 0.95))},
@@ -148,10 +151,12 @@ def write_report(path, s):
              "within-sentence centered.", "",
              "## Overlap of the two EEG subspaces", "",
              "Mean squared cosine of the principal angles (0 = unrelated, 1 = identical).", "",
-             "| | real | null mean | null 95th percentile |", "|---|---:|---:|---:|",
-             f"| all directions | {o['real']:.4f} | {o['null_mean']:.4f} | {o['null_q95']:.4f} |",
+             "| | real | null mean | null 95th percentile | p |", "|---|---:|---:|---:|---:|",
+             f"| all directions | {o['real']:.4f} | {o['null_mean']:.4f} | {o['null_q95']:.4f} | "
+             f"{o.get('p_value', float('nan')):.3f} |",
              f"| without word-feature directions | {o['real_without_word_features']:.4f} | "
-             f"{o['null_without_word_features_mean']:.4f} | {o['null_without_word_features_q95']:.4f} |", "",
+             f"{o['null_without_word_features_mean']:.4f} | {o['null_without_word_features_q95']:.4f} | "
+             f"{o.get('p_value_without_word_features', float('nan')):.3f} |", "",
              f"Random subspaces would give about {o['random_expectation']:.4f}. Share of each language's word-feature "
              "directions inside its own EEG subspace: "
              + ", ".join(f"{NAMES[l]} {v:.2f}" for l, v in s["eeg_subspace_contains_word_features"].items()) + ".", "",
@@ -163,13 +168,29 @@ def write_report(path, s):
             lines.append(f"| {name} | {r['r2']:.4f}{ci} |")
         lines.append("")
     shared = o["real"] > o["null_q95"]
-    beyond = o["real_without_word_features"] > o["null_without_word_features_q95"]
+    overlap_beyond = o["real_without_word_features"] > o["null_without_word_features_q95"]
+
+    def transfer_beyond(results):
+        own = next(v for k, v in results.items() if k.endswith("EEG subspace without word features"))
+        shuffled = next(v for k, v in results.items() if k.endswith("shuffled-EEG subspace"))
+        return own["r2_ci_low"] > shuffled["r2_ci_high"]
+
+    transfer = all(transfer_beyond(r) for r in s["transfer"].values())
     lines += ["## Reading", "",
-              "* **Shared EEG directions:** " + ("the overlap exceeds the shuffled-EEG null." if shared else
-                                                 "the overlap is within the shuffled-EEG null."),
-              "* **Beyond word features:** " + ("the overlap remains after removing the word-feature directions."
-                                                if beyond else "no overlap remains once the word-feature directions "
-                                                "are removed.")]
+              "* **Shared EEG directions:** " + (f"the overlap exceeds the shuffled-EEG null by "
+                                                 f"{o['real'] - o['null_mean']:.4f} (p = {o.get('p_value', float('nan')):.3f})."
+                                                 if shared else "the overlap is within the shuffled-EEG null."),
+              "* **Beyond word features:** "
+              + ("supported: the overlap stays above its null and, in both directions, the other language's EEG "
+                 "subspace without word features transfers better than its shuffled-EEG subspace."
+                 if overlap_beyond and transfer else
+                 "not supported: " + ("the overlap without word features is within its null"
+                                      if not overlap_beyond else
+                                      "the overlap without word features is only slightly above its null, and")
+                 + (" transfer without word features does not beat the shuffled-EEG subspace (CIs overlap)."
+                    if not transfer else ".")),
+              "* Compare the word-feature subspace rows: a few word-feature directions of the other language "
+              "predict EEG about as well as the full text space."]
     with open(path, "w") as handle:
         handle.write("\n".join(lines) + "\n")
 
