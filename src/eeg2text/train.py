@@ -34,8 +34,11 @@ class Settings:
 
 
 def precision_for(device):
-    """bf16 autocast where the GPU supports it, else float32 (fp16 training of mBART is unstable)."""
-    if device.type == "cuda" and torch.cuda.is_bf16_supported():
+    """bf16 autocast on GPUs with native bf16 (compute capability 8+: A100, L4, ...), else float32.
+
+    fp16 training of mBART is unstable, and ``torch.cuda.is_bf16_supported()`` is also True on older GPUs
+    such as the T4 that only emulate bf16 (bf16 precision without its speed)."""
+    if device.type == "cuda" and torch.cuda.get_device_capability(device)[0] >= 8:
         return torch.bfloat16, None
     return torch.float32, None
 
