@@ -1,0 +1,96 @@
+{
+ "model": "labse",
+ "layer": 2,
+ "k": 32,
+ "dim": 768,
+ "explained": {
+  "en": 0.6781198215866793,
+  "fa": 0.972588431909771
+ },
+ "overlap": {
+  "real": 0.11198007294762992,
+  "null_mean": 0.09691842436094174,
+  "null_q95": 0.10611776817084421,
+  "random_expectation": 0.041666666666666664,
+  "real_without_word_features": 0.10730963561067719,
+  "null_without_word_features_mean": 0.09430211422621154,
+  "null_without_word_features_q95": 0.10321821429852736
+ },
+ "eeg_subspace_contains_word_features": {
+  "en": 0.18012038766553537,
+  "fa": 0.19700129583684758
+ },
+ "transfer": {
+  "fa": {
+   "full text space": {
+    "r2": 0.0025746313846472637,
+    "r2_ci_low": 0.002020030449329518,
+    "r2_ci_high": 0.0031868387704283825,
+    "r2_shuffled": 2.404192750529166e-05
+   },
+   "English EEG subspace": {
+    "r2": 0.0029890611104862242,
+    "r2_ci_low": 0.002368859079091035,
+    "r2_ci_high": 0.0036752086699736583,
+    "r2_shuffled": 1.9844098888555095e-05
+   },
+   "English EEG subspace without word features": {
+    "r2": 0.002694819257085279,
+    "r2_ci_low": 0.0020915644620781867,
+    "r2_ci_high": 0.0033571312501399844,
+    "r2_shuffled": 1.8252059420209578e-05
+   },
+   "English shuffled-EEG subspace": {
+    "r2": 0.0020082456403016868,
+    "r2_ci_low": 0.0016087640029971574,
+    "r2_ci_high": 0.002443465229817717,
+    "r2_shuffled": 3.5403127548239154e-06
+   },
+   "English word-feature subspace": {
+    "r2": 0.0025057081113567083,
+    "r2_ci_low": 0.0019308381715804595,
+    "r2_ci_high": 0.0031607017270676363,
+    "r2_shuffled": -1.4958794025132782e-05
+   },
+   "random subspace (mean of 5)": {
+    "r2": 0.0008441737925555072
+   }
+  },
+  "en": {
+   "full text space": {
+    "r2": 0.0030864310051979425,
+    "r2_ci_low": 0.0026011937011174097,
+    "r2_ci_high": 0.003565022947641138,
+    "r2_shuffled": -1.6603074264542884e-06
+   },
+   "Persian EEG subspace": {
+    "r2": 0.002984109550761804,
+    "r2_ci_low": 0.0025337053432147954,
+    "r2_ci_high": 0.0034151874021848966,
+    "r2_shuffled": 1.401509050238392e-05
+   },
+   "Persian EEG subspace without word features": {
+    "r2": 0.0021890276863981263,
+    "r2_ci_low": 0.0017596660446061857,
+    "r2_ci_high": 0.0025851885408358496,
+    "r2_shuffled": 1.2824752795870253e-05
+   },
+   "Persian shuffled-EEG subspace": {
+    "r2": 0.0027441279740549216,
+    "r2_ci_low": 0.0023091418875375402,
+    "r2_ci_high": 0.00315338982288258,
+    "r2_shuffled": -1.1695775374742645e-05
+   },
+   "Persian word-feature subspace": {
+    "r2": 0.002825288814589433,
+    "r2_ci_low": 0.002353471466456798,
+    "r2_ci_high": 0.003278412160505554,
+    "r2_shuffled": 5.31859828394321e-06
+   },
+   "random subspace (mean of 5)": {
+    "r2": 0.001008793371464467
+   }
+  }
+ },
+ "runtime_min": 0.7854294141133626
+}
