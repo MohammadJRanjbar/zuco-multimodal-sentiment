@@ -266,3 +266,30 @@ def test_unlabelled_tasks_get_stable_text_ids():
     b, _ = unlabelled_match("henry ford born in 1863 was an engineer")
     assert a == b and a >= 10 ** 8 and label == UNLABELLED
     assert subject_from_path("/x/resultsZKB_NR.mat") == "ZKB" and subject_from_path("resultsZAB_TSR.mat") == "ZAB"
+
+
+def test_fetch_skips_a_failing_download_and_retries_it(tmp_path, monkeypatch):
+    sys.path.insert(0, os.path.dirname(__file__))
+    from test_diagnostics import word_trials
+
+    fetch = load_script("fetch_zuco_task")
+    calls = []
+
+    def flaky_download(url, path):
+        calls.append(os.path.basename(path))
+        if path.endswith("resultsZDM_NR.mat") and calls.count("resultsZDM_NR.mat") == 1:
+            raise IOError("HTTP Error 403: Forbidden")
+        open(path, "w").close()
+
+    trials, _, _ = word_trials(n_readers=1, n_sentences=3)
+    monkeypatch.setattr(fetch, "download", flaky_download)
+    monkeypatch.setattr(fetch, "extract_subject", lambda path, lookup, match, measure: (trials, [
+        {"subject_id": fetch.os.path.basename(path)[7:10], "status": "ok", "n_words": 5, "n_words_with_eeg": 4}]))
+    monkeypatch.setattr(fetch.time, "sleep", lambda seconds: None)
+    out = os.path.join(str(tmp_path), "NR")
+    monkeypatch.setattr(sys, "argv", ["x", "--task", "NR", "--out-dir", out, "--tmp-dir", str(tmp_path),
+                                      "--subjects", "ZAB", "ZDM", "ZJS"])
+    fetch.main()
+    assert calls == ["resultsZAB_NR.mat", "resultsZDM_NR.mat", "resultsZJS_NR.mat", "resultsZDM_NR.mat"]
+    assert sorted(f for f in os.listdir(out) if f.endswith(".npz")) == ["ZAB.npz", "ZDM.npz", "ZJS.npz"]
+    assert not [f for f in os.listdir(str(tmp_path)) if f.endswith(".mat")]  # downloads deleted
