@@ -119,7 +119,8 @@ def run_brain_fold(model, init_state, words, labels, targets, split, aux_weight,
             target = torch.as_tensor(target, device=device)
             keep = torch.isfinite(target).all(dim=1)
             if keep.any():
-                aux_loss = F.mse_loss(aux[keep], target[keep])
+                # aux comes out of the autocast region in bf16/fp16; compute the loss in float32
+                aux_loss = F.mse_loss(aux[keep].float(), target[keep].float())
         total_loss = loss + aux_weight * aux_loss
         if not torch.isfinite(total_loss):
             raise RuntimeError(f"non-finite loss at step {step + 1}; rerun with --base-dtype float32")

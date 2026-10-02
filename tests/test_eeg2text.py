@@ -164,3 +164,23 @@ def test_script_end_to_end(tmp_path, monkeypatch):
     assert summary["multilingual_interaction"], "joint vs single-language interaction missing"
     os.utime(os.path.join(run_root, "en_continuous_eeg", "metrics.json"))
     runner.main()  # finished runs are reused
+
+
+def test_training_under_bf16_autocast(monkeypatch):
+    """The GPU path trains under bf16 autocast (VQ codebook included)."""
+    import src.eeg2text.train as t
+
+    monkeypatch.setattr(t, "precision_for", lambda device: (torch.bfloat16, None))
+    monkeypatch.setattr(t, "autocast", lambda device, dtype: torch.autocast("cpu", dtype=torch.bfloat16))
+    corpus = synthetic_corpus("en")
+    codec = CharCodec(set("".join(" ".join(w) for w in corpus.words)))
+    labels = codec.encode(corpus.texts, "en")
+    inputs = d.build_inputs(corpus, "eeg", 0)
+    items = {p: [{"x": x, "fixated": m, "labels": labels[i], "trial": f"en:{i}"}
+                 for i, ((x, m), part) in enumerate(zip(inputs, corpus.part)) if part == p] for p in ("train", "val", "test")}
+    model = EEGToText(tiny_seq2seq(codec), codec, {"en": 12}, lora={"r": 4, "alpha": 8, "targets": ["q_proj", "v_proj"]},
+                      vq={"codes": 16, "dim": 8}, hidden=32)
+    settings = Settings(epochs=1, batch_size=8, max_new_tokens=8)
+    t.train(model, {"en": items["train"]}, {"en": items["val"]}, settings, torch.device("cpu"), log=lambda *_: None)
+    records, codes = t.evaluate(model, items["test"], "en", settings, torch.device("cpu"))
+    assert records and codes is not None

@@ -167,3 +167,32 @@ def test_brain_tuning_script_end_to_end(tmp_path, monkeypatch, capsys):
     capsys.readouterr()
     runner.main()
     assert capsys.readouterr().out.count("reuse saved predictions") == 4
+
+
+def test_brain_tuning_backward_under_bf16_autocast(monkeypatch):
+    """The GPU path runs under bf16 autocast; the auxiliary loss must still backpropagate."""
+    torch = pytest.importorskip("torch")
+    pytest.importorskip("transformers")
+    sys.path.insert(0, os.path.dirname(__file__))
+    from test_fusion import PROMPT, tiny_lm
+
+    import src.brainshaping.brain_tuning as bt
+    from src.fusion.train import TrainConfig
+    from src.neurolm.splits import make_splits
+
+    monkeypatch.setattr(bt, "precision_for", lambda device: (torch.bfloat16, None))
+    monkeypatch.setattr(bt, "_autocast", lambda device, dtype: torch.autocast("cpu", dtype=torch.bfloat16))
+    model = bt.BrainTunedClassifier(tiny_lm(), PieceTokenizer(), class_words=["negative", "neutral", "positive"],
+                                    prompt=PROMPT, lora={"r": 4, "alpha": 8, "dropout": 0.0,
+                                                         "targets": ["q_proj", "k_proj", "v_proj", "o_proj"]},
+                                    aux_dim=3, aux_layer=2)
+    rng = np.random.default_rng(0)
+    words = [list(rng.choice(["the", "movie", "was", "great", "awful"], size=5)) for _ in range(30)]
+    labels = np.tile([0, 1, 2], 10)
+    targets = [rng.standard_normal((5, 3)).astype(np.float32) for _ in words]
+    samples = pd.DataFrame({"sample_id": [str(i) for i in range(30)], "subject_id": "all",
+                            "sentence_id": range(30), "label_id": labels})
+    split = make_splits("text", samples, 0, {"n_folds": 5, "val_fraction": 0.15})[0]
+    cfg = TrainConfig(epochs=1, batch_size=8, lr_lora=1e-3, lr_projector=1e-3, evals_per_epoch=1)
+    bt.run_brain_fold(model, model.trainable_state(), words, labels, targets, split, 0.5, cfg,
+                      torch.device("cpu"), log=lambda *_: None)
