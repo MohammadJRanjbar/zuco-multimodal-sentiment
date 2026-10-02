@@ -39,7 +39,7 @@ def long_word_table(trials, drop_channels=(ZUCO_REFERENCE_CHANNEL_INDEX,), log_p
         if keep is None:
             keep = [c for c in range(block.shape[2]) if c not in set(drop_channels)]
             n_channels = len(keep)
-        flat = block[:, :, keep].reshape(len(block), -1)
+        flat = block[:, :, keep].reshape(len(block), block.shape[1] * len(keep))  # also valid for 0 words
         present = np.isfinite(flat).all(axis=1)
         for index in np.flatnonzero(present):
             meta.append({"reader": trial["subject_id"], "sentence_id": trial["sentence_id"],

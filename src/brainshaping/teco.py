@@ -16,6 +16,7 @@ import glob
 import os
 import pickle
 import re
+from collections import Counter
 
 import numpy as np
 
@@ -67,7 +68,9 @@ def describe_pickle(path, max_words=3):
     return "\n".join(lines)
 
 
-def load_teco_trials(trt_dir, labels_csv=None, suffix="_trt_total.pickle"):
+def load_teco_trials(trt_dir, labels_csv=None, suffix="_trt_total.pickle", log=print):
+    """Trials of every participant. Trials without words are skipped; if participants disagree on a
+    sentence's words, only trials with the most common word list are kept (word indices must agree)."""
     paths = sorted(glob.glob(os.path.join(trt_dir, f"*{suffix}")))
     if not paths:
         raise FileNotFoundError(f"no *{suffix} files in {trt_dir}")
@@ -81,11 +84,14 @@ def load_teco_trials(trt_dir, labels_csv=None, suffix="_trt_total.pickle"):
     n_values = max(sizes, default=0)
     if n_values <= 2:
         raise ValueError(f"no fixated words with a TRT_total vector in {trt_dir}")
-    trials = []
+    trials, empty = [], []
     for subject, data in participants:
         for key in data:
             sentence = data[key]
             indices = sorted(sentence["word"], key=int)
+            if not indices:
+                empty.append(f"{subject}:{sentence.get('sentenceId')}")
+                continue
             word_dicts = [sentence["word"][i] for i in indices]
             features = np.full((len(indices), 1, n_values), np.nan, dtype=np.float32)
             for j, word in enumerate(word_dicts):
@@ -104,4 +110,17 @@ def load_teco_trials(trt_dir, labels_csv=None, suffix="_trt_total.pickle"):
                            "sentence_id": int(sentence["sentenceId"]), "label": int(label),
                            "words": _word_texts(sentence, word_dicts), "features": features,
                            "fixations": fixated.astype(np.float32)})
-    return trials
+    if empty:
+        log(f"TeCo: skipped {len(empty)} trials with no words (participant:sentenceId): {', '.join(empty[:10])}"
+            + (" ..." if len(empty) > 10 else ""))
+    versions = {}
+    for trial in trials:
+        versions.setdefault(trial["sentence_id"], Counter())[tuple(trial["words"])] += 1
+    majority = {sid: counts.most_common(1)[0][0] for sid, counts in versions.items()}
+    kept = [t for t in trials if tuple(t["words"]) == majority[t["sentence_id"]]]
+    if len(kept) < len(trials):
+        dropped = sorted(f"{t['subject_id']}:{t['sentence_id']}" for t in trials
+                         if tuple(t["words"]) != majority[t["sentence_id"]])
+        log(f"TeCo: dropped {len(dropped)} trials whose word list differs from the other participants': "
+            + ", ".join(dropped[:10]) + (" ..." if len(dropped) > 10 else ""))
+    return kept

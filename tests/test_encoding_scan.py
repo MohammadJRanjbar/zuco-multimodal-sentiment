@@ -124,6 +124,26 @@ def test_teco_loader(tmp_path, word_text):
     assert "TRT_total: shape (126,)" in describe_pickle(os.path.join(trt, "P0_trt_total.pickle"))
 
 
+def test_teco_loader_skips_empty_and_inconsistent_trials(tmp_path):
+    trt, labels_csv, sentences, _ = write_teco(str(tmp_path), n_subjects=3)
+    path = os.path.join(trt, "P1_trt_total.pickle")
+    data = pickle.load(open(path, "rb"))
+    keys = list(data)
+    data[keys[0]]["word"] = {}                                       # a trial with no words
+    words = data[keys[1]]["word"]
+    words[0] = {**words[0], "content": words[0]["content"] + "x"}    # this reader's word list disagrees
+    pickle.dump(data, open(path, "wb"))
+    messages = []
+    trials = load_teco_trials(trt, labels_csv, log=messages.append)
+    assert len(trials) == 3 * len(sentences) - 2
+    assert any("no words" in m for m in messages) and any("differs" in m for m in messages)
+    from src.brainshaping.data import item_eeg, sentence_table
+
+    items, eeg = item_eeg(trials, drop_channels=())
+    table = sentence_table(trials)
+    assert table["words"].tolist() == sentences and len(items) == len(eeg) > 0
+
+
 def test_teco_loader_explains_missing_word_text(tmp_path):
     trt, _, _, _ = write_teco(str(tmp_path), n_subjects=1, word_text=False)
     path = os.path.join(trt, "P0_trt_total.pickle")
