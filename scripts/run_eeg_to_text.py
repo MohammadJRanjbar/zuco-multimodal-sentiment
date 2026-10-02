@@ -35,7 +35,7 @@ from src.eeg2text.augment import Augment, average_by_sentence  # noqa: E402
 from src.eeg2text.metrics import corpus_bleu  # noqa: E402
 from src.eeg2text.model import EEGToText, MBartCodec, code_usage, word_token_vectors  # noqa: E402
 from src.eeg2text.report import summarize  # noqa: E402
-from src.eeg2text.train import Settings, evaluate, train  # noqa: E402
+from src.eeg2text.train import Settings, evaluate, precision_for, train  # noqa: E402
 
 LORA_TARGETS = ["q_proj", "k_proj", "v_proj", "out_proj"]
 
@@ -73,6 +73,9 @@ def parse_args():
     parser.add_argument("--input-mapping", default="ridge", choices=["ridge", "none"],
                         help="ridge: map each word's input to its mBART embedding by ridge regression first "
                              "(src/eeg2text/mapping.py); none: the generator's input layer learns the mapping")
+    parser.add_argument("--input-layer", default="auto", choices=["auto", "mlp", "identity"],
+                        help="auto: identity (feed the predicted mBART embeddings to mBART as they are) with ridge "
+                             "mapping and the continuous encoder, else a learned MLP")
     parser.add_argument("--source-layout", default="mbart", choices=["mbart", "plain"],
                         help="mbart: [language code] words [</s>] as in mBART-50 training; plain: words only")
     parser.add_argument("--vq-codes", type=int, default=512)
@@ -104,7 +107,7 @@ def condition_inputs(corpus, condition, seed, input_mapping, device, ridge_map=N
     inputs = d.build_inputs(corpus, condition, seed)
     if input_mapping == "none":
         return inputs, None, None
-    targets = d.vectors_by_word(corpus, "mbart_vectors")
+    targets = d.vectors_by_word(corpus, "mbart_embeddings")
     if ridge_map is not None:
         mapped = mapping.apply_map(ridge_map, inputs)
         return mapped, ridge_map, mapping.quality(mapped, targets, corpus.part != "train")
@@ -123,8 +126,16 @@ def attach_mbart_vectors(corpora, model_name):
     lm, codec = load_seq2seq(model_name)
     for corpus in corpora.values():
         words = d.unique_words(corpus)
-        d.attach_vectors(corpus, "mbart_vectors", words, *word_token_vectors(lm, codec, words))
+        vectors, found = word_token_vectors(lm, codec, words)
+        d.attach_vectors(corpus, "mbart_vectors", words, vectors, found)  # input condition (z-scored)
+        d.attach_vectors(corpus, "mbart_embeddings", words, vectors, found, standardize=False)  # ridge target
     del lm
+
+
+def input_layer_for(args, encoder):
+    if args.input_layer != "auto":
+        return args.input_layer
+    return "identity" if args.input_mapping == "ridge" and encoder == "continuous" else "mlp"
 
 
 def main():
@@ -133,6 +144,8 @@ def main():
 
     transformers.logging.set_verbosity_error()  # mBART's generation config repeats a max_length warning every batch
     device = torch.device(args.device or ("cuda" if torch.cuda.is_available() else "cpu"))
+    gpu = torch.cuda.get_device_name(device) if device.type == "cuda" else "cpu"
+    print(f"device: {gpu}; training precision {precision_for(device)[0]}")
     root = os.path.join(args.results_dir, args.run_tag)
     os.makedirs(root, exist_ok=True)
     needed = sorted({lang for s in args.settings for lang in langs_of(s)})
@@ -169,6 +182,7 @@ def main():
     key_base = {"model": args.model, "settings": settings.to_dict(), "lora_r": args.lora_r, "fold": args.fold,
                 "full_finetune": args.full_finetune, "vq": [args.vq_codes, args.vq_dim],
                 "source_layout": args.source_layout, "input_mapping": args.input_mapping,
+                "input_layer": args.input_layer,
                 "extra": sorted(os.path.basename(os.path.normpath(p)) for p in args.zuco_extra_dirs),
                 "reader_average": not args.no_reader_average}
     for encoder in args.encoders:
@@ -199,7 +213,8 @@ def main():
                 vq = {"codes": args.vq_codes, "dim": args.vq_dim} if encoder == "vq" else None
                 model = EEGToText(lm, codec, dims, lora={"r": args.lora_r, "alpha": 2 * args.lora_r, "dropout": 0.05,
                                                          "targets": LORA_TARGETS},
-                                  vq=vq, full_finetune=args.full_finetune, source_layout=args.source_layout).to(device)
+                                  vq=vq, full_finetune=args.full_finetune, source_layout=args.source_layout,
+                                  input_layer=input_layer_for(args, encoder)).to(device)
                 info = train(model, {lang: data[lang]["train"] for lang in langs},
                              {lang: data[lang]["val"] for lang in langs}, settings, device, log=print)
                 records, codes_by_lang = [], {}
@@ -243,6 +258,7 @@ def main():
                 json.dump({"key": key, "setting": setting, "encoder": encoder, "input": condition, "langs": langs,
                            "train": info, "test": summary, "runtime_min": (time.time() - started) / 60,
                            "input_mapping": args.input_mapping, "mapping_quality": map_quality,
+                           "input_layer": input_layer_for(args, encoder),
                            "vq_code_usage": code_usage(codes_by_lang, args.vq_codes) if codes_by_lang else None,
                            "examples": generations[generations["condition"] == condition].head(8)[
                                ["lang", "gold", "tf_text", "free_text"]].to_dict("records")},

@@ -187,11 +187,13 @@ def unique_words(corpus):
     return sorted({w for words in corpus.words for w in words})
 
 
-def attach_vectors(corpus, name, words, vectors, found):
-    """Store z-scored word vectors as input ``name`` (a positive control)."""
+def attach_vectors(corpus, name, words, vectors, found, standardize=True):
+    """Store word vectors as ``name`` (z-scored per dimension unless ``standardize`` is False)."""
     vectors, found = np.asarray(vectors, dtype=np.float64), np.asarray(found, dtype=bool)
     mean, std = vectors[found].mean(axis=0), vectors[found].std(axis=0)
     std[std < 1e-8] = 1.0
+    if not standardize:
+        mean, std = np.zeros_like(mean), np.ones_like(std)
     corpus.static[name] = {w: ((v - mean) / std).astype(np.float32) for w, v, ok in zip(words, vectors, found) if ok}
     return corpus
 

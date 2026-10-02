@@ -91,10 +91,12 @@ class VectorQuantizer(nn.Module):
 
 class EEGToText(nn.Module):
     def __init__(self, seq2seq, codec, input_dims, *, lora=None, vq=None, hidden=1024, dropout=0.1,
-                 full_finetune=False, source_layout="mbart"):
+                 full_finetune=False, source_layout="mbart", input_layer="mlp"):
         super().__init__()
         if source_layout not in ("mbart", "plain"):
             raise ValueError(f"unknown source layout {source_layout!r}")
+        if input_layer not in ("mlp", "identity"):
+            raise ValueError(f"unknown input layer {input_layer!r}")
         self.lm, self.codec, self.source_layout = seq2seq, codec, source_layout
         d_model = seq2seq.config.d_model
         for parameter in self.lm.parameters():
@@ -102,9 +104,14 @@ class EEGToText(nn.Module):
         if lora and lora.get("r", 0) > 0 and not full_finetune:
             add_lora(self.lm, set(lora["targets"]), lora["r"], lora["alpha"], lora.get("dropout", 0.0))
         width = vq["dim"] if vq else d_model
-        self.inputs = nn.ModuleDict({lang: nn.Sequential(nn.Linear(dim, hidden), nn.GELU(), nn.Dropout(dropout),
-                                                         nn.Linear(hidden, width))
-                                     for lang, dim in input_dims.items()})
+        if input_layer == "identity":  # inputs already are mBART word embeddings (e.g. predicted by a ridge map)
+            if vq or any(dim != d_model for dim in input_dims.values()):
+                raise ValueError(f"the identity input layer needs continuous inputs of width {d_model}")
+            self.inputs = nn.ModuleDict({lang: nn.Identity() for lang in input_dims})
+        else:
+            self.inputs = nn.ModuleDict({lang: nn.Sequential(nn.Linear(dim, hidden), nn.GELU(), nn.Dropout(dropout),
+                                                             nn.Linear(hidden, width))
+                                         for lang, dim in input_dims.items()})
         self.missing = nn.ParameterDict({lang: nn.Parameter(0.02 * torch.randn(width)) for lang in input_dims})
         self.vq = VectorQuantizer(vq["codes"], vq["dim"], vq.get("beta", 0.25)) if vq else None
         self.up = nn.Linear(width, d_model) if vq else nn.Identity()

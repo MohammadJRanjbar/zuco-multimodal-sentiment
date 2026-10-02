@@ -322,3 +322,17 @@ def test_ridge_map_recovers_embeddings_from_informative_inputs_only():
     again = mapping.apply_map(fitted, informative)
     held_out = [i for i in range(n_sentences) if part[i] != "train"]
     assert all(np.allclose(again[i][0], mapped[i][0], atol=1e-5) for i in held_out)
+
+
+def test_identity_input_layer_feeds_embeddings_as_they_are():
+    corpus = synthetic_corpus("en")
+    codec = CharCodec(set("".join(" ".join(w) for w in corpus.words)))
+    lm = tiny_seq2seq(codec)
+    model = EEGToText(lm, codec, {"en": 32}, input_layer="identity")
+    word = token_embeddings(lm, torch.tensor([7, 8, 9]))[None]  # three real token embeddings as word vectors
+    embeds, _, _ = model.embed(word, torch.ones(1, 3, dtype=torch.bool), "en")
+    cos = torch.nn.functional.cosine_similarity(embeds[0], word[0] - word[0].mean(-1, keepdim=True), dim=-1)
+    assert (cos > 0.999).all()  # only re-centred and re-scaled (layer norm), not transformed
+    assert [n for n, p in model.named_parameters() if p.requires_grad] == ["missing.en"]
+    with pytest.raises(ValueError):
+        EEGToText(lm, codec, {"en": 12}, input_layer="identity")
