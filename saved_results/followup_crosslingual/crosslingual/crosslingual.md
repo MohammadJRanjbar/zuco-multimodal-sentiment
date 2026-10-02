@@ -6,10 +6,10 @@ labse layer 2 (768 dimensions), 32 EEG components per language, within-sentence 
 
 Mean squared cosine of the principal angles (0 = unrelated, 1 = identical).
 
-| | real | null mean | null 95th percentile |
-|---|---:|---:|---:|
-| all directions | 0.1120 | 0.0964 | 0.1064 |
-| without word-feature directions | 0.1060 | 0.0934 | 0.1037 |
+| | real | null mean | null 95th percentile | p |
+|---|---:|---:|---:|---:|
+| all directions | 0.1120 | 0.0964 | 0.1064 | 0.010 |
+| without word-feature directions | 0.1060 | 0.0934 | 0.1037 | 0.030 |
 
 Random subspaces would give about 0.0417. Share of each language's word-feature directions inside its own EEG subspace: English (ZuCo) 0.14, Persian (TeCo) 0.15.
 
@@ -39,5 +39,6 @@ Random subspaces would give about 0.0417. Share of each language's word-feature 
 
 ## Reading
 
-* **Shared EEG directions:** the overlap exceeds the shuffled-EEG null.
-* **Beyond word features:** the overlap remains after removing the word-feature directions.
+* **Shared EEG directions:** the overlap exceeds the shuffled-EEG null by 0.0156 (p = 0.010).
+* **Beyond word features:** not supported: the overlap without word features is only slightly above its null, and transfer without word features does not beat the shuffled-EEG subspace (CIs overlap).
+* Compare the word-feature subspace rows: a few word-feature directions of the other language predict EEG about as well as the full text space.
