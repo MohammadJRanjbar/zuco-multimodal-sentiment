@@ -113,6 +113,10 @@ def save_timing(out_dir, subject, trials, timing):
 
 def main():
     args = parse_args()
+    for flag, value in (("--mat-dir", args.mat_dir), ("--labels-csv", args.labels_csv)):
+        if not value or not os.path.exists(value):
+            raise SystemExit(f"{flag} is empty or missing ({value!r}). In Colab, run the setup cells (paths and the "
+                             "local copy of the .mat files) again after a runtime restart.")
     lookup = label_lookup(args.labels_csv)
     paths = subject_files(args.mat_dir, args.subjects)
     if not paths:
