@@ -1,4 +1,4 @@
-ZAB: 0sentence [00:00, ?sentence/s]ZAB: 1sentence [00:10, 10.13s/sentence]ZAB: 4sentence [00:10,  2.58s/sentence]
+ZAB: 0sentence [00:00, ?sentence/s]ZAB: 1sentence [00:10, 10.08s/sentence]ZAB: 4sentence [00:10,  2.56s/sentence]
 {
  "subject": "ZAB",
  "sentences": 5,
