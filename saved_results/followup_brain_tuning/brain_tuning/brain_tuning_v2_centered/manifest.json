@@ -61,9 +61,9 @@
     "config_path": "/content/zuco-multimodal-sentiment/configs/brain_tuning.yaml"
   },
   "git": {
-    "commit": "0c9099e2c6d965d51930115d1bd0c21bc97c3c0a",
+    "commit": "b422ef6c4f5161c1a3d6309e79c2c417cd918586",
     "branch": "feature/neurolm-eeg-probe",
-    "dirty": false
+    "dirty": true
   },
   "environment": {
     "python": "3.13.15",
@@ -76,7 +76,7 @@
     "h5py": "3.16.0",
     "cuda_device": "Tesla T4"
   },
-  "created_unix": 1790944481.2571354,
+  "created_unix": 1790945060.712544,
   "settings": {
     "model": "Qwen/Qwen2.5-1.5B-Instruct",
     "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
