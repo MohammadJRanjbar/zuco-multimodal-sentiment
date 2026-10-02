@@ -85,6 +85,7 @@ def main():
     row_of = {sid: i for i, sid in enumerate(sentences["sentence_id"])}
     X_items = np.stack([vectors[row_of[s]][w] for s, w in zip(items["sentence_id"], items["word_index"])])
     y = sentences["label_id"].to_numpy()
+    item_sentences = items["sentence_id"].to_numpy()
     samples = pd.DataFrame({"sample_id": sentences["sentence_id"].astype(str), "subject_id": "all",
                             "sentence_id": sentences["sentence_id"], "label_id": y})
     splits = make_splits("text", samples, args.seed, {"n_folds": 5, "val_fraction": 0.15})[:args.folds]
@@ -106,7 +107,8 @@ def main():
             U, ridge = None, None
             if arm != "text_only":
                 arm_y = arm_targets(arm, targets, np.flatnonzero(item_train), rng)
-                U, ridge = static.fit_subspace(Xs[item_train], arm_y[item_train])
+                U, ridge = static.fit_subspace(Xs[item_train], arm_y[item_train],
+                                               groups=item_sentences[item_train])
                 entry[f"{arm}_encoding_r2_on_real_test_eeg"] = static.encoding_r2(ridge, Xs[item_test], targets[item_test])
                 share = static.alignment_with_sentiment(U, S[split.train], y[split.train])
                 entry[f"{arm}_sentiment_weight_share_in_subspace"] = share[0]
@@ -152,7 +154,7 @@ def main():
             U = None
             if arm != "text_only":
                 arm_y = arm_targets(arm, targets, np.arange(len(targets)), rng)
-                U, _ = static.fit_subspace(Xs, arm_y)
+                U, _ = static.fit_subspace(Xs, arm_y, groups=item_sentences)
             probs, choice = static.select_and_predict(features["train"], parts["train"][1], features["validation"],
                                                       parts["validation"][1], features["test"], U)
             static.save_model(os.path.join(args.out_dir, "models", f"sst3_{arm}.npz"), U, mean, std, choice)

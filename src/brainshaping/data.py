@@ -7,7 +7,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from ..config import LABEL_TO_ID
+from ..config import LABEL_TO_ID, ZUCO_REFERENCE_CHANNEL_INDEX
 from ..diagnostics import signal
 
 TARGET_ARMS = ("eeg", "shuffled_eeg", "random_targets")
@@ -23,13 +23,26 @@ def sentence_table(trials):
     return pd.DataFrame(rows)
 
 
-def item_eeg(trials):
-    """Reader-averaged, per-reader-normalized word EEG: one row per (sentence, word)."""
-    meta, X, _ = signal.long_word_table(trials)
+def item_eeg(trials, drop_channels=(ZUCO_REFERENCE_CHANNEL_INDEX,)):
+    """Reader-averaged, per-reader-normalized word EEG: one row per (sentence, word).
+
+    ``drop_channels`` defaults to ZuCo's flat Cz reference; pass ``()`` for other data.
+    """
+    meta, X, _ = signal.long_word_table(trials, drop_channels=drop_channels)
     Z = signal.zscore_per_reader(meta, X)
     del X
     items, averaged = signal.reader_average(meta, Z)
     return items[["sentence_id", "word_index", "n_readers"]].reset_index(drop=True), averaged
+
+
+def grouped_splits(groups, n_splits, seed=0):
+    """(train, test) row indices with every group (sentence) on one side; random group order."""
+    unique = np.unique(groups)
+    if len(unique) < n_splits:
+        raise ValueError(f"{len(unique)} sentences cannot fill {n_splits} folds")
+    fold_of = dict(zip(np.random.default_rng(seed).permutation(unique), np.arange(len(unique)) % n_splits))
+    assignment = np.array([fold_of[g] for g in groups])
+    return [(np.flatnonzero(assignment != f), np.flatnonzero(assignment == f)) for f in range(n_splits)]
 
 
 def fit_targets(train_eeg, k=32):

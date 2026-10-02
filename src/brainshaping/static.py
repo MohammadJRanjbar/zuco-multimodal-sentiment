@@ -13,7 +13,9 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression, RidgeCV
 from sklearn.metrics import f1_score, r2_score
 
-ALPHAS = np.logspace(-1, 5, 13)
+from .data import grouped_splits
+
+ALPHAS = np.logspace(-1, 7, 17)
 BETAS = (0.0, 0.5, 1.0, 2.0, 4.0, 8.0)
 CS = (0.01, 0.1, 1.0, 10.0)
 
@@ -24,8 +26,17 @@ def standardizer(X):
     return mean, std
 
 
-def fit_subspace(Xs_train, Y_train, alphas=ALPHAS):
-    ridge = RidgeCV(alphas=alphas).fit(Xs_train, Y_train)
+def fit_subspace(Xs_train, Y_train, alphas=ALPHAS, groups=None):
+    """Ridge from word vectors to EEG targets; U spans the coefficient columns.
+
+    With ``groups`` (sentence id per row) the penalty is chosen by
+    cross-validation over whole sentences. Without, RidgeCV uses
+    leave-one-word-out, where words of the same sentence (shared EEG offset,
+    similar contextual vectors) inform each other and too little
+    regularization wins.
+    """
+    cv = None if groups is None else grouped_splits(np.asarray(groups), 5, seed=0)
+    ridge = RidgeCV(alphas=alphas, cv=cv).fit(Xs_train, Y_train)
     coef = np.atleast_2d(ridge.coef_).T  # [dim, k]
     U, _ = np.linalg.qr(coef)
     return U, ridge

@@ -1347,3 +1347,47 @@ The next experiments therefore use EEG only as a training signal:
 Both use the arms no EEG objective, real EEG, EEG shuffled across words, and
 random targets. Each reports how well real held-out EEG is predicted
 (encoding R²), which checks that EEG information was actually learned.
+
+## 2026-10-02 — Version A result and the encoding scan
+
+The first version A run (LaBSE, 5 sentence-disjoint folds) found no
+sentiment effect. Mean fold macro-F1 was text_only 0.565, eeg 0.576,
+shuffled 0.565 and random 0.569. β = 0 was chosen in most folds, and on SST-3
+the eeg arm chose β = 0 (0.619, identical to text_only).
+
+The positive control failed: the EEG encoding R² on held-out words was
+−0.07 for real targets and −0.004 for shuffled targets. Part of the negative
+value is a selection artefact. RidgeCV chose the penalty by
+leave-one-word-out, and words of the same sentence share an EEG offset and
+similar contextual vectors. Little regularization therefore won, and the model
+then failed on new sentences. A simulation with no word–EEG link reproduces
+the pattern: −0.31 for real-style targets vs −0.003 shuffled under
+leave-one-word-out, and about −0.03 under sentence-grouped selection.
+`fit_subspace` now chooses the penalty by sentence-grouped CV, and the penalty
+grid extends to 1e7.
+
+Before the sentiment or multilingual steps, `scan_eeg_encoding.py` asks the
+prerequisite question: does any model or layer predict word EEG on unseen
+sentences?
+
+- **Targets:** the top-k EEG principal components, fit on training words.
+- **Folds:** outer and inner folds are both split by sentence.
+- **Modes:**
+  - *centered* removes each sentence's mean from its words' EEG and vectors;
+  - *raw* keeps the differences between sentences.
+- **Control:** targets shuffled across training words.
+- **Uncertainty:** sentence-bootstrap CIs.
+- **Pass rule:** a layer passes when both its R² and its margin over shuffled
+  have 95% CIs above 0.
+- **Models:** decoder LMs (Qwen) are included. Their word vector is the
+  hidden state of the word's last sub-token.
+- **TeCo:** read from the `TRT_Total` pickles (126 values per word), with
+  sentence-held-out folds.
+
+The next steps depend on the outcome:
+
+- if no layer passes for a language, EEG shaping has nothing to amplify for
+  that language;
+- if layers pass for both languages, the cross-lingual tests (overlap,
+  transfer and a joint fit in the shared text space) and then sentiment
+  follow.

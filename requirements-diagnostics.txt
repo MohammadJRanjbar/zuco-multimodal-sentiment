@@ -3,3 +3,4 @@
 wordfreq>=3.0
 vaderSentiment>=3.3
 datasets>=2.14
+tqdm>=4.60

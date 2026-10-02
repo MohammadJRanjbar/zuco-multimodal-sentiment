@@ -330,6 +330,12 @@ each word's EEG. Both compare real EEG targets against shuffled and random
 targets. Run `notebooks/eeg_shaped_embeddings_colab.ipynb`, or
 `scripts/run_eeg_shaped_embeddings.py` and `scripts/run_brain_tuning.py`.
 
+Both versions need word vectors that predict word EEG on unseen sentences.
+`scripts/scan_eeg_encoding.py` (notebook `eeg_encoding_scan_colab.ipynb`)
+tests that for several multilingual models (LaBSE, XLM-R, mE5, Qwen) and
+every layer, on ZuCo (English) and TeCo (Persian). It uses sentence-grouped
+ridge and a shuffled-target control.
+
 ## Repository layout
 
 ```text
