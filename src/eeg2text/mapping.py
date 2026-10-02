@@ -68,18 +68,30 @@ def _assemble(inputs, predicted, trial, position, dim):
     return out
 
 
+def _cosine(P, T):
+    return (P * T).sum(1) / np.maximum(np.linalg.norm(P, axis=1) * np.linalg.norm(T, axis=1), 1e-12)
+
+
 def quality(mapped, targets, held_out):
-    """Mean cosine and R² of predicted vs true embeddings over fixated words of ``held_out`` trials."""
-    pred = [x[m] for (x, m), keep in zip(mapped, held_out) if keep]
-    true = [t[m] for (_, m), t, keep in zip(mapped, targets, held_out) if keep]
-    if not pred:
+    """Prediction quality over fixated words of ``held_out`` trials: R², cosine, and cosine after removing
+    the mean training embedding (raw mBART embeddings share a large common direction, so even predicting
+    the mean word scores a high raw cosine; the centred cosine and R² are 0 for an uninformative input)."""
+    def stack(keep_held_out):
+        pairs = [(x[m], t[m]) for (x, m), t, h in zip(mapped, targets, held_out) if h == keep_held_out]
+        if not pairs:
+            return None, None
+        P, T = (np.concatenate(a).astype(np.float64) for a in zip(*pairs))
+        ok = np.isfinite(T).all(axis=1)
+        return P[ok], T[ok]
+
+    P, T = stack(True)
+    if P is None:
         return None
-    P, T = np.concatenate(pred), np.concatenate(true)
-    ok = np.isfinite(T).all(axis=1)
-    P, T = P[ok].astype(np.float64), T[ok].astype(np.float64)
-    cosine = (P * T).sum(1) / np.maximum(np.linalg.norm(P, axis=1) * np.linalg.norm(T, axis=1), 1e-12)
+    _, train_targets = stack(False)
+    center = train_targets.mean(axis=0) if train_targets is not None and len(train_targets) else T.mean(axis=0)
     r2 = 1 - ((P - T) ** 2).sum() / max(((T - T.mean(axis=0)) ** 2).sum(), 1e-12)
-    return {"words": int(len(P)), "cosine": float(cosine.mean()), "r2": float(r2)}
+    return {"words": int(len(P)), "cosine": float(_cosine(P, T).mean()),
+            "cosine_centered": float(_cosine(P - center, T - center).mean()), "r2": float(r2)}
 
 
 def map_inputs(inputs, targets, part, sentence_id, n_folds=5, device="cpu", seed=0):

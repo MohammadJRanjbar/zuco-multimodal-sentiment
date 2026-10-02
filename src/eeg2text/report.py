@@ -187,11 +187,14 @@ def write_markdown(path, table, comparisons, interaction, codes, positive=(), ma
         lines.append("")
     if mapping:
         lines += ["## Input -> mBART word embedding (ridge map, validation + test words)", "",
-                  "How well each input predicts the read word's mBART embedding (the generator's input). Cosine "
-                  "0 and R² <= 0 mean the input carries no information about the word's embedding.", "",
-                  "| run | language/input | words | mean cosine | R² |", "|---|---|---:|---:|---:|"]
+                  "How well each input predicts the read word's mBART embedding (the generator's input). R² <= 0 "
+                  "and a centred cosine of 0 mean the input carries no information about the word. The raw cosine "
+                  "is high even for noise, because mBART's embeddings share a large common direction.", "",
+                  "| run | language/input | words | R² | centred cosine | raw cosine |", "|---|---|---:|---:|---:|---:|"]
         for q in mapping:
-            lines.append(f"| {q['run']} | {q['input']} | {q['words']} | {q['cosine']:.3f} | {q['r2']:.3f} |")
+            centered = f"{q['cosine_centered']:.3f}" if "cosine_centered" in q else "—"
+            lines.append(f"| {q['run']} | {q['input']} | {q['words']} | {q['r2']:.3f} | {centered} | "
+                         f"{q['cosine']:.3f} |")
         lines.append("")
     cols = ["setting", "encoder", "trained_on", "tested_on", "n_trials", "tf_accuracy", "tf_bleu4", "free_bleu1",
             "free_bleu4", "rouge1", "wer"] + [c for c in ("sentiment_f1_generated", "sentiment_f1_real_text")

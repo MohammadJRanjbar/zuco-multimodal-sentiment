@@ -317,7 +317,8 @@ def test_ridge_map_recovers_embeddings_from_informative_inputs_only():
     mapped, fitted, good = mapping.map_inputs(informative, targets, part, np.arange(n_sentences))
     _, _, bad = mapping.map_inputs(noise, targets, part, np.arange(n_sentences))
     assert good["cosine"] > 0.9 and good["r2"] > 0.8, good
-    assert abs(bad["cosine"]) < 0.2 and bad["r2"] < 0.05, bad
+    assert abs(bad["cosine_centered"]) < 0.2 and bad["r2"] < 0.05, bad
+    assert good["cosine_centered"] > 0.9, good
     assert all(len(x) == words_per and (x[~m] == 0).all() for x, m in mapped)
     again = mapping.apply_map(fitted, informative)
     held_out = [i for i in range(n_sentences) if part[i] != "train"]
