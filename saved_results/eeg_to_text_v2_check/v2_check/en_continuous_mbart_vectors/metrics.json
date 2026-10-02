@@ -1,0 +1,133 @@
+{
+ "key": "eda7c565183dfb59",
+ "setting": "en",
+ "encoder": "continuous",
+ "input": "mbart_vectors",
+ "langs": [
+  "en"
+ ],
+ "train": {
+  "best_val_loss": 2.086662544624638,
+  "history": [
+   {
+    "epoch": 1,
+    "train_loss": 6.526427928683828,
+    "val_loss": 5.572808207733544
+   },
+   {
+    "epoch": 2,
+    "train_loss": 3.8166517678973744,
+    "val_loss": 3.6363454464910383
+   },
+   {
+    "epoch": 3,
+    "train_loss": 2.2974777250613982,
+    "val_loss": 3.569234536400736
+   },
+   {
+    "epoch": 4,
+    "train_loss": 0.848096343643457,
+    "val_loss": 2.329505664707501
+   },
+   {
+    "epoch": 5,
+    "train_loss": 0.3889604950848135,
+    "val_loss": 2.18866831407364
+   },
+   {
+    "epoch": 6,
+    "train_loss": 0.2645036527905071,
+    "val_loss": 2.1819853452222944
+   },
+   {
+    "epoch": 7,
+    "train_loss": 0.20350597957962924,
+    "val_loss": 2.086662544624638
+   },
+   {
+    "epoch": 8,
+    "train_loss": 0.16134170706845025,
+    "val_loss": 2.2221793437054926
+   },
+   {
+    "epoch": 9,
+    "train_loss": 0.1256059392454844,
+    "val_loss": 2.176543668389066
+   },
+   {
+    "epoch": 10,
+    "train_loss": 0.10793700938122076,
+    "val_loss": 2.286843627754813
+   },
+   {
+    "epoch": 11,
+    "train_loss": 0.08996234662396815,
+    "val_loss": 2.2752179245450606
+   }
+  ]
+ },
+ "test": {
+  "en/mbart_vectors": {
+   "tf_accuracy": 0.639315140978154,
+   "tf_bleu4": 0.2879928955662144,
+   "free_bleu4": 0.19895492544937426
+  },
+  "en/mbart_vectors_avg": {
+   "tf_accuracy": 0.8158362989323843,
+   "tf_bleu4": 0.5868175997939796,
+   "free_bleu4": 0.5092445320690347
+  }
+ },
+ "runtime_min": 43.74419023593267,
+ "vq_code_usage": null,
+ "examples": [
+  {
+   "lang": "en",
+   "gold": "Presents a good case while failing to provide a reason for us to care beyond the very basic dictums of human decency.",
+   "tf_text": "Presents a case case for attempting to provide a reason to his to care beyond the very basicss of human defeni.",
+   "free_text": "Presents a case which seems to provide a reason to care beyond the very basics of human defence."
+  },
+  {
+   "lang": "en",
+   "gold": "Bread, My Sweet has so many flaws it would be easy for critics to shred it.",
+   "tf_text": "Bullad My My Sweet has so many flaws, would be easy to yous to shred",
+   "free_text": "Bullshit, My Sweet has so many flaws, it just happens to be easy to shred."
+  },
+  {
+   "lang": "en",
+   "gold": "If Deuces Wild had been tweaked up a notch it would have become a camp adventure, one of those movies that's so bad it starts to become good.",
+   "tf_text": "If Debutces hade been aeaked up to bitch, would have become a camp and, one that those movies that's so funny that nevers to become good.",
+   "free_text": "If Debut had been a bit lighter, it would have become a camp and adventure, one that few movies has become so, and one that has, and it continues to become good."
+  },
+  {
+   "lang": "en",
+   "gold": "I love the robust middle of this picture.",
+   "tf_text": "A love the robust middle of this picture.",
+   "free_text": "A sweet and poignant middle-aged comedy."
+  },
+  {
+   "lang": "en",
+   "gold": "The Ring is worth a look, if you don't demand much more than a few cheap thrills from your Halloween entertainment.",
+   "tf_text": "The movie is worth a movie, if you don't mind much more than a few cheap laughthrills from the Halloween entertainment.",
+   "free_text": "The movie is worth a lot more if you don't mind the refrains of a few cheap-sale movies cut from the Halloween entertainment."
+  },
+  {
+   "lang": "en",
+   "gold": "I like the new footage and still love the old stuff.",
+   "tf_text": "to' the new footage and still love the old one.",
+   "free_text": "to the new footage and still love to make a"
+  },
+  {
+   "lang": "en",
+   "gold": "It briefly flirts with player masochism, but the point of real interest -- audience sadism -- is evaded completely.",
+   "tf_text": "It briefly flirts with movie furochism, but in point is the drama is thesness -- is fadcliped..",
+   "free_text": "It briefly flirts with movie criticism, but in the long run, it's pretty real and the audience is giddy."
+  },
+  {
+   "lang": "en",
+   "gold": "Could The Country Bears really be as bad as its trailers?",
+   "tf_text": "Could The Rock Bears really be as bad as its trailers.",
+   "free_text": "Could The Rockers really be as bad as its title suggests."
+  }
+ ]
+}

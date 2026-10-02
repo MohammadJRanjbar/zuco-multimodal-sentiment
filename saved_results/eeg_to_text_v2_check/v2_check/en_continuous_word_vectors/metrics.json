@@ -1,0 +1,108 @@
+{
+ "key": "cd0d83e237f8a189",
+ "setting": "en",
+ "encoder": "continuous",
+ "input": "word_vectors",
+ "langs": [
+  "en"
+ ],
+ "train": {
+  "best_val_loss": 3.7130451700580656,
+  "history": [
+   {
+    "epoch": 1,
+    "train_loss": 6.703054597076861,
+    "val_loss": 5.6231061990327165
+   },
+   {
+    "epoch": 2,
+    "train_loss": 3.8461051288160304,
+    "val_loss": 3.7130451700580656
+   },
+   {
+    "epoch": 3,
+    "train_loss": 2.7731423181237527,
+    "val_loss": 4.070882259401431
+   },
+   {
+    "epoch": 4,
+    "train_loss": 2.25538883394408,
+    "val_loss": 4.509426935395198
+   },
+   {
+    "epoch": 5,
+    "train_loss": 1.7751265694794145,
+    "val_loss": 4.946343728982564
+   },
+   {
+    "epoch": 6,
+    "train_loss": 1.303213975672583,
+    "val_loss": 5.2574577158702205
+   }
+  ]
+ },
+ "test": {
+  "en/word_vectors": {
+   "tf_accuracy": 0.36865976264267897,
+   "tf_bleu4": 0.03851463654856344,
+   "free_bleu4": 0.009624361947124354
+  },
+  "en/word_vectors_avg": {
+   "tf_accuracy": 0.3701067615658363,
+   "tf_bleu4": 0.03875273903366406,
+   "free_bleu4": 0.006546829769911925
+  }
+ },
+ "runtime_min": 25.186550716559093,
+ "vq_code_usage": null,
+ "examples": [
+  {
+   "lang": "en",
+   "gold": "Presents a good case while failing to provide a reason for us to care beyond the very basic dictums of human decency.",
+   "tf_text": "Theer a beautiful por of givinging to capture a solidably why to believe about the obvious basics that of the natureceit.",
+   "free_text": "The film is a wonderfully realistic portrait of a woman who has a gift for being a woman, and a gift for being a woman."
+  },
+  {
+   "lang": "en",
+   "gold": "Bread, My Sweet has so many flaws it would be easy for critics to shred it.",
+   "tf_text": "Thee is  Name, a many wonderfullaws that' be hard to yous to forgetrug, into",
+   "free_text": "The film is a beautifully written and directed portrait of a woman who was born in a"
+  },
+  {
+   "lang": "en",
+   "gold": "If Deuces Wild had been tweaked up a notch it would have become a camp adventure, one of those movies that's so bad it starts to become good.",
+   "tf_text": "The youancesdale were a aeaed to, bitch, would have been a morefire, but that which that that's a much it's to look funny.",
+   "free_text": "The film is a spectacularly funny and engaging portrait of a woman who was born in a city that was never a city."
+  },
+  {
+   "lang": "en",
+   "gold": "I love the robust middle of this picture.",
+   "tf_text": "The' the wayness- the.",
+   "free_text": "The movie is a beautifully crafted portrait of"
+  },
+  {
+   "lang": "en",
+   "gold": "The Ring is worth a look, if you don't demand much more than a few cheap thrills from your Halloween entertainment.",
+   "tf_text": "The film is aless watch, but you''t like a from than a movie minuteserthrills. a-.",
+   "free_text": "The film is a beautifully written and directed portrait of a woman who is a great fighter."
+  },
+  {
+   "lang": "en",
+   "gold": "I like the new footage and still love the old stuff.",
+   "tf_text": "The' the waylyage, the find the..",
+   "free_text": "The film is a beautifully written and directed portrait of"
+  },
+  {
+   "lang": "en",
+   "gold": "It briefly flirts with player masochism, but the point of real interest -- audience sadism -- is evaded completely.",
+   "tf_text": "The'ly makess with the-queism, but the way is the life is insly -- is atcliping by by",
+   "free_text": "The film is a shameless attempt to convey a sense of shame and awe through a cruel, unimaginative story that is unlike anything else."
+  },
+  {
+   "lang": "en",
+   "gold": "Could The Country Bears really be as bad as its trailers?",
+   "tf_text": "The be Movie be be have be a good as the pred..",
+   "free_text": "The movie is a beautifully written, engaging portrait of a"
+  }
+ ]
+}

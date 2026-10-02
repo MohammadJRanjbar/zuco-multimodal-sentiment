@@ -1,0 +1,260 @@
+{
+ "runs": [
+  {
+   "run": "en_continuous_mbart_vectors",
+   "setting": "en",
+   "encoder": "continuous",
+   "trained_on": "mbart_vectors",
+   "tested_on": "mbart_vectors",
+   "lang": "en",
+   "n_trials": 942,
+   "tf_accuracy": 0.6556950370849386,
+   "tf_bleu4": 0.2879928955662144,
+   "free_bleu4": 0.19895492544937426,
+   "free_bleu1": 0.4857701090176046,
+   "rouge1": 0.5082928097352645,
+   "wer": 0.6766926350221216,
+   "sentiment_f1_generated": 0.5226069647931815,
+   "sentiment_f1_real_text": 0.6107961814332005
+  },
+  {
+   "run": "en_continuous_mbart_vectors",
+   "setting": "en",
+   "encoder": "continuous",
+   "trained_on": "mbart_vectors",
+   "tested_on": "mbart_vectors_avg",
+   "lang": "en",
+   "n_trials": 80,
+   "tf_accuracy": 0.8235457928643501,
+   "tf_bleu4": 0.5868175997939796,
+   "free_bleu4": 0.5092445320690347,
+   "free_bleu1": 0.7050397877984085,
+   "rouge1": 0.7477997405066606,
+   "wer": 0.36835735080811766,
+   "sentiment_f1_generated": 0.4938108576764038,
+   "sentiment_f1_real_text": 0.6116396617276054
+  },
+  {
+   "run": "en_continuous_noise",
+   "setting": "en",
+   "encoder": "continuous",
+   "trained_on": "noise",
+   "tested_on": "noise",
+   "lang": "en",
+   "n_trials": 942,
+   "tf_accuracy": 0.3802453021423854,
+   "tf_bleu4": 0.0423088012905604,
+   "free_bleu4": 0.007728758652239235,
+   "free_bleu1": 0.17309246572755033,
+   "rouge1": 0.18440853098070378,
+   "wer": 0.9285269517426178,
+   "sentiment_f1_generated": 0.16625421168816082,
+   "sentiment_f1_real_text": 0.6107961814332005
+  },
+  {
+   "run": "en_continuous_noise",
+   "setting": "en",
+   "encoder": "continuous",
+   "trained_on": "noise",
+   "tested_on": "noise_avg",
+   "lang": "en",
+   "n_trials": 80,
+   "tf_accuracy": 0.3838403777677287,
+   "tf_bleu4": 0.045112685400263725,
+   "free_bleu4": 0.007548696882887767,
+   "free_bleu1": 0.17168162526961395,
+   "rouge1": 0.1778911783524221,
+   "wer": 0.9349356494473998,
+   "sentiment_f1_generated": 0.1488673139158576,
+   "sentiment_f1_real_text": 0.6116396617276054
+  },
+  {
+   "run": "en_continuous_word_vectors",
+   "setting": "en",
+   "encoder": "continuous",
+   "trained_on": "word_vectors",
+   "tested_on": "word_vectors",
+   "lang": "en",
+   "n_trials": 942,
+   "tf_accuracy": 0.3708487965267633,
+   "tf_bleu4": 0.03851463654856344,
+   "free_bleu4": 0.009624361947124354,
+   "free_bleu1": 0.18121459901204964,
+   "rouge1": 0.1736444333678866,
+   "wer": 0.9587853708473921,
+   "sentiment_f1_generated": 0.281897156697034,
+   "sentiment_f1_real_text": 0.6107961814332005
+  },
+  {
+   "run": "en_continuous_word_vectors",
+   "setting": "en",
+   "encoder": "continuous",
+   "trained_on": "word_vectors",
+   "tested_on": "word_vectors_avg",
+   "lang": "en",
+   "n_trials": 80,
+   "tf_accuracy": 0.37267388390934403,
+   "tf_bleu4": 0.03875273903366406,
+   "free_bleu4": 0.006546829769911925,
+   "free_bleu1": 0.17281317930227205,
+   "rouge1": 0.1739928132563194,
+   "wer": 0.9426377965261917,
+   "sentiment_f1_generated": 0.27601480644958903,
+   "sentiment_f1_real_text": 0.6116396617276054
+  }
+ ],
+ "positive_control": [
+  {
+   "setting": "en",
+   "encoder": "continuous",
+   "input": "mbart_vectors",
+   "lang": "en",
+   "test": "single reader",
+   "comparison": "en_continuous: positive control, mbart_vectors model - noise model (single reader)",
+   "metric": "bleu4",
+   "diff": 0.18194513421923023,
+   "ci_low": 0.15639724277488568,
+   "ci_high": 0.21049888839975078,
+   "passed": true
+  },
+  {
+   "setting": "en",
+   "encoder": "continuous",
+   "input": "mbart_vectors",
+   "lang": "en",
+   "test": "reader average",
+   "comparison": "en_continuous: positive control, mbart_vectors model - noise model (reader average)",
+   "metric": "bleu4",
+   "diff": 0.4738636773826812,
+   "ci_low": 0.4239872021924724,
+   "ci_high": 0.524900870434389,
+   "passed": true
+  },
+  {
+   "setting": "en",
+   "encoder": "continuous",
+   "input": "word_vectors",
+   "lang": "en",
+   "test": "single reader",
+   "comparison": "en_continuous: positive control, word_vectors model - noise model (single reader)",
+   "metric": "bleu4",
+   "diff": -0.0012974132432146618,
+   "ci_low": -0.004792336090906654,
+   "ci_high": 0.0019203069745699474,
+   "passed": false
+  },
+  {
+   "setting": "en",
+   "encoder": "continuous",
+   "input": "word_vectors",
+   "lang": "en",
+   "test": "reader average",
+   "comparison": "en_continuous: positive control, word_vectors model - noise model (reader average)",
+   "metric": "bleu4",
+   "diff": -0.0023318744548114522,
+   "ci_low": -0.006762576743850681,
+   "ci_high": 0.0019021243720444407,
+   "passed": false
+  }
+ ],
+ "comparisons": [
+  {
+   "comparison": "en_continuous: positive control, mbart_vectors model - noise model (single reader)",
+   "lang": "en",
+   "metric": "tf_accuracy",
+   "diff": 0.27544973494255326,
+   "ci_low": 0.2568970654294916,
+   "ci_high": 0.2946017642858011
+  },
+  {
+   "comparison": "en_continuous: positive control, mbart_vectors model - noise model (single reader)",
+   "lang": "en",
+   "metric": "bleu4",
+   "diff": 0.18194513421923023,
+   "ci_low": 0.15639724277488568,
+   "ci_high": 0.21049888839975078
+  },
+  {
+   "comparison": "en_continuous: positive control, mbart_vectors model - noise model (single reader)",
+   "lang": "en",
+   "metric": "rouge1",
+   "diff": 0.32388427875456083,
+   "ci_low": 0.2948208429491646,
+   "ci_high": 0.3557579664923894
+  },
+  {
+   "comparison": "en_continuous: positive control, mbart_vectors model - noise model (reader average)",
+   "lang": "en",
+   "metric": "tf_accuracy",
+   "diff": 0.4397054150966214,
+   "ci_low": 0.4145233852688013,
+   "ci_high": 0.4655788693886857
+  },
+  {
+   "comparison": "en_continuous: positive control, mbart_vectors model - noise model (reader average)",
+   "lang": "en",
+   "metric": "bleu4",
+   "diff": 0.4738636773826812,
+   "ci_low": 0.4239872021924724,
+   "ci_high": 0.524900870434389
+  },
+  {
+   "comparison": "en_continuous: positive control, mbart_vectors model - noise model (reader average)",
+   "lang": "en",
+   "metric": "rouge1",
+   "diff": 0.5699085621542387,
+   "ci_low": 0.5325399434866255,
+   "ci_high": 0.608204132528283
+  },
+  {
+   "comparison": "en_continuous: positive control, word_vectors model - noise model (single reader)",
+   "lang": "en",
+   "metric": "tf_accuracy",
+   "diff": -0.00939650561562211,
+   "ci_low": -0.02025714376927048,
+   "ci_high": 0.00038710959564299614
+  },
+  {
+   "comparison": "en_continuous: positive control, word_vectors model - noise model (single reader)",
+   "lang": "en",
+   "metric": "bleu4",
+   "diff": -0.0012974132432146618,
+   "ci_low": -0.004792336090906654,
+   "ci_high": 0.0019203069745699474
+  },
+  {
+   "comparison": "en_continuous: positive control, word_vectors model - noise model (single reader)",
+   "lang": "en",
+   "metric": "rouge1",
+   "diff": -0.010764097612817186,
+   "ci_low": -0.020305148026398497,
+   "ci_high": -0.0017970808588080077
+  },
+  {
+   "comparison": "en_continuous: positive control, word_vectors model - noise model (reader average)",
+   "lang": "en",
+   "metric": "tf_accuracy",
+   "diff": -0.011166493858384747,
+   "ci_low": -0.023955769981908365,
+   "ci_high": 0.0012440853369539869
+  },
+  {
+   "comparison": "en_continuous: positive control, word_vectors model - noise model (reader average)",
+   "lang": "en",
+   "metric": "bleu4",
+   "diff": -0.0023318744548114522,
+   "ci_low": -0.006762576743850681,
+   "ci_high": 0.0019021243720444407
+  },
+  {
+   "comparison": "en_continuous: positive control, word_vectors model - noise model (reader average)",
+   "lang": "en",
+   "metric": "rouge1",
+   "diff": -0.0038983650961026918,
+   "ci_low": -0.018808613585239387,
+   "ci_high": 0.011092686795562846
+  }
+ ],
+ "multilingual_interaction": [],
+ "vq_code_usage": {}
+}
