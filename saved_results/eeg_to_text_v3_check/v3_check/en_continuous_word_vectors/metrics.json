@@ -1,0 +1,121 @@
+{
+ "key": "b1659c7a7d6862de",
+ "setting": "en",
+ "encoder": "continuous",
+ "input": "word_vectors",
+ "langs": [
+  "en"
+ ],
+ "train": {
+  "best_val_loss": 3.9442165218182463,
+  "history": [
+   {
+    "epoch": 1,
+    "train_loss": 6.612668120745316,
+    "val_loss": 5.62594586293072
+   },
+   {
+    "epoch": 2,
+    "train_loss": 6.256858642818858,
+    "val_loss": 5.362564754892768
+   },
+   {
+    "epoch": 3,
+    "train_loss": 3.172291582070508,
+    "val_loss": 3.9442165218182463
+   },
+   {
+    "epoch": 4,
+    "train_loss": 2.4081813855078615,
+    "val_loss": 4.284379325695892
+   },
+   {
+    "epoch": 5,
+    "train_loss": 1.7104268380739156,
+    "val_loss": 4.810419678433871
+   },
+   {
+    "epoch": 6,
+    "train_loss": 1.1360037827376024,
+    "val_loss": 5.0711821066036915
+   },
+   {
+    "epoch": 7,
+    "train_loss": 0.8146394780538615,
+    "val_loss": 5.159405642226815
+   }
+  ]
+ },
+ "test": {
+  "en/word_vectors": {
+   "tf_accuracy": 0.3632927658931136,
+   "tf_bleu4": 0.035309377172347216,
+   "free_bleu4": 0.011877962032726067
+  },
+  "en/word_vectors_avg": {
+   "tf_accuracy": 0.3692170818505338,
+   "tf_bleu4": 0.033096955745744526,
+   "free_bleu4": 0.01021760080114085
+  }
+ },
+ "runtime_min": 29.082632648944855,
+ "input_mapping": "ridge",
+ "mapping_quality": {
+  "en/word_vectors": {
+   "words": 16582,
+   "cosine": 0.6965066442824931,
+   "r2": 0.5278252290513294
+  }
+ },
+ "vq_code_usage": null,
+ "examples": [
+  {
+   "lang": "en",
+   "gold": "Presents a good case while failing to provide a reason for us to care beyond the very basic dictums of human decency.",
+   "tf_text": "Thes a  example for beinging to capture a compably why to re about the level basics of of the naturecency.",
+   "free_text": "The film is a great example of the power of a well-educated audience, but it's also a poorly educated one, despite its rich content."
+  },
+  {
+   "lang": "en",
+   "gold": "Bread, My Sweet has so many flaws it would be easy for critics to shred it.",
+   "tf_text": "Theed and it Little Pea a many thingslaws that' be hard to yous to pointrug off off",
+   "free_text": "The film is a great example of the need to be respected by all who"
+  },
+  {
+   "lang": "en",
+   "gold": "If Deuces Wild had been tweaked up a notch it would have become a camp adventure, one of those movies that's so bad it starts to become good.",
+   "tf_text": "A youanber Wild were a aelveaed to a bitch, would have been a lotfire, but that the that that doesns never much that's to look funny.",
+   "free_text": "A dark comedy, a dark romance, and a dark one, all of which is a lot more fun than the usual"
+  },
+  {
+   "lang": "en",
+   "gold": "I love the robust middle of this picture.",
+   "tf_text": "The' this movieness- the.",
+   "free_text": "The film is a wonder of American life."
+  },
+  {
+   "lang": "en",
+   "gold": "The Ring is worth a look, if you don't demand much more than a few cheap thrills from your Halloween entertainment.",
+   "tf_text": "The film is a seeing watch at but you''t mind a more than a movie hours popcornthrills. a.",
+   "free_text": "The film is so much more poignant than its predecessor, The Art of War, which was a delightful satire of a wonderful American film."
+  },
+  {
+   "lang": "en",
+   "gold": "I like the new footage and still love the old stuff.",
+   "tf_text": "The' the movie filmage, the have the old.",
+   "free_text": "The film is a wonderous gift from a filmmaker who"
+  },
+  {
+   "lang": "en",
+   "gold": "It briefly flirts with player masochism, but the point of real interest -- audience sadism -- is evaded completely.",
+   "tf_text": "The'ly seemss with the-queraism, but it film is theism is especiallysly -- is atcliped..",
+   "free_text": "The film is a tremendous example of the courage and tenacity of a man who was once a prisoner."
+  },
+  {
+   "lang": "en",
+   "gold": "Could The Country Bears really be as bad as its trailers?",
+   "tf_text": "An Legend Club be Get be the funny as the..",
+   "free_text": "A movie about a man who was forced to work"
+  }
+ ]
+}

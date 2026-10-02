@@ -1,0 +1,121 @@
+{
+ "key": "15608837dcd14463",
+ "setting": "en",
+ "encoder": "continuous",
+ "input": "mbart_vectors",
+ "langs": [
+  "en"
+ ],
+ "train": {
+  "best_val_loss": 3.9209310983035612,
+  "history": [
+   {
+    "epoch": 1,
+    "train_loss": 6.614000554223662,
+    "val_loss": 5.667974785192689
+   },
+   {
+    "epoch": 2,
+    "train_loss": 6.762448541169028,
+    "val_loss": 3.9981378024575043
+   },
+   {
+    "epoch": 3,
+    "train_loss": 3.27619189660526,
+    "val_loss": 3.9209310983035612
+   },
+   {
+    "epoch": 4,
+    "train_loss": 2.663649630778044,
+    "val_loss": 4.303796428607217
+   },
+   {
+    "epoch": 5,
+    "train_loss": 2.1857466419923655,
+    "val_loss": 4.73183256019153
+   },
+   {
+    "epoch": 6,
+    "train_loss": 1.7856556495416511,
+    "val_loss": 5.0892841302509755
+   },
+   {
+    "epoch": 7,
+    "train_loss": 1.476012976424208,
+    "val_loss": 5.223359372315885
+   }
+  ]
+ },
+ "test": {
+  "en/mbart_vectors": {
+   "tf_accuracy": 0.3585305011716683,
+   "tf_bleu4": 0.03743276310917686,
+   "free_bleu4": 0.0
+  },
+  "en/mbart_vectors_avg": {
+   "tf_accuracy": 0.35765124555160144,
+   "tf_bleu4": 0.03573099491744518,
+   "free_bleu4": 0.0
+  }
+ },
+ "runtime_min": 32.27469218174617,
+ "input_mapping": "ridge",
+ "mapping_quality": {
+  "en/mbart_vectors": {
+   "words": 16582,
+   "cosine": 0.9999999895500821,
+   "r2": 0.9999999744320537
+  }
+ },
+ "vq_code_usage": null,
+ "examples": [
+  {
+   "lang": "en",
+   "gold": "Presents a good case while failing to provide a reason for us to care beyond the very basic dictums of human decency.",
+   "tf_text": "s a re film, alsoing to capture a solid to the to be about the obvious leasts of of naturecency.",
+   "free_text": ""
+  },
+  {
+   "lang": "en",
+   "gold": "Bread, My Sweet has so many flaws it would be easy for critics to shred it.",
+   "tf_text": "w and itstic, a much greatlaws that' be hard to yous torug off.",
+   "free_text": ""
+  },
+  {
+   "lang": "en",
+   "gold": "If Deuces Wild had been tweaked up a notch it would have become a camp adventure, one of those movies that's so bad it starts to become good.",
+   "tf_text": "youances Wild has been aelveaed to a littlech in would have been a muchfire, but that the adventure that wills about familiar that nevers to look.",
+   "free_text": ""
+  },
+  {
+   "lang": "en",
+   "gold": "I love the robust middle of this picture.",
+   "tf_text": "' this movieness- the.",
+   "free_text": ""
+  },
+  {
+   "lang": "en",
+   "gold": "The Ring is worth a look, if you don't demand much more than a few cheap thrills from your Halloween entertainment.",
+   "tf_text": "film is a a watch at but you''t have a from than a movie hours popcornthrills. your costume.",
+   "free_text": ""
+  },
+  {
+   "lang": "en",
+   "gold": "I like the new footage and still love the old stuff.",
+   "tf_text": "' the movie movieage, the have it old one.",
+   "free_text": ""
+  },
+  {
+   "lang": "en",
+   "gold": "It briefly flirts with player masochism, but the point of real interest -- audience sadism -- is evaded completely.",
+   "tf_text": "'ly makess with the-ochism, but it more is theism is the membersly -- is atcliped..",
+   "free_text": ""
+  },
+  {
+   "lang": "en",
+   "gold": "Could The Country Bears really be as bad as its trailers?",
+   "tf_text": "n Movie Club be have be the funny as this pred..",
+   "free_text": ""
+  }
+ ]
+}
