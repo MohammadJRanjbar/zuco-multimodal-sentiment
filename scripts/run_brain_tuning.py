@@ -137,7 +137,7 @@ def main():
             csv_path = os.path.join(run_dir, arm, f"fold_{k}.csv")
             meta_path = os.path.join(run_dir, arm, f"fold_{k}.json")
             if os.path.exists(csv_path) and os.path.exists(meta_path) and json.load(open(meta_path))["key"] == key:
-                frame = pd.read_csv(csv_path)
+                frame = pd.read_csv(csv_path, dtype={"sample_id": str})  # ids are strings in fresh runs
                 aux_scores[arm].append(json.load(open(meta_path)).get("aux_r2_real_test"))
                 print(f"{arm} fold {k + 1}: reuse saved predictions")
             else:

@@ -192,7 +192,7 @@ def main():
             missing_weights = args.retrain_missing_weights and not os.path.exists(weights_path)
             if (os.path.exists(csv_path) and os.path.exists(meta_path) and not missing_weights
                     and json.load(open(meta_path))["key"] == key):
-                frame = pd.read_csv(csv_path)
+                frame = pd.read_csv(csv_path, dtype={"sample_id": str})  # ids are strings in fresh runs
                 print(f"{arm} fold {k + 1}: reuse saved predictions")
             else:
                 rng = np.random.default_rng(split_cfg["seed"] * 1000 + k)

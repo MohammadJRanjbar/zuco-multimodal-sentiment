@@ -167,6 +167,12 @@ def test_brain_tuning_script_end_to_end(tmp_path, monkeypatch, capsys):
     capsys.readouterr()
     runner.main()
     assert capsys.readouterr().out.count("reuse saved predictions") == 4
+    # mix reused and freshly trained arms (sample ids must have the same type for the paired comparisons)
+    os.remove(os.path.join(results, "t", "eeg", "fold_0.csv"))
+    os.remove(os.path.join(results, "t", "brain_tuning_results.md"))
+    runner.main()
+    assert capsys.readouterr().out.count("reuse saved predictions") == 3
+    assert os.path.exists(os.path.join(results, "t", "brain_tuning_results.md"))
 
 
 def test_brain_tuning_backward_under_bf16_autocast(monkeypatch):
