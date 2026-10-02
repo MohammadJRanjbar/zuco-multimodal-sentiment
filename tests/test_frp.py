@@ -191,3 +191,30 @@ def test_extract_and_analyze_frp(tmp_path, monkeypatch, fmt):
     coefficients = pd.read_csv(os.path.join(results, "n400_regression.csv")).set_index("predictor")
     assert coefficients.loc["surprisal", "beta_uv_per_sd"] < 0 and coefficients.loc["surprisal", "excludes_zero"]
     assert os.path.exists(os.path.join(results, "plots", "frp_grand_average.png"))
+
+
+def test_sentence_sentiment_script(tmp_path, monkeypatch):
+    rng = np.random.default_rng(2)
+    mat_dir = os.path.join(tmp_path, "mat")
+    os.makedirs(mat_dir)
+    for subject in ("ZAA", "ZAB", "ZAC"):
+        write_v5(os.path.join(mat_dir, f"results{subject}_SR.mat"), rng)
+    labels = labels_csv(str(tmp_path))
+    out = os.path.join(tmp_path, "frp")
+    extractor = load_script("extract_frp")
+    monkeypatch.setattr(sys, "argv", ["x", "--mat-dir", mat_dir, "--labels-csv", labels, "--out-dir", out])
+    extractor.main()
+    trials_csv = os.path.join(tmp_path, "word_eeg_trials.csv")
+    pd.DataFrame([{"subject_id": s, "position": i, "sentence_id": i, "status": "ok"}
+                  for s in ("ZAA", "ZAB", "ZAC") for i in range(len(SENTENCES))]).to_csv(trials_csv, index=False)
+    runner = load_script("frp_sentence_sentiment")
+    monkeypatch.setattr(runner, "lm_surprisal", lambda sentences, *a, **k: [np.ones(len(s)) for s in sentences])
+    results = os.path.join(tmp_path, "sentence")
+    monkeypatch.setattr(sys, "argv", ["x", "--frp-dir", out, "--out-dir", results, "--trials-csv", trials_csv,
+                                      "--n-perm", "50"])
+    runner.main()
+    table = pd.read_csv(os.path.join(results, "sentence_sentiment.csv"))
+    assert {"FRP", "text form", "presentation order"} <= set(table["probe"])
+    assert any(p.startswith("FRP with form") for p in table["probe"])
+    assert (table["rows"] == "single reader").sum() == 1
+    assert "## Reading" in open(os.path.join(results, "sentence_sentiment.md")).read()
