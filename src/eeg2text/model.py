@@ -49,6 +49,29 @@ class MBartCodec:
         """Token ids of each word on its own (as it is tokenized inside a sentence, without special tokens)."""
         return self.tokenizer(list(words), add_special_tokens=False)["input_ids"]
 
+    def special_ids(self):
+        return sorted(set(self.tokenizer.all_special_ids))
+
+
+def text_only_processor(banned, eos, min_text_tokens, start=2):
+    """Generation constraint: after the decoder start and language tokens (``start``), never emit special
+    tokens other than </s>, and write at least ``min_text_tokens`` tokens before </s>.
+
+    Without it, a model with little information in its input can stop at once or emit only special tokens,
+    which decode to an empty sentence (seen for the noise model in the v4 check)."""
+    from transformers import LogitsProcessor, LogitsProcessorList
+
+    class TextOnly(LogitsProcessor):
+        def __call__(self, input_ids, scores):
+            step = input_ids.shape[1] - start
+            if step >= 0:
+                scores[:, banned] = -float("inf")
+                if step < min_text_tokens:
+                    scores[:, eos] = -float("inf")
+            return scores
+
+    return LogitsProcessorList([TextOnly()])
+
 
 def token_embeddings(lm, ids):
     """mBART's input embeddings of token ids, scaled by sqrt(d_model) as its encoder scales them."""
@@ -179,12 +202,16 @@ class EEGToText(nn.Module):
         return correct.sum(1).cpu(), scored.sum(1).cpu(), texts
 
     @torch.no_grad()
-    def generate(self, x, fixated, valid, lang, max_new_tokens=128, num_beams=1):
-        """Free-running generation: every token conditioned on the model's own previous tokens."""
+    def generate(self, x, fixated, valid, lang, max_new_tokens=128, num_beams=1, min_text_tokens=1):
+        """Free-running generation: every token conditioned on the model's own previous tokens (text tokens
+        only, at least ``min_text_tokens`` of them; see ``text_only_processor``)."""
         embeds, mask, _, _ = self.encode(x, fixated, valid, lang)
         encoder = self.lm.get_encoder()(inputs_embeds=embeds, attention_mask=mask)
+        eos = self.lm.config.eos_token_id
+        banned = [i for i in self.codec.special_ids() if i != eos]
         ids = self.lm.generate(encoder_outputs=encoder, attention_mask=mask, max_new_tokens=max_new_tokens,
-                               num_beams=num_beams, forced_bos_token_id=self.codec.lang_id(lang), do_sample=False)
+                               num_beams=num_beams, forced_bos_token_id=self.codec.lang_id(lang), do_sample=False,
+                               logits_processor=text_only_processor(banned, eos, min_text_tokens))
         return self.codec.decode(ids.tolist())
 
 

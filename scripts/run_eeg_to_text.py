@@ -85,6 +85,8 @@ def parse_args():
     parser.add_argument("--num-beams", type=int, default=1)
     parser.add_argument("--no-test-swaps", action="store_true", help="skip feeding the EEG model noise/shuffled EEG")
     parser.add_argument("--no-reader-average", action="store_true", help="skip the reader-averaged test")
+    parser.add_argument("--min-text-tokens", type=int, default=1,
+                        help="free-running generation writes at least this many text tokens (never special tokens)")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", default=None)
     return parser.parse_args()
@@ -185,6 +187,8 @@ def main():
                 "input_layer": args.input_layer,
                 "extra": sorted(os.path.basename(os.path.normpath(p)) for p in args.zuco_extra_dirs),
                 "reader_average": not args.no_reader_average}
+    # Decoding is not part of the key: changing it re-evaluates finished runs from their saved weights.
+    decoding = {"text_only": True, "min_text_tokens": args.min_text_tokens}
     for encoder in args.encoders:
         for setting in args.settings:
             for condition in args.inputs:
@@ -192,11 +196,15 @@ def main():
                 out_dir = os.path.join(root, name)
                 key = hashlib.sha256(json.dumps({**key_base, "name": name}, sort_keys=True).encode()).hexdigest()[:16]
                 metrics_path = os.path.join(out_dir, "metrics.json")
-                if os.path.exists(metrics_path) and json.load(open(metrics_path)).get("key") == key:
+                weights_path = os.path.join(out_dir, "weights.pt")
+                previous = json.load(open(metrics_path)) if os.path.exists(metrics_path) else {}
+                if previous.get("key") == key and previous.get("decoding") == decoding:
                     print(f"{name}: reusing finished run")
                     continue
+                reuse_weights = previous.get("key") == key and os.path.exists(weights_path)
                 started = time.time()
-                print(f"=== {name} ===")
+                print(f"=== {name} ===" + (" (trained earlier; evaluating again with the current decoding)"
+                                           if reuse_weights else ""))
                 torch.manual_seed(args.seed)
                 lm, codec = load_seq2seq(args.model)
                 langs = langs_of(setting)
@@ -215,8 +223,12 @@ def main():
                                                          "targets": LORA_TARGETS},
                                   vq=vq, full_finetune=args.full_finetune, source_layout=args.source_layout,
                                   input_layer=input_layer_for(args, encoder)).to(device)
-                info = train(model, {lang: data[lang]["train"] for lang in langs},
-                             {lang: data[lang]["val"] for lang in langs}, settings, device, log=print)
+                if reuse_weights:
+                    model.load_trainable(torch.load(weights_path, map_location=device))
+                    info = previous["train"]
+                else:
+                    info = train(model, {lang: data[lang]["train"] for lang in langs},
+                                 {lang: data[lang]["val"] for lang in langs}, settings, device, log=print)
                 records, codes_by_lang = [], {}
                 for lang in langs:
                     tested = [condition] + ([] if args.no_test_swaps or condition != "eeg" else ["noise", "shuffled_eeg"])
@@ -234,7 +246,8 @@ def main():
                         corpus = corpora[lang]
                         for tested_name, test_items in test_sets:
                             result, codes = evaluate(model, test_items, lang, settings, device,
-                                                     desc=f"{name} {lang} test ({tested_name})")
+                                                     desc=f"{name} {lang} test ({tested_name})",
+                                                     min_text_tokens=args.min_text_tokens)
                             for r in result:
                                 i = int(r["trial"].split(":")[1])
                                 averaged = r["trial"].endswith(":avg")
@@ -258,6 +271,7 @@ def main():
                 json.dump({"key": key, "setting": setting, "encoder": encoder, "input": condition, "langs": langs,
                            "train": info, "test": summary, "runtime_min": (time.time() - started) / 60,
                            "input_mapping": args.input_mapping, "mapping_quality": map_quality,
+                           "decoding": decoding,
                            "input_layer": input_layer_for(args, encoder),
                            "vq_code_usage": code_usage(codes_by_lang, args.vq_codes) if codes_by_lang else None,
                            "examples": generations[generations["condition"] == condition].head(8)[

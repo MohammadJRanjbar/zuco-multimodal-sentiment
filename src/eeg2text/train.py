@@ -162,7 +162,7 @@ def train(model, train_by_lang, val_by_lang, settings, device, log=print):
 
 
 @torch.no_grad()
-def evaluate(model, items, lang, settings, device, desc="evaluate"):
+def evaluate(model, items, lang, settings, device, desc="evaluate", min_text_tokens=1):
     """Per trial: teacher-forced token accuracy and text, free-running text, EEG-token codes (if any)."""
     model.eval()
     dtype, _ = precision_for(device)
@@ -172,7 +172,8 @@ def evaluate(model, items, lang, settings, device, desc="evaluate"):
         x, fixated, valid, labels = collate(batch, device)
         with autocast(device, dtype):
             correct, scored, tf_texts = model.teacher_forced(x, fixated, valid, labels, lang)
-            free = model.generate(x, fixated, valid, lang, settings.max_new_tokens, settings.num_beams)
+            free = model.generate(x, fixated, valid, lang, settings.max_new_tokens, settings.num_beams,
+                                  min_text_tokens)
             if model.vq is not None:
                 _, _, batch_codes = model.embed(x, fixated, lang)
                 codes.append(batch_codes[fixated].cpu())

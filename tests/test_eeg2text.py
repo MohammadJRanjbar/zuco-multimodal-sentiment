@@ -47,6 +47,9 @@ class CharCodec:
     def word_ids(self, words):
         return [[self.index[c] for c in w if c in self.index] for w in words]
 
+    def special_ids(self):
+        return [0, 1, 2, 3, 4]
+
 
 def tiny_seq2seq(codec):
     from transformers import MBartConfig, MBartForConditionalGeneration
@@ -185,6 +188,17 @@ def test_script_end_to_end(tmp_path, monkeypatch):
     assert "Input -> mBART word embedding" in report
     os.utime(os.path.join(run_root, "en_continuous_eeg", "metrics.json"))
     runner.main()  # finished runs are reused
+    path = os.path.join(run_root, "en_continuous_eeg", "metrics.json")
+    old = json.load(open(path))
+    json.dump({**old, "decoding": {"text_only": False}}, open(path, "w"))  # as if evaluated with older decoding
+
+    def no_training(*args, **kwargs):
+        raise AssertionError("a run with saved weights must be evaluated again, not retrained")
+
+    monkeypatch.setattr(runner, "train", no_training)
+    runner.main()
+    again = json.load(open(path))
+    assert again["decoding"] == {"text_only": True, "min_text_tokens": 1} and again["train"] == old["train"]
 
 
 def test_training_under_bf16_autocast(monkeypatch):
@@ -337,3 +351,16 @@ def test_identity_input_layer_feeds_embeddings_as_they_are():
     assert [n for n, p in model.named_parameters() if p.requires_grad] == ["missing.en"]
     with pytest.raises(ValueError):
         EEGToText(lm, codec, {"en": 12}, input_layer="identity")
+
+
+def test_text_only_decoding_bans_special_tokens_and_early_stop():
+    from src.eeg2text.model import text_only_processor
+
+    processor = text_only_processor(banned=[0, 1, 3, 4], eos=2, min_text_tokens=1)[0]
+    scores = torch.zeros(2, 8)
+    forced_step = processor(torch.zeros(2, 1, dtype=torch.long), scores.clone())  # language token step: untouched
+    assert torch.isfinite(forced_step).all()
+    first = processor(torch.zeros(2, 2, dtype=torch.long), scores.clone())
+    assert torch.isinf(first[:, [0, 1, 2, 3, 4]]).all() and torch.isfinite(first[:, 5:]).all()
+    later = processor(torch.zeros(2, 3, dtype=torch.long), scores.clone())
+    assert torch.isfinite(later[:, 2]).all() and torch.isinf(later[:, [0, 1, 3, 4]]).all()  # </s> allowed again

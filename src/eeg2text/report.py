@@ -85,6 +85,7 @@ def summarize(root, sentiment_model=None, device="cpu", n_boot=2000):
                        "tf_accuracy": float(scores[key]["tf_accuracy"].mean()),
                        "tf_bleu4": corpus_bleu(sub["tf_text"], sub["gold"]),
                        "free_bleu4": corpus_bleu(sub["free_text"], sub["gold"]),
+                       "free_empty": float((sub["free_text"].str.strip() == "").mean()),
                        "free_bleu1": corpus_bleu(sub["free_text"], sub["gold"], max_n=1),
                        "rouge1": float(scores[key]["rouge1"].mean()), "wer": float(scores[key]["wer"].mean())}
                 if lang in classifiers:
@@ -197,7 +198,7 @@ def write_markdown(path, table, comparisons, interaction, codes, positive=(), ma
                          f"{q['cosine']:.3f} |")
         lines.append("")
     cols = ["setting", "encoder", "trained_on", "tested_on", "n_trials", "tf_accuracy", "tf_bleu4", "free_bleu1",
-            "free_bleu4", "rouge1", "wer"] + [c for c in ("sentiment_f1_generated", "sentiment_f1_real_text")
+            "free_bleu4", "free_empty", "rouge1", "wer"] + [c for c in ("sentiment_f1_generated", "sentiment_f1_real_text")
                                               if c in table]
     for lang, sub in table.groupby("lang"):
         lines += [f"## {'English (ZuCo)' if lang == 'en' else 'Persian (TeCo)'}", "",
